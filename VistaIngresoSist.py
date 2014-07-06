@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*- 
-
-
 import sys
 import time
 import threading
+from VistaProfesor import *
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
@@ -39,7 +38,11 @@ class VistaIngresoSist(QWidget):
 			self.hbox = QHBoxLayout() #layout que coloca los widgets en forma horizontal
 			self.hbox.addWidget(QLabel("           ")) #agego un espacio en el lado izquierdo 
 			self.hbox.addWidget(self.botonIngresar)
+
 			self.hbox.addWidget(QLabel("           "))
+			
+			self.connect(self.botonIngresar,SIGNAL("clicked()"),self.vistaProfesor)
+
 			hvbox= QVBoxLayout() #layout con disposicion vertical
 			hvbox.addWidget(QLabel("                      ")) #agrego un espacio
 			self.contenedor.addLayout(hvbox) #agrego ese espacio al layout principal
@@ -48,12 +51,12 @@ class VistaIngresoSist(QWidget):
 			self.form_layout.addRow(self.hbox)
 			self.setLayout(self.contenedor)
 
-			
-
-
-			
-			
-
+		
+	def vistaProfesor(self):
+		nombre=self.usuario.displayText()
+		self.ventana_profesor=VistaProfesor(nombre)
+		self.close()
+		self.ventana_profesor.show()
 
 
 app = QApplication(sys.argv)
