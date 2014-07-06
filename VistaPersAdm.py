@@ -16,48 +16,49 @@ class VistaPersAdm(QMainWindow):
 			QWidget.__init__(self,*args)
 			self.setGeometry(100,50,self.dimension_x,self.dimension_y)
 			self.main_widget = QWidget(self)
-			 
-
-			self.contenedor = QHBoxLayout() #layout principal de esta gui, los widgets se agregan de forma horizontal
-			self.form_layout = QFormLayout() #layout interno Izquierdo
+			self.contenedor= QVBoxLayout()
 			
-			self.setLayout(self.contenedor)
+			#--Creacion de Pestañas---#
+			tab_widget = QTabWidget()
+			tab_est = QWidget()
+			tab_est.setWindowIcon(QIcon("Imagenes/estudiante.jpg"))
+			tab_pers = QWidget()
+			tab_cursos = QWidget()
+			tab_materias = QWidget()
+			tab_facturacion = QWidget()
+			
+			#--definicion de contenedores de cada pestaña--#
+			
+			
+			self.cont_est = QHBoxLayout(tab_est) #layout principal de esta gui, los widgets se agregan de forma horizontal
+			self.cont_pers = QHBoxLayout(tab_pers) 
+			self.cont_Cursos = QHBoxLayout(tab_cursos)
+			self.cont_materias = QHBoxLayout(tab_materias)
+			self.cont_Facturacion = QHBoxLayout(tab_facturacion)
+			
+			#--agrego las pestañas al tab biew
+			tab_widget.addTab(tab_est,"Estudiantes")
+			tab_widget.addTab(tab_pers,"Personas")
+			tab_widget.addTab(tab_cursos,"Cursos")
+			tab_widget.addTab(tab_materias,"Materias")
+			tab_widget.addTab(tab_facturacion,u"Facturación")
+			
+			
 			self.setWindowTitle("Administrativo opciones")
 			
-			self.btEstudiantes= QPushButton("Estudiantes")
-			self.btEstudiantes.setIcon(QIcon("Imagenes/estudiante.jpg"))
-			self.btPersonas= QPushButton("Personas")
-			self.btPersonas.setIcon(QIcon("Imagenes/persona.jpg"))
-			self.btCursos= QPushButton("Cursos")
-			self.btCursos.setIcon(QIcon("Imagenes/curso.jpg"))
-			self.btMaterias= QPushButton("Materias")
-			self.btMaterias.setIcon(QIcon("Imagenes/materia.jpg"))
-			self.btFacturacion = QPushButton(u"Facturación")
-			self.btFacturacion.setIcon(QIcon("Imagenes/factura.jpg"))
-
-			
-			for i in range(3):
-				self.form_layout.addRow(QLabel("")) #estoy agregando filas vacias 				
-
-			self.form_layout.addRow(self.btEstudiantes) #agrego botones
-			self.form_layout.addRow(self.btPersonas)
-			self.form_layout.addRow(self.btCursos)
-			self.form_layout.addRow(self.btMaterias)
-			self.form_layout.addRow(self.btFacturacion)
-
-
-			hvbox= QVBoxLayout() #layout con disposicion vertical
-			hvbox.addWidget(QLabel("               ")) #agrego un espacio
-			
-			self.contenedor.addLayout(hvbox)
-			self.contenedor.addLayout(self.form_layout)
-			self.contenedor.addLayout(hvbox)
 			
 
+							
+
 			
-			self.setCentralWidget(self.main_widget)
+			self.contenedor.addWidget(tab_widget)
+			
+
 			self.main_widget.setLayout(self.contenedor)
-
+			self.setCentralWidget(self.main_widget)
+			
+			
+			#---Menu---#	
 			exitAction = QAction(QIcon('Imagenes/salir.jpg'), '&Salir', self)
 			exitAction.setShortcut('Ctrl+Q')
 			exitAction.setStatusTip('Exit application')
