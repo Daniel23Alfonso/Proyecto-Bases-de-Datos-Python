@@ -5,6 +5,8 @@ import threading
 from VistaProfesor import *
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
+from Tabla import * 
+from VistaConsultaNotas import *
 
 
 class VistaIngresoSist(QWidget):

@@ -15,6 +15,7 @@ class VistaPersAdm(QMainWindow):
 	def __init__(self,*args):
 			QWidget.__init__(self,*args)
 			self.setGeometry(100,50,self.dimension_x,self.dimension_y)
+			self.setWindowTitle("Opciones de Administrador")
 			self.main_widget = QWidget(self)
 			self.contenedor= QVBoxLayout()
 			

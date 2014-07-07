@@ -16,6 +16,7 @@ class VistaIngresoCalificaciones(QWidget):
 	def __init__(self,*args):
 			QWidget.__init__(self,*args)
 			self.setGeometry(100,50,self.dimension_x,self.dimension_y)
+			self.setWindowTitle("Ingreso Calificaciones")
 			self.contenedor = QHBoxLayout() #layout principal de esta gui, los widgets se agregan de forma horizontal
 			self.form_layout = QFormLayout() #layout interno
 			self.setLayout(self.contenedor)
@@ -45,12 +46,5 @@ class VistaIngresoCalificaciones(QWidget):
 			self.contenedor.addLayout(hvbox)
 			self.form_layout.addRow(self.hbox)
 			self.setLayout(self.contenedor)
-
-
-app = QApplication(sys.argv)
-vista1 = VistaIngresoCalificaciones()
-vista1.show()
-app.exec_()
-
 			
 

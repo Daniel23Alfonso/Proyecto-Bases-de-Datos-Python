@@ -10,9 +10,10 @@ class VistaConsultaNotas(QWidget):
 	dimension_x=700
 	dimension_y=600
 
-	def __init__(self,,*args):
+	def __init__(self,*args):
 			QWidget.__init__(self,*args)
 			self.setGeometry(100,50,self.dimension_x,self.dimension_y)
+			self.setWindowTitle("Consulta de Notas")
 			self.contenedor = QHBoxLayout() #layout principal de esta gui, los widgets se agregan de forma horizontal
 			self.form_layout = QFormLayout() #layout interno
 			self.setLayout(self.contenedor)
@@ -31,9 +32,3 @@ class VistaConsultaNotas(QWidget):
 			self.contenedor.addLayout(hvbox)
 			self.form_layout.addRow(self.hbox)
 			self.setLayout(self.contenedor)
-
-
-app = QApplication(sys.argv)
-vista1 = VistaConsultaNotas()
-vista1.show()
-app.exec_()
