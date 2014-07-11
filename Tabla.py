@@ -25,7 +25,9 @@ class MyTable(QTableWidget):
 			i=i+1
 		self.rows=self.rows+1
 
-		
+
+ 
+
 #app = QApplication(sys.argv)
 #table = MyTable()
 #table.show()

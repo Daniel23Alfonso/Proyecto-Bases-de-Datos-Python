@@ -3,10 +3,11 @@ import sys
 import time
 import threading
 from VistaProfesor import *
+from VistaPersAdm import *
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from Tabla import * 
-from VistaConsultaNotas import *
+
 
 
 class VistaIngresoSist(QWidget):
@@ -27,6 +28,7 @@ class VistaIngresoSist(QWidget):
 			self.contrasenia = QLineEdit()  
 			self.contrasenia.setEchoMode(QLineEdit.Password)
 			self.botonIngresar = QPushButton("Ingresar")
+			
 			self.Tusuarios =QComboBox() #tipos de usuario mostrados en un combo box
 			self.Tusuarios.addItems(self.tipoUsuario)
 			
@@ -43,7 +45,7 @@ class VistaIngresoSist(QWidget):
 
 			self.hbox.addWidget(QLabel("           "))
 			
-			self.connect(self.botonIngresar,SIGNAL("clicked()"),self.vistaProfesor)
+			self.vistaUsuario()
 
 			hvbox= QVBoxLayout() #layout con disposicion vertical
 			hvbox.addWidget(QLabel("                      ")) #agrego un espacio
@@ -53,12 +55,26 @@ class VistaIngresoSist(QWidget):
 			self.form_layout.addRow(self.hbox)
 			self.setLayout(self.contenedor)
 
-		
+	def vistaUsuario(self):
+		self.connect(self.botonIngresar,SIGNAL("clicked()"),self.vista)
+
+	def vista(self):
+		if(self.Tusuarios.currentIndex()==0):
+			self.vistaProfesor()
+		else:
+			self.vistaAdmin()
+
 	def vistaProfesor(self):
 		nombre=self.usuario.displayText()
 		self.ventana_profesor=VistaProfesor(nombre)
 		self.close()
 		self.ventana_profesor.show()
+
+	def vistaAdmin(self):
+		self.ventana_administrador=VistaPersAdm()
+		self.close()
+		self.ventana_administrador.show()
+
 
 
 app = QApplication(sys.argv)

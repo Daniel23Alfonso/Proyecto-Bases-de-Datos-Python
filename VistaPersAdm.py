@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*- 
 
-
 import sys
 import time
 import threading
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-
+from VistasFacturacion import *
+from VistaPersona import *
+from VistaCurso import *
+from VistasMateria import *
 
 class VistaPersAdm(QMainWindow):
 	dimension_x=1000
@@ -15,7 +17,6 @@ class VistaPersAdm(QMainWindow):
 	def __init__(self,*args):
 			QWidget.__init__(self,*args)
 			self.setGeometry(100,50,self.dimension_x,self.dimension_y)
-			self.setWindowTitle("Opciones de Administrador")
 			self.main_widget = QWidget(self)
 			self.contenedor= QVBoxLayout()
 			
@@ -23,10 +24,10 @@ class VistaPersAdm(QMainWindow):
 			tab_widget = QTabWidget()
 			tab_est = QWidget()
 			tab_est.setWindowIcon(QIcon("Imagenes/estudiante.jpg"))
-			tab_pers = QWidget()
-			tab_cursos = QWidget()
-			tab_materias = QWidget()
-			tab_facturacion = QWidget()
+			tab_pers = VistaPersona()
+			tab_cursos = VistaCurso()
+			tab_materias = VistasMateria()
+			tab_facturacion = VistaFacturacion()
 			
 			#--definicion de contenedores de cada pestaña--#
 			
@@ -38,11 +39,12 @@ class VistaPersAdm(QMainWindow):
 			self.cont_Facturacion = QHBoxLayout(tab_facturacion)
 			
 			#--agrego las pestañas al tab biew
+			tab_widget.addTab(tab_facturacion,u"Facturación")
 			tab_widget.addTab(tab_est,"Estudiantes")
 			tab_widget.addTab(tab_pers,"Personas")
 			tab_widget.addTab(tab_cursos,"Cursos")
 			tab_widget.addTab(tab_materias,"Materias")
-			tab_widget.addTab(tab_facturacion,u"Facturación")
+			
 			
 			
 			self.setWindowTitle("Administrativo opciones")
@@ -68,19 +70,3 @@ class VistaPersAdm(QMainWindow):
 			menubar = self.menuBar()
 			fileMenu = menubar.addMenu('&Archivo')
 			fileMenu.addAction(exitAction)
-
-
-
-
-
-
-
-			
-			
-
-
-
-app = QApplication(sys.argv)
-vista1 = VistaPersAdm()
-vista1.show()
-app.exec_()

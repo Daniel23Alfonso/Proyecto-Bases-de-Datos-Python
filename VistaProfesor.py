@@ -11,7 +11,7 @@ from VistaIngresoCalificaciones import *
 from VistaConsultaNotas import *
 
 class VistaProfesor(QWidget):
-	dimension_x=500
+	dimension_x=1000
 	dimension_y=600
 
 
@@ -69,10 +69,10 @@ class VistaProfesor(QWidget):
 		self.layoutCalificaciones.addRow(self.botonCalificaciones)
 
 
-		for i in range(4):
-			self.form_layout.addRow(QLabel("")) #estoy agregando filas vacias 				
+		#for i in range(4):
+		#	self.form_layout.addRow(QLabel("")) #estoy agregando filas vacias 				
 
-		self.form_layout.addRow(QLabel("      "))
+		#self.form_layout.addRow(QLabel("      "))
 		self.form_layout.addRow('Usuario:', self.usuarioNombre)
 		
 		self.form_layout.addRow(QLabel("      "))
