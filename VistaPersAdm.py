@@ -28,6 +28,7 @@ class VistaPersAdm(QMainWindow):
 			tab_cursos = VistaCurso()
 			tab_materias = VistasMateria()
 			tab_facturacion = VistaFacturacion()
+			tab_matriculacion = QWidget()
 			
 			
 			
@@ -37,6 +38,7 @@ class VistaPersAdm(QMainWindow):
 			tab_widget.addTab(tab_pers,"Personas")
 			tab_widget.addTab(tab_cursos,"Cursos")
 			tab_widget.addTab(tab_materias,"Materias")
+			tab_widget.addTab(tab_matriculacion,"Matriculacion")
 			
 			
 			

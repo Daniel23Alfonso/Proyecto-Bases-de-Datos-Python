@@ -38,6 +38,16 @@ class VistaFacturacion(QWidget):
 			self.btnNuevo=QPushButton("Nuevo Cliente")
 			#etiquetas
 			self.lblNumeroFactura=QLabel("Factura:     ")
+			#valores de la factura
+			self.lblSubTotal=QLabel("SubTota = $ 0.00   ")
+			self.lblIva=QLabel("IVA 12% = $ 0.00   ")
+			self.lblTotal=QLabel("Total = $ 0.00   ")
+			self.GBoxValores = QGroupBox ( "valores" )
+			vGBoxValores = QVBoxLayout()
+			self.GBoxValores.setLayout(vGBoxValores)
+			vGBoxValores.addWidget(self.lblSubTotal)
+			vGBoxValores.addWidget(self.lblIva)
+			vGBoxValores.addWidget(self.lblTotal)
 			#contruccion ventana
 			
 			self.layoutEstudiantes=QVBoxLayout()
@@ -69,6 +79,7 @@ class VistaFacturacion(QWidget):
 			self.layoutFactura.addLayout(self.layoutFactura1)
 			self.layoutFactura.addLayout(self.layoutFactura2)
 			self.layoutFactura2.addWidget(self.factura)
+			self.layoutFactura2.addWidget(self.GBoxValores)
 			self.layoutFactura2.addWidget(self.btnGenerar)
 			self.layoutFactura1.addWidget(self.lblNumeroFactura)
 			
