@@ -9,6 +9,7 @@ from VistasFacturacion import *
 from VistaPersona import *
 from VistaCurso import *
 from VistasMateria import *
+from VistaEstudiantes import *
 
 class VistaPersAdm(QMainWindow):
 	dimension_x=1000
@@ -22,21 +23,13 @@ class VistaPersAdm(QMainWindow):
 			
 			#--Creacion de Pestañas---#
 			tab_widget = QTabWidget()
-			tab_est = QWidget()
-			tab_est.setWindowIcon(QIcon("Imagenes/estudiante.jpg"))
+			tab_est = VistaEstudiantes()
 			tab_pers = VistaPersona()
 			tab_cursos = VistaCurso()
 			tab_materias = VistasMateria()
 			tab_facturacion = VistaFacturacion()
 			
-			#--definicion de contenedores de cada pestaña--#
 			
-			
-			self.cont_est = QHBoxLayout(tab_est) #layout principal de esta gui, los widgets se agregan de forma horizontal
-			self.cont_pers = QHBoxLayout(tab_pers) 
-			self.cont_Cursos = QHBoxLayout(tab_cursos)
-			self.cont_materias = QHBoxLayout(tab_materias)
-			self.cont_Facturacion = QHBoxLayout(tab_facturacion)
 			
 			#--agrego las pestañas al tab biew
 			tab_widget.addTab(tab_facturacion,u"Facturación")
