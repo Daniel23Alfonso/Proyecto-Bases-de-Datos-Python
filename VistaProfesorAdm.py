@@ -74,6 +74,7 @@ class VistaProfesorAdm(QWidget):
 			self.llenarTabConsultas()
 			self.llenarTabEdicion()
 			self.llenarTabCreacion()
+			self.contenedor.addWidget(self.profesores)
 			self.contenedor.addWidget(tab_widget)
 			
 	
@@ -92,8 +93,6 @@ class VistaProfesorAdm(QWidget):
 		primeraFila.addWidget(QLabel("               "))
 		contenidoTab.addLayout(primeraFila)
 		
-		#agrego una tabla donde habra informacion de los estudiantes, segunda fila
-		contenidoTab.addWidget(self.profesores)
 		
 		#creacion de la tercera fila
 		terceraFila = QHBoxLayout()
