@@ -11,6 +11,7 @@ from VistaCurso import *
 from VistasMateria import *
 from VistaEstudiantes import *
 from VistaProfesorAdm import *
+from VistaMatriculacion import *
 
 class VistaPersAdm(QMainWindow):
 	dimension_x=1000
@@ -29,7 +30,7 @@ class VistaPersAdm(QMainWindow):
 			tab_cursos = VistaCurso()
 			tab_materias = VistasMateria()
 			tab_facturacion = VistaFacturacion()
-			tab_matriculacion = QWidget()
+			tab_matriculacion = VistaMatriculacion()
 			tab_profesor=VistaProfesorAdm()
 			
 			
@@ -43,14 +44,8 @@ class VistaPersAdm(QMainWindow):
 			tab_widget.addTab(tab_matriculacion,"Matriculacion")
 			tab_widget.addTab(tab_profesor,"Profesores")
 			
-			
-			
 			self.setWindowTitle("Administrativo opciones")
 			
-			
-
-							
-
 			
 			self.contenedor.addWidget(tab_widget)
 			
