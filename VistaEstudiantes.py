@@ -20,7 +20,7 @@ class VistaEstudiantes(QWidget):
 
 			#componentes que iran en la ventana
 			self.tipoBusqueda=[u"Cédula","Apellido","Nombre"]
-			self.tipoBusquedaEdit = ["Apellidos", "Nombre"]
+			self.tipoBusquedaEdit = [u"Cédula","Apellidos", "Nombre"]
 			self.paramBusqueda = QLineEdit() #entrada de texto usada para ingresar el parametro de busqueda seccion Consultas
 			self.btnBuscar = QPushButton() # boton para aceptar la busqueda
 			self.btnBuscar.setIcon(QIcon("Imagenes/buscar.jpg"))
@@ -30,7 +30,6 @@ class VistaEstudiantes(QWidget):
 
 			#elementos de la pestaña de edicion
 			self.paramBusquedaEdit = QLineEdit() #entrada de texto usada para ingresar el parametro de busqueda seccion Consultas
-			self.cedulaEdit = QLineEdit()  # entrada de texto donde se ingresa la cedula 
 			self.btnBuscarEdit = QPushButton("Buscar") # boton para aceptar la busqueda
 			self.btnBuscarEdit.setIcon(QIcon("Imagenes/buscar.jpg"))
 			self.comboBusquedaEdit=QComboBox() #tipos de usuario mostrados en un combo box
@@ -60,7 +59,7 @@ class VistaEstudiantes(QWidget):
 
 			
 			#lineas de texto para deditar al estudiante
-			self.textDatosEstudiantes = [ QLineEdit(), QLineEdit(), QLineEdit(), QLineEdit(),QLineEdit(), QLineEdit(), QLineEdit(), QLineEdit() ]
+			self.textDatosEstudiantes = [ QLineEdit(), QLineEdit(), QLineEdit(), QLineEdit(), QLineEdit(),QLineEdit(), QLineEdit(), QLineEdit(), QLineEdit() ]
 
 			for i in self.textDatosEstudiantes:
 				i.setReadOnly(True)
@@ -85,6 +84,7 @@ class VistaEstudiantes(QWidget):
 			self.llenarTabConsultas()
 			self.llenarTabEdicion()
 			
+			self.contenedor.addWidget(self.alumnos)
 			self.contenedor.addWidget(tab_widget)
 			
 	
@@ -103,8 +103,6 @@ class VistaEstudiantes(QWidget):
 		primeraFila.addWidget(QLabel("               "))
 		contenidoTab.addLayout(primeraFila)
 		
-		#agrego una tabla donde habra informacion de los estudiantes, segunda fila
-		contenidoTab.addWidget(self.alumnos)
 		
 		#creacion de la tercera fila
 		terceraFila = QHBoxLayout()
@@ -162,24 +160,20 @@ class VistaEstudiantes(QWidget):
 		primeraFila = QHBoxLayout() # primera fila, contiene el combobox y la entrada de texto
 		primeraFila.addWidget(self.comboBusquedaEdit)
 		primeraFila.addWidget(self.paramBusquedaEdit)
+		primeraFila.addWidget(self.btnBuscarEdit)
 		contenidoTab.addLayout(primeraFila)
-		segundaFila = QHBoxLayout()
-		segundaFila.addWidget(QLabel(u"Cédula"))
-		segundaFila.addWidget(self.cedulaEdit)
-		segundaFila.addWidget(self.btnBuscarEdit)
-		contenidoTab.addLayout(segundaFila)
-		listDatosEst = ["Nombres:","Apellidos:",u"Cédula:", "Sexo:","Estado Civil:","Origen:","Etnia:" ,"Fecha de nacimiento:"]
+		listDatosEst = [u"Cédula","Nombres:","Apellidos:",u"Cédula:", "Sexo:","Estado Civil:","Origen:","Etnia:" ,"Fecha de nacimiento:"]
 		form_layout = QFormLayout()
 
-		for i in range (0,7):
+		for i in range (0,8):
 			form_layout.addRow(listDatosEst[i], self.textDatosEstudiantes[i])
 
 		contenidoTab.addLayout(form_layout)
 
-		cuartaFila = QHBoxLayout()
-		cuartaFila.addWidget(self.btnEditar)
-		cuartaFila.addWidget(self.btnGuardar)
-		contenidoTab.addLayout(cuartaFila)
+		terceraFila = QHBoxLayout()
+		terceraFila.addWidget(self.btnEditar)
+		terceraFila.addWidget(self.btnGuardar)
+		contenidoTab.addLayout(terceraFila)
 
 
 	def activarEdicion(self):
