@@ -10,6 +10,7 @@ from VistaPersona import *
 from VistaCurso import *
 from VistasMateria import *
 from VistaEstudiantes import *
+from VistaProfesorAdm import *
 
 class VistaPersAdm(QMainWindow):
 	dimension_x=1000
@@ -29,6 +30,7 @@ class VistaPersAdm(QMainWindow):
 			tab_materias = VistasMateria()
 			tab_facturacion = VistaFacturacion()
 			tab_matriculacion = QWidget()
+			tab_profesor=VistaProfesorAdm()
 			
 			
 			
@@ -39,6 +41,7 @@ class VistaPersAdm(QMainWindow):
 			tab_widget.addTab(tab_cursos,"Cursos")
 			tab_widget.addTab(tab_materias,"Materias")
 			tab_widget.addTab(tab_matriculacion,"Matriculacion")
+			tab_widget.addTab(tab_profesor,"Profesores")
 			
 			
 			
