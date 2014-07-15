@@ -17,8 +17,15 @@ class VistaSemestre(QWidget):
 		self.parciales_uno=[QWidget(),QWidget(),QWidget(),QWidget()]#pestañas con los parciales y el examen
 		self.layouts=[QVBoxLayout(),QVBoxLayout(),QVBoxLayout(),QVBoxLayout()]#layouts para cada pestaña
 		self.botones=[QPushButton("Agregar Actividad"),QPushButton("Agregar Actividad"),QPushButton("Agregar Actividad")]
+		self.layoutHorizontal=[QHBoxLayout(),QHBoxLayout(),QHBoxLayout()]#layouts para los espacios
+		
+		self.tipoActividades=["Actividad 1","Actividad 2","Actividad 3"];
+		self.comboActividades=[QComboBox(),QComboBox(),QComboBox()]
+		self.initComboBox(self.comboActividades,self.tipoActividades)
+
 		self.initTab(self.tab_uno,self.layout_uno,self.parciales_uno,self.layouts)
-		self.initBotones(self.layouts,self.botones)
+		self.initBotones(self.layoutHorizontal,self.layouts,self.botones,self.comboActividades)
+		
 		self.setLayout(self.layout_uno)
 
 
@@ -33,9 +40,21 @@ class VistaSemestre(QWidget):
 			coleccionWidget[i].setLayout(coleccionLayout[i])
 		layoutWidget.addWidget(tabWidget)#se añaden las pestañas de los parciales y el examen
 
-	def initBotones(self,coleccionLayout,coleccionBotones):
+	def initComboBox(self,coleccionCombo,contenido):
+		for i in range(3):
+			coleccionCombo[i].addItems(contenido)
+
+
+	def initBotones(self,layoutHorizontal,coleccionLayout,coleccionBotones,coleccionCombo):
 		for i in range (3):
-			coleccionLayout[i].addWidget(coleccionBotones[i])
+			layoutHorizontal[i].addWidget(QLabel("			"))
+			layoutHorizontal[i].addWidget(coleccionBotones[i])
+			layoutHorizontal[i].addWidget(QLabel("			"))
+			layoutHorizontal[i].addWidget(QLabel("Tipo de Actividad:"))
+			layoutHorizontal[i].addWidget(coleccionCombo[i])
+			layoutHorizontal[i].addWidget(QLabel("			"))
+			coleccionLayout[i].addLayout(layoutHorizontal[i])
+
 
 
 class VistaExamenes(QWidget):
@@ -57,10 +76,7 @@ class VistaIngresoCalificaciones(QWidget):
 		QWidget.__init__(self,*args)
 		self.setGeometry(100,50,self.dimension_x,self.dimension_y)
 		self.setWindowTitle("Ingreso Calificaciones")
-		self.contenedor = QHBoxLayout() #layout principal de esta gui, los widgets se agregan de forma horizontal
-		self.form_layout = QFormLayout() #layout interno
-		self.setLayout(self.contenedor)
-
+		self.contenedor = QVBoxLayout() #layout principal de esta gui, los widgets se agregan de forma horizontal
 		self.Tab=QTabWidget()#pestañas con los quimestres y examenes
 			
 		self.tab_primer= VistaSemestre(1)
@@ -73,11 +89,10 @@ class VistaIngresoCalificaciones(QWidget):
 		self.Tab.addTab (self.tab_segundo,"2do Quimestre")
 		self.Tab.addTab(self.tab_examen,"Examenes")
 
-		self.form_layout.addRow(QLabel("                               "))
-		self.form_layout.addRow(QLabel("Usuario:"))
-		self.form_layout.addRow(QLabel("                               "))
-		self.form_layout.addRow(self.Tab)
-		self.contenedor.addLayout(self.form_layout)
+		self.contenedor.addWidget(QLabel("                               "))
+		self.contenedor.addWidget(QLabel("Usuario:"))
+		self.contenedor.addWidget(QLabel("                               "))
+		self.contenedor.addWidget(self.Tab)
 		self.setLayout(self.contenedor)
 
 
@@ -88,39 +103,63 @@ class VistaConsultaNotas(QWidget):
 	def __init__(self,*args):
 		QWidget.__init__(self,*args)
 		self.setGeometry(100,50,self.dimension_x,self.dimension_y)
-		self.contenedor = QHBoxLayout() #layout principal de esta gui, los widgets se agregan de forma horizontal
-		self.form_layout = QFormLayout() #layout interno
-		self.setLayout(self.contenedor)			
+		self.setWindowTitle("Consulta Notas")
+		self.contenedor = QVBoxLayout() #layout principal de esta gui, los widgets se agregan de forma horizontal	
 		self.Estudiantes=MyTable()	
-		self.form_layout.addWidget(QLabel("Calificaciones de los Estudiantes:"))		
-		
-		self.form_layout.addRow(self.Estudiantes)
-
-		self.contenedor.addLayout(self.form_layout)
+		self.contenedor.addWidget(QLabel("Calificaciones de los Estudiantes:"))				
+		self.contenedor.addWidget(self.Estudiantes)
 		self.setLayout(self.contenedor)
 
+class VistaReporte(QWidget):
+	def __init__(self,*args):
+		QWidget.__init__(self,*args)
+		self.layout_reportes=QVBoxLayout()
+		self.layout_reportes.addWidget(QLabel("Cursos Disponibles:"))
+		self.Estudiantes=MyTable()
+		self.layout_reportes.addWidget(self.Estudiantes)
+		self.boton_uno=QHBoxLayout()
+		#self.boton_uno.addWidget(QLabel("                               "))
+		self.boton_uno.addWidget(QLabel("                               "))
+		self.tiposReportes=["Lista de Estudiantes","Acta de Calificaciones","Libretas","Sabanas","Promociones"]
+		self.comboReportes=QComboBox()
+		self.comboReportes.addItems(self.tiposReportes)
+		self.boton_uno.addWidget(QLabel("Tipos de Reportes:"))
+		self.boton_uno.addWidget(self.comboReportes)
+		self.boton_uno.addWidget(QLabel("                               "))
+		self.boton_uno.addWidget(QLabel("                               "))	
+		self.botonReportes=QPushButton("Generar Reporte")
+		self.connect(self.botonReportes,SIGNAL("clicked()"),self.initReportes)
+		self.boton_uno.addWidget(self.botonReportes)
+		self.boton_uno.addWidget(QLabel("                               "))
+		self.boton_uno.addWidget(QLabel("                               "))
+		self.layout_reportes.addLayout(self.boton_uno)
+		self.setLayout(self.layout_reportes)
 
-class VistaProfesor(QWidget):
-	dimension_x=800
+	def initReportes(self):
+		pass
+
+
+class VistaProfesor(QMainWindow):
+	dimension_x=700
 	dimension_y=500 
 
 	def __init__(self,usuarioNombre,*args):
 		QWidget.__init__(self,*args)
 		self.setGeometry(100,50,self.dimension_x,self.dimension_y)
+		self.main_widget = QWidget(self)
 		self.activarCalificaciones=False
 		self.activarConsultas=False
-		self.contenedor = QHBoxLayout() #layout principal de esta gui, los widgets se agregan de forma horizontal
+		self.contenedor = QVBoxLayout() #layout principal de esta gui, los widgets se agregan de forma horizontal
 		self.form_layout = QFormLayout() #layout interno
-		self.usuarioNombre=QLabel(usuarioNombre)
 		self.setWindowTitle("Opciones Profesor")
 		
 		self.opciones=QTabWidget()
 		
-		self.tablas=[MyTable(),MyTable(),MyTable()]
+		self.tablas=[MyTable(),MyTable()]
 
 		self.consultas=QWidget()
 		self.calificaciones=QWidget()
-		self.reportes=QWidget()
+		self.reportes=VistaReporte()
 
 		self.layout_consultas=QVBoxLayout()
 		self.layout_consultas.addWidget(QLabel("Cursos Disponibles:"))
@@ -133,26 +172,12 @@ class VistaProfesor(QWidget):
 		self.layout_cero.addWidget(self.botonConsultas)
 		self.layout_cero.addWidget(QLabel("                               "))
 		self.layout_cero.addWidget(QLabel("                               "))
-		
 		self.layout_consultas.addLayout(self.layout_cero)
 
-		self.layout_reportes=QVBoxLayout()
-		self.layout_reportes.addWidget(QLabel("Cursos Disponibles:"))
-		self.layout_reportes.addWidget(self.tablas[1])
-		
-		self.boton_uno=QHBoxLayout()
-		self.boton_uno.addWidget(QLabel("                               "))
-		self.boton_uno.addWidget(QLabel("                               "))
-		self.botonReportes=QPushButton("Generar Reportes")
-		self.connect(self.botonReportes,SIGNAL("clicked()"),self.initReportes)
-		self.boton_uno.addWidget(self.botonReportes)
-		self.boton_uno.addWidget(QLabel("                               "))
-		self.boton_uno.addWidget(QLabel("                               "))	
-		self.layout_reportes.addLayout(self.boton_uno)
 
 		self.layout_calificaciones=QVBoxLayout()
 		self.layout_calificaciones.addWidget(QLabel("Cursos Disponibles:"))
-		self.layout_calificaciones.addWidget(self.tablas[2])
+		self.layout_calificaciones.addWidget(self.tablas[1])
 		self.layout_dos=QHBoxLayout()
 		self.layout_dos.addWidget(QLabel("                               "))
 		self.layout_dos.addWidget(QLabel("                               "))
@@ -165,32 +190,22 @@ class VistaProfesor(QWidget):
 
 		self.consultas.setLayout(self.layout_consultas)
 		self.calificaciones.setLayout(self.layout_calificaciones)
-		self.reportes.setLayout(self.layout_reportes)
 
 		self.opciones.addTab(self.consultas,"Consultas")
 		self.opciones.addTab(self.reportes,"Generar Reportes")
 		self.opciones.addTab(self.calificaciones,"Insertar Calificaciones")
 
-		self.form_layout.addRow(QLabel("      "))
-		self.form_layout.addRow(QLabel("      "))
-		self.form_layout.addRow(QLabel("      "))
-		self.form_layout.addRow('Usuario:', self.usuarioNombre)
-		self.form_layout.addRow(QLabel("      "))
-		self.form_layout.addRow(QLabel("      "))
-		self.form_layout.addRow(self.opciones)
+		self.contenedor.addWidget(QLabel("		"))
+		self.contenedor.addWidget(QLabel("Usuario: "+usuarioNombre))
+		self.contenedor.addWidget(QLabel("		"))
+		self.contenedor.addWidget(self.opciones)
 
-		hvbox= QVBoxLayout() #layout con disposicion vertical
-		hvbox.addWidget(QLabel("               ")) #agrego un espacio
-
-		self.contenedor.addLayout(hvbox)
-		self.contenedor.addLayout(self.form_layout)
-		self.contenedor.addLayout(hvbox)	
-		self.setLayout(self.contenedor)
+		self.main_widget.setLayout(self.contenedor)
+		self.setCentralWidget(self.main_widget)
 
 	def initCalificaciones(self):
 		if self.activarCalificaciones==False:
 			self.vistaCalificaciones=VistaIngresoCalificaciones()
-			self.close()
 			self.vistaCalificaciones.show()
 			#self.layout_calificaciones.addWidget(self.vistaCalificaciones)
 			self.activarCalificaciones=True
@@ -198,9 +213,7 @@ class VistaProfesor(QWidget):
 	def initConsultas(self):
 		if self.activarConsultas==False:
 			self.vistaConsultas=VistaConsultaNotas()
-			self.layout_consultas.addWidget(self.vistaConsultas)
+			self.vistaConsultas.show()
+			#self.layout_consultas.addWidget(self.vistaConsultas)
 			self.activarConsultas=True
 
-
-	def initReportes(self):
-		pass
