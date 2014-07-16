@@ -57,13 +57,26 @@ class VistaEstudiantes(QWidget):
 			self.labelsDatosRep = [ QLabel(""), QLabel(""), QLabel(""), QLabel(""), QLabel(""),
 			QLabel(""), QLabel(""), QLabel(""), QLabel(""), QLabel("") ]
 
-			
+			#variables de la pestaña de edicion
+			self.listsexos=["MASCULINO","FEMENINO"] #lista para escoger el tipo de usuario
+			self.listEstCivil = ["SOLTERO(A)","CASADO(A)","DIVORCIADO(A)","VIUDO(A)","UNIDO(A)" ]
+			self.listEtnia = ["BLANCO","MESTIZO","AFROECUATORIANO","INDIGENA", "MONTUBIO","NEGRO","MULATO","OTROS"]
+
 			#lineas de texto para deditar al estudiante
-			self.textDatosEstudiantes = [ QLineEdit(), QLineEdit(), QLineEdit(), QLineEdit(), QLineEdit(),QLineEdit(), QLineEdit(), QLineEdit(), QLineEdit() ]
 
-			for i in self.textDatosEstudiantes:
-				i.setReadOnly(True)
 
+			self.textDatosEstudiantes = [ QLineEdit(), QLineEdit(), QLineEdit(), QComboBox(), QComboBox(),
+			QLineEdit(), QComboBox(), QLineEdit()]
+
+			self.regex = QRegExp(u"^[À-Ÿà-ÿA-Za-z\\s*\\u'\xf1'*]+$")
+			self.validator = QRegExpValidator(self.regex)
+						
+			#itero los QLineEdit y les seteo la expresion regular y que sean solo de lectura
+			for i in [0,1,2,5]:
+				self.textDatosEstudiantes[i].setReadOnly(True)
+				self.textDatosEstudiantes[i].setValidator(self.validator)
+			
+			#agrego la tabla de alumnos
 			self.alumnos=MyTable()
 			
 			
@@ -162,10 +175,10 @@ class VistaEstudiantes(QWidget):
 		primeraFila.addWidget(self.paramBusquedaEdit)
 		primeraFila.addWidget(self.btnBuscarEdit)
 		contenidoTab.addLayout(primeraFila)
-		listDatosEst = [u"Cédula","Nombres:","Apellidos:",u"Cédula:", "Sexo:","Estado Civil:","Origen:","Etnia:" ,"Fecha de nacimiento:"]
+		listDatosEst = [u"Cédula","Nombres:","Apellidos:", "Sexo:","Estado Civil:","Origen:","Etnia:" ,"Fecha de nacimiento:"]
 		form_layout = QFormLayout()
 
-		for i in range (0,8):
+		for i in range (0,7):
 			form_layout.addRow(listDatosEst[i], self.textDatosEstudiantes[i])
 
 		contenidoTab.addLayout(form_layout)
@@ -177,5 +190,16 @@ class VistaEstudiantes(QWidget):
 
 
 	def activarEdicion(self):
-		for i in self.textDatosEstudiantes:
-			i.setReadOnly(False)
+		for i in [0,1,2,5]:
+			self.textDatosEstudiantes[i].setReadOnly(False)
+
+		self.textDatosEstudiantes[3].addItems(self.listsexos)
+		self.textDatosEstudiantes[4].addItems(self.listEstCivil)
+		self.textDatosEstudiantes[6].addItems(self.listEtnia)
+
+"""
+	def setValidacionTexto(editLine):
+		regex = QRegExp(u"^[À-Ÿà-ÿA-Za-z\\s*\\u'\xf1'*]+$")
+        validator = QRegExpValidator(regex, editLine)
+        editLine.setValidator(validator)
+"""

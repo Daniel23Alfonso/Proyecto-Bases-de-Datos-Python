@@ -19,9 +19,11 @@ class VistaProfesorAdm(QWidget):
 			self.setLayout(self.contenedor)
 
 			#componentes que iran en la ventana
-			#componentes de la pestaña consultas
+
+			#COMPONENTES DE LA VENTANA CONSULTAS
+			
+
 			self.tipoBusqueda=[u"Cédula","Apellido","Nombre"]
-			self.tipoBusquedaEdit = ["Apellidos", "Nombre"]
 			self.paramBusqueda = QLineEdit() #entrada de texto usada para ingresar el parametro de busqueda seccion Consultas
 			self.btnBuscar = QPushButton() # boton para aceptar la busqueda
 			self.btnBuscar.setIcon(QIcon("Imagenes/buscar.jpg"))
@@ -30,13 +32,17 @@ class VistaProfesorAdm(QWidget):
 			self.labelsProfesor = [QLabel(""),QLabel(""),QLabel(""),QLabel(""),QLabel(""),QLabel("")]
 			
 
-			#elementos de la pestaña de edicion
-			self.paramBusquedaEdit = QLineEdit() #entrada de texto usada para ingresar el parametro de busqueda seccion Consultas
-			self.cedulaEdit = QLineEdit()  # entrada de texto donde se ingresa la cedula 
+			#elementos de la pestaña de EDICION
+			
+			# expresion regular`para validar nombres
+			self.regex = QRegExp(u"^[À-Ÿà-ÿA-Za-z\\s*\\u'\xf1'*]+$")
+			self.validator = QRegExpValidator(self.regex)
+
+			self.paramBusquedaEdit = QLineEdit() #entrada de texto usada para ingresar el parametro de busqueda seccion Consultas 
 			self.btnBuscarEdit = QPushButton("Buscar") # boton para aceptar la busqueda
 			self.btnBuscarEdit.setIcon(QIcon("Imagenes/buscar.jpg"))
 			self.comboBusquedaEdit=QComboBox() #tipos de usuario mostrados en un combo box
-			self.comboBusquedaEdit.addItems(self.tipoBusquedaEdit)
+			self.comboBusquedaEdit.addItems(self.tipoBusqueda)
 			self.btnEditar = QPushButton("Editar")
 			self.btnEditar.setIcon(QIcon("Imagenes/editar.jpg"))
 			self.connect(self.btnEditar,SIGNAL("clicked()"),self.activarEdicion)
@@ -46,12 +52,24 @@ class VistaProfesorAdm(QWidget):
 			self.editorProfesor = [ QLineEdit(), QLineEdit(), QLineEdit(), QLineEdit(),QLineEdit(), QLineEdit()]
 			for i in self.editorProfesor:
 				i.setReadOnly(True)
+
+			for i in range(1,4):
+				self.editorProfesor[i].setValidator(self.validator)
+
 			
-			#atributos de creacion
+			#ATRIBUTOS DE CREACION
 			#lineas de texto para crear al profesor
 			self.textCamposProfesor = [ QLineEdit(), QLineEdit(), QLineEdit(), QLineEdit(),QLineEdit()]
+			
+			#seteo la expresion regular en los QLineEdit
+			for i in range(1,4):
+				self.textCamposProfesor[i].setValidator(self.validator)
+
 			self.btnCrear = QPushButton("Guardar")
 			self.btnCrear.setIcon(QIcon("Imagenes/guardar.jpg"))
+
+
+
 
 			self.profesores=MyTable()
 			
@@ -144,12 +162,8 @@ class VistaProfesorAdm(QWidget):
 		primeraFila = QHBoxLayout() # primera fila, contiene el combobox y la entrada de texto
 		primeraFila.addWidget(self.comboBusquedaEdit)
 		primeraFila.addWidget(self.paramBusquedaEdit)
+		primeraFila.addWidget(self.btnBuscarEdit)
 		contenidoTab.addLayout(primeraFila)
-		segundaFila = QHBoxLayout()
-		segundaFila.addWidget(QLabel(u"Cédula"))
-		segundaFila.addWidget(self.cedulaEdit)
-		segundaFila.addWidget(self.btnBuscarEdit)
-		contenidoTab.addLayout(segundaFila)
 		textoCampos = [u"Cédula:","Nombres:", "Apellidos:","Usuario:","Clave:"]
 		form_layout = QFormLayout()
 
