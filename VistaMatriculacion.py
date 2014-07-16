@@ -58,6 +58,9 @@ class VistaMatriculacion(QWidget):
 		self.vistaAgregarEst.show()
 
 
+
+
+
 class VistaAgregarEstudiante(QWidget):
 	dimension_x=600
 	dimension_y=500
@@ -66,6 +69,12 @@ class VistaAgregarEstudiante(QWidget):
 		QWidget.__init__(self,*args)
 		self.setWindowTitle("Agregar Estudiante")
 		self.setGeometry(100,50,self.dimension_x,self.dimension_y)
+		#validadores
+		#expresiones regulares para los nombres
+		self.regex = QRegExp(u"^[À-Ÿà-ÿA-Za-z\\s*\\u'\xf1'*]+$")
+		self.validator = QRegExpValidator(self.regex)
+		#expresiones regulares para la cedula
+		self.regexN = QRegExp("[0-9]*")
 		self.contenedor=QHBoxLayout()
 		self.tab_uno=QTabWidget()
 		self.estudiante=QWidget()
@@ -78,7 +87,12 @@ class VistaAgregarEstudiante(QWidget):
 		self.tab_uno.addTab(self.representante,"Representante")
 		self.contenedor.addWidget(self.tab_uno)
 		self.initEstudiante()
+		self.initPadre()
+		self.initMadre()
+		self.initRepresentante()
+		self.validatorN = QRegExpValidator(self.regexN)
 		self.setLayout(self.contenedor)
+
 
 	def initEstudiante(self):
 		self.layout_estudiante=QVBoxLayout()
@@ -87,7 +101,7 @@ class VistaAgregarEstudiante(QWidget):
 		#for i in range(8):
 		#	self.listaLayouts.append(QFormLayout())
 
-		listDatosEst = ["Nombres:","Apellidos:",u"Cédula:", "Sexo:","Estado Civil:","Origen:","Etnia:" ,"Fecha de nacimiento:"]
+		listDatosEst = [u"Cédula:","Nombres:","Apellidos:", "Sexo:","Estado Civil:","Origen:","Etnia:" ,"Fecha de nacimiento:"]
 		indiceSexo=3
 		indiceEstadoCivil=4
 		for i in range(0,3):
@@ -124,9 +138,38 @@ class VistaAgregarEstudiante(QWidget):
 
 
 		self.estudiante.setLayout(self.layout_estudiante)
+		#validaciones
 
 
+	def initPadre(self):
+		self.layout_Padre=QFormLayout()
+		#creacion de cajas de texto
+		self.ListaDatosPadre=["Cedula:","Nombres:","Apellidos:","Sexo:","Fecha de Nacimiento:","Estado Civil:","Ocupacion:","Lugar de Trabajo:","Ocupacion:"]
+		self.ListaEntradasPadre=[QLineEdit(),QLineEdit(),QLineEdit(),QComboBox(),QCalendarWidget(),QComboBox(),QLineEdit(),QLineEdit()]
+		for i in range(0,8):
+			self.layout_Padre.addRow(self.ListaDatosPadre[i],self.ListaEntradasPadre[i])
+		self.padre.setLayout(self.layout_Padre)
+		#seteo las validaciones
+		#self.ListaEntradasPadre[0].setValidator(self.validatorN)
 
+	def initMadre(self):
+		self.layout_Madre=QFormLayout()
+		#creacion de cajas de texto
+		self.ListaDatosMadre=["Cedula:","Nombres:","Apellidos:","Sexo:","Fecha de Nacimiento:","Estado Civil:","Ocupacion:","Lugar de Trabajo:","Ocupacion:"]
+		self.ListaEntradasMadre=[QLineEdit(),QLineEdit(),QLineEdit(),QComboBox(),QCalendarWidget(),QComboBox(),QLineEdit(),QLineEdit()]
+		for i in range(0,8):
+			self.layout_Madre.addRow(self.ListaDatosMadre[i],self.ListaEntradasMadre[i])
+		self.madre.setLayout(self.layout_Madre)
+		#seteo las validaciones
+		#self.ListaEntradasMadre[0].setValidator(self.validatorN)
 
-
-
+	def initRepresentante(self):
+		self.layout_Representante=QFormLayout()
+		#creacion de cajas de texto
+		self.ListaDatosRepresentante=["Cedula:","Nombres:","Apellidos:","Sexo:","Fecha de Nacimiento:","Estado Civil:","Ocupacion:","Lugar de Trabajo:","Ocupacion:"]
+		self.ListaEntradasRepresentante=[QLineEdit(),QLineEdit(),QLineEdit(),QComboBox(),QCalendarWidget(),QComboBox(),QLineEdit(),QLineEdit()]
+		for i in range(0,8):
+			self.layout_Representante.addRow(self.ListaDatosRepresentante[i],self.ListaEntradasRepresentante[i])
+		self.representante.setLayout(self.layout_Representante)
+		#seteo las validaciones
+		#self.ListaEntradasRepresentante[0].setValidator(self.validatorN)
