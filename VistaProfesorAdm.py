@@ -38,6 +38,10 @@ class VistaProfesorAdm(QWidget):
 			self.regex = QRegExp(u"^[À-Ÿà-ÿA-Za-z\\s*\\u'\xf1'*]+$")
 			self.validator = QRegExpValidator(self.regex)
 
+			#expresiones regulares para la cedula
+			self.regexN = QRegExp("[0-9]*")
+			self.validatorN = QRegExpValidator(self.regexN)
+
 			self.paramBusquedaEdit = QLineEdit() #entrada de texto usada para ingresar el parametro de busqueda seccion Consultas 
 			self.btnBuscarEdit = QPushButton("Buscar") # boton para aceptar la busqueda
 			self.btnBuscarEdit.setIcon(QIcon("Imagenes/buscar.jpg"))
@@ -48,13 +52,17 @@ class VistaProfesorAdm(QWidget):
 			self.connect(self.btnEditar,SIGNAL("clicked()"),self.activarEdicion)
 			self.btnGuardar = QPushButton("Guardar")
 			self.btnGuardar.setIcon(QIcon("Imagenes/guardar.jpg"))
+			self.connect(self.btnGuardar,SIGNAL("clicked()"),self.accionGuadarEdicion)
 			#cuadros de texto que permiten editar
 			self.editorProfesor = [ QLineEdit(), QLineEdit(), QLineEdit(), QLineEdit(),QLineEdit(), QLineEdit()]
+			
 			for i in self.editorProfesor:
 				i.setReadOnly(True)
 
 			for i in range(1,4):
 				self.editorProfesor[i].setValidator(self.validator)
+
+			self.editorProfesor[0].setValidator(self.validatorN)
 
 			
 			#ATRIBUTOS DE CREACION
@@ -65,8 +73,12 @@ class VistaProfesorAdm(QWidget):
 			for i in range(1,4):
 				self.textCamposProfesor[i].setValidator(self.validator)
 
+			self.textCamposProfesor[0].setValidator(self.validatorN)
+
+
 			self.btnCrear = QPushButton("Guardar")
 			self.btnCrear.setIcon(QIcon("Imagenes/guardar.jpg"))
+			self.connect(self.btnCrear,SIGNAL("clicked()"),self.accionGuadarCreacion)
 
 
 
@@ -181,3 +193,38 @@ class VistaProfesorAdm(QWidget):
 	def activarEdicion(self):
 		for i in self.editorProfesor:
 			i.setReadOnly(False)
+
+
+	def accionGuadarCreacion(self):
+		cedula = self.textCamposProfesor[0].displayText()
+		nombre = self.textCamposProfesor[1].displayText()
+		apellido = self.textCamposProfesor[2].displayText()
+		usuario = self.textCamposProfesor[3].displayText()
+		clave = self.textCamposProfesor[4].displayText()
+
+		if (not(len(cedula)==10)):
+			QMessageBox.about(self, 'Error',u'Cédula inválida: debe tener 10 dígitos')
+		elif (cedula =="" or nombre == "" or apellido == "" or usuario =="" or clave == ""):
+			QMessageBox.about(self, 'Error',u'Datos sin llenar: llene todos los datos')
+		else:
+			QMessageBox.about(self,"Aviso",u'Se ha creado un nuevo profesor con éxito')
+			for i in self.textCamposProfesor:
+				i.setText("")
+
+
+	def accionGuadarEdicion(self):
+		cedula = self.editorProfesor[0].displayText()
+		nombre = self.editorProfesor[1].displayText()
+		apellido = self.editorProfesor[2].displayText()
+		usuario = self.editorProfesor[3].displayText()
+		clave = self.editorProfesor[4].displayText()
+
+		if (not(len(cedula)==10)):
+			QMessageBox.about(self, 'Error',u'Cédula inválida: debe tener 10 dígitos')
+		elif (cedula =="" or nombre == "" or apellido == "" or usuario =="" or clave == ""):
+			QMessageBox.about(self, 'Error',u'Datos sin llenar: llene todos los datos')
+		else:
+			QMessageBox.about(self,"Aviso",u'Se han guardado los cambios con éxito')
+			for i in self.editorProfesor:
+				i.setReadOnly(True)
+

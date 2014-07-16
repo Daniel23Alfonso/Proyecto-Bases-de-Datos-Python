@@ -39,6 +39,7 @@ class VistaEstudiantes(QWidget):
 			self.connect(self.btnEditar,SIGNAL("clicked()"),self.activarEdicion)
 			self.btnGuardar = QPushButton("Guardar")
 			self.btnGuardar.setIcon(QIcon("Imagenes/guardar.jpg"))
+			self.connect(self.btnGuardar,SIGNAL("clicked()"),self.accionGuadarEdicion)
 			#labels que muestran informacion 
 			self.labelsDatosEstudiantes = [ QLabel(""), QLabel(""), QLabel(""), QLabel(""),QLabel(""), QLabel(""), QLabel(""), QLabel("") ]
 			
@@ -68,14 +69,22 @@ class VistaEstudiantes(QWidget):
 			self.textDatosEstudiantes = [ QLineEdit(), QLineEdit(), QLineEdit(), QComboBox(), QComboBox(),
 			QLineEdit(), QComboBox(), QLineEdit()]
 
+			#expresiones regulares para los nombres
 			self.regex = QRegExp(u"^[À-Ÿà-ÿA-Za-z\\s*\\u'\xf1'*]+$")
 			self.validator = QRegExpValidator(self.regex)
+
+			#expresiones regulares para la cedula
+			self.regexN = QRegExp("[0-9]*")
+			self.validatorN = QRegExpValidator(self.regexN)
 						
 			#itero los QLineEdit y les seteo la expresion regular y que sean solo de lectura
 			for i in [0,1,2,5]:
 				self.textDatosEstudiantes[i].setReadOnly(True)
+			
+			for i in [1,2,5]:
 				self.textDatosEstudiantes[i].setValidator(self.validator)
 			
+			self.textDatosEstudiantes[0].setValidator(self.validatorN)
 			#agrego la tabla de alumnos
 			self.alumnos=MyTable()
 			
@@ -197,9 +206,18 @@ class VistaEstudiantes(QWidget):
 		self.textDatosEstudiantes[4].addItems(self.listEstCivil)
 		self.textDatosEstudiantes[6].addItems(self.listEtnia)
 
-"""
-	def setValidacionTexto(editLine):
-		regex = QRegExp(u"^[À-Ÿà-ÿA-Za-z\\s*\\u'\xf1'*]+$")
-        validator = QRegExpValidator(regex, editLine)
-        editLine.setValidator(validator)
-"""
+
+	def accionGuadarEdicion(self):
+		cedula = self.textDatosEstudiantes[0].displayText()
+		nombre = self.textDatosEstudiantes[1].displayText()
+		apellido = self.textDatosEstudiantes[2].displayText()
+		origen = self.textDatosEstudiantes[5].displayText()
+
+		if (not(len(cedula)==10)):
+			QMessageBox.about(self, 'Error',u'Cédula inválida: debe tener 10 dígitos')
+		elif (cedula =="" or nombre == "" or apellido == "" or origen =="" ):
+			QMessageBox.about(self, 'Error',u'Datos sin llenar: llene todos los datos')
+		else:
+			QMessageBox.about(self,"Aviso",u'Se han guardado los cambios con éxito')
+			for i in [0,1,2,5]:
+				self.textDatosEstudiantes[i].setReadOnly(True)
