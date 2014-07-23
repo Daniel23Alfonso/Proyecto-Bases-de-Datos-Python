@@ -75,6 +75,7 @@ class VistaAgregarEstudiante(QWidget):
 		self.validator = QRegExpValidator(self.regex)
 		#expresiones regulares para la cedula
 		self.regexN = QRegExp("[0-9]*")
+		self.validatorN = QRegExpValidator(self.regexN)
 		self.contenedor=QHBoxLayout()
 		self.tab_uno=QTabWidget()
 		self.estudiante=QWidget()
@@ -90,7 +91,6 @@ class VistaAgregarEstudiante(QWidget):
 		self.initPadre()
 		self.initMadre()
 		self.initRepresentante()
-		self.validatorN = QRegExpValidator(self.regexN)
 		self.setLayout(self.contenedor)
 
 
@@ -104,8 +104,9 @@ class VistaAgregarEstudiante(QWidget):
 		listDatosEst = [u"Cédula:","Nombres:","Apellidos:", "Sexo:","Estado Civil:","Origen:","Etnia:" ,"Fecha de nacimiento:"]
 		indiceSexo=3
 		indiceEstadoCivil=4
+		self.textos=[QLineEdit(),QLineEdit(),QLineEdit(),QLineEdit()]
 		for i in range(0,3):
-			self.listaLayouts[0].addRow(QLabel(listDatosEst[i]),QLineEdit())
+			self.listaLayouts[0].addRow(QLabel(listDatosEst[i]),self.textos[i])
 
 		self.comboSexo=QComboBox()
 		self.sexos=["MASCULINO","FEMENINO"]
@@ -131,7 +132,7 @@ class VistaAgregarEstudiante(QWidget):
 		self.calendario.setGridVisible(False)
 
 		self.listaLayouts[0].addRow(QLabel(listDatosEst[7]),self.calendario)
-
+		self.textos[0].setValidator(self.validatorN)
 
 
 		self.layout_estudiante.addLayout(self.listaLayouts[0])
@@ -150,7 +151,7 @@ class VistaAgregarEstudiante(QWidget):
 			self.layout_Padre.addRow(self.ListaDatosPadre[i],self.ListaEntradasPadre[i])
 		self.padre.setLayout(self.layout_Padre)
 		#seteo las validaciones
-		#self.ListaEntradasPadre[0].setValidator(self.validatorN)
+		self.ListaEntradasPadre[0].setValidator(self.validatorN)
 
 	def initMadre(self):
 		self.layout_Madre=QFormLayout()
