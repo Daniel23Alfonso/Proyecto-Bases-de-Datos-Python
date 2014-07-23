@@ -47,14 +47,11 @@ class VistaIngresoSist(QWidget):
 			
 			self.vistaUsuario()
 
-			hvbox= QVBoxLayout() #layout con disposicion vertical
-			hvbox.addWidget(QLabel("                      ")) #agrego un espacio
-			self.contenedor.addLayout(hvbox) #agrego ese espacio al layout principal
+			self.contenedor.addWidget(QLabel("                      ")) #agrego ese espacio al layout principal
 			self.contenedor.addLayout(self.form_layout)
-			self.contenedor.addLayout(hvbox)
+			self.contenedor.addWidget(QLabel("                      ")) #agrego ese espacio al layout principal
 			self.form_layout.addRow(self.hbox)
-			self.setLayout(self.contenedor)
-
+			
 	def vistaUsuario(self):
 		self.connect(self.botonIngresar,SIGNAL("clicked()"),self.vista)
 
