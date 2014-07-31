@@ -11,8 +11,12 @@ class MyTable(QTableWidget):
 		self.rows=0
 	
 	def setHeader(self,header):
-		self.setHorizontalHeaderLabels(header)
+		cad=""
+		for l in header:
+			cad=cad+";"+l
 		self.setColumnCount(len(header))
+		self.setHorizontalHeaderLabels(QString(cad[1:]).split(";"))
+		
 	
 	def vaciar(self):
 		self.clear()
