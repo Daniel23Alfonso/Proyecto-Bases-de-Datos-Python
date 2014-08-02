@@ -12,9 +12,7 @@ class MyTable(QTableView):
 		self.proxy.setSourceModel(self.modelo)
 		self.setModel(self.proxy)
 		self.row=0
-		#self.setHeader(["Nombre","Apellido","Numero de Matricula","Edad","Carrera"])
-		#self.addData(["Rodrigo","Castro","201127218","18","Ciencias Computacionales"])
-		#self.addData(["Monstruo","Ball Neuman","19506666","muchos","Astronomia"])
+
 
 	def setHeader(self,listaCabezeras):
 		labels=QStringList()
@@ -23,9 +21,13 @@ class MyTable(QTableView):
 		self.modelo.setHorizontalHeaderLabels(labels)
 
 
-	def addData(self,listaDatos):
+	def addTable(self,listaTuplas):
+		for registro in listaTuplas:
+			self.addRow(registro)
+
+	def addRow(self,listaDatos):
 		for i in range(len(listaDatos)):
-			self.modelo.setItem(self.row,i,QStandardItem(QString(listaDatos[i])))
+			self.modelo.setItem(self.row,i,QStandardItem(QString(str(listaDatos[i]))))
 		self.row=self.row+1		
 
 	#callback para los lineEdit
