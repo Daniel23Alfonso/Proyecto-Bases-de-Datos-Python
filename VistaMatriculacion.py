@@ -26,8 +26,8 @@ class VistaMatriculacion(QWidget):
 		self.botonAgregar=QPushButton()
 		self.botonAgregar.setIcon(QIcon("Imagenes/agregar.jpg"))
 		
-		self.estudiantes=MyTable()
-		self.cursos=MyTable()
+		self.estudiantes=MyTable(self)
+		self.cursos=MyTable(self)
 
 		self.initBusqueda()
 		self.contenedor.addWidget(QLabel("Estudiantes Existentes:"))

@@ -20,11 +20,11 @@ class VistaFacturacion(QWidget):
 			self.comboBusquedaAlumno=QComboBox() #tipos de usuario mostrados en un combo box
 			self.comboBusquedaAlumno.addItems(self.tipoBusqueda)
 			#Tabla alumnos
-			self.alumnos=MyTable()
+			self.alumnos=MyTable(self)
 			#Tabla factura
-			self.factura=MyTable()
+			self.factura=MyTable(self)
 			#Tabla cliente
-			self.clientes=MyTable()
+			self.clientes=MyTable(self)
 			#combobox Cliente
 			self.tipoCliente=["Consumidor Final","Con Nombre"]
 			self.comboBusquedaCliente=QComboBox() #tipos de usuario mostrados en un combo box

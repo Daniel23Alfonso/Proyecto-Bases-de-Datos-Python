@@ -83,7 +83,7 @@ class VistaProfesorAdm(QWidget):
 
 
 
-			self.profesores=MyTable()
+			self.profesores=MyTable(self)
 			
 			
 			# creacion de pestañas

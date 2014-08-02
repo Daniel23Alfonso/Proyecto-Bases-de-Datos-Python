@@ -21,7 +21,7 @@ class VistaIngresoCalificaciones(QWidget):
 			self.form_layout = QFormLayout() #layout interno
 			self.setLayout(self.contenedor)
 			self.form_layout.addRow("Estudiantes",QLabel(""))
-			self.Estudiantes=MyTable()
+			self.Estudiantes=MyTable(self)
 			self.Estudiantes.setHeader(["Apellido","Nombre"])
 			self.Tab=QTabWidget()
 			tab1= QWidget()	

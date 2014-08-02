@@ -36,7 +36,7 @@ class VistaSemestre(QWidget):
 		tabWidget.addTab(coleccionWidget[3],"Examen")
 		for i in range(4):
 			coleccionLayout[i].addWidget(QLabel("Lista de Estudiantes:"))
-			coleccionLayout[i].addWidget(MyTable())
+			coleccionLayout[i].addWidget(MyTable(self))
 			coleccionWidget[i].setLayout(coleccionLayout[i])
 		layoutWidget.addWidget(tabWidget)#se añaden las pestañas de los parciales y el examen
 
@@ -62,7 +62,7 @@ class VistaExamenes(QWidget):
 		QWidget.__init__(self,*args)
 		self.layout_examen=QVBoxLayout()
 		self.layout_examen.addWidget(QLabel("Lista de Estudiantes:"))
-		self.Estudiantes=MyTable()
+		self.Estudiantes=MyTable(self)
 		self.layout_examen.addWidget(self.Estudiantes)
 		self.setLayout(self.layout_examen)
 
@@ -105,7 +105,7 @@ class VistaConsultaNotas(QWidget):
 		self.setGeometry(100,50,self.dimension_x,self.dimension_y)
 		self.setWindowTitle("Consulta Notas")
 		self.contenedor = QVBoxLayout() #layout principal de esta gui, los widgets se agregan de forma horizontal	
-		self.Estudiantes=MyTable()	
+		self.Estudiantes=MyTable(self)	
 		self.contenedor.addWidget(QLabel("Calificaciones de los Estudiantes:"))				
 		self.contenedor.addWidget(self.Estudiantes)
 		self.setLayout(self.contenedor)
@@ -115,7 +115,7 @@ class VistaReporte(QWidget):
 		QWidget.__init__(self,*args)
 		self.layout_reportes=QVBoxLayout()
 		self.layout_reportes.addWidget(QLabel("Cursos Disponibles:"))
-		self.Estudiantes=MyTable()
+		self.Estudiantes=MyTable(self)
 		self.layout_reportes.addWidget(self.Estudiantes)
 		self.boton_uno=QHBoxLayout()
 		#self.boton_uno.addWidget(QLabel("                               "))
@@ -155,7 +155,7 @@ class VistaProfesor(QMainWindow):
 		
 		self.opciones=QTabWidget()
 		
-		self.tablas=[MyTable(),MyTable()]
+		self.tablas=[MyTable(self),MyTable(self)]
 
 		self.consultas=QWidget()
 		self.calificaciones=QWidget()

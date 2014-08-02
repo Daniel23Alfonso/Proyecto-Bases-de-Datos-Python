@@ -18,7 +18,7 @@ class VistaConsultaNotas(QWidget):
 			self.form_layout = QFormLayout() #layout interno
 			self.setLayout(self.contenedor)
 			self.form_layout.addRow("Curso:      ",QLabel("Paralelo:"     ))
-			self.Estudiantes=MyTable()
+			self.Estudiantes=MyTable(self)
 			self.Tab=QTabWidget()
 			self.form_layout.addRow(self.Estudiantes)
 

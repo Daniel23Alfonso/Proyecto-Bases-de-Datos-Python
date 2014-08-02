@@ -15,7 +15,7 @@ class VistaPersona(QWidget):
 			self.setGeometry(100,50,self.dimension_x,self.dimension_y)
 			self.contenedor = QVBoxLayout() #layout principal de esta gui, los widgets se agregan de forma horizontal
 			self.setLayout(self.contenedor)
-			self.Personas=MyTable()
+			self.Personas=MyTable(self)
 			self.contenedor.addWidget(QLabel("Personas"))
 			self.contenedor.addWidget(self.Personas)
 			self.layoutPersona=QFormLayout()

@@ -11,7 +11,7 @@ from Tabla import *
 class VistaEstudiantes(QWidget):
 	dimension_x=400
 	dimension_y=500
-
+	
 	def __init__(self,*args):
 			QWidget.__init__(self,*args)
 			self.setGeometry(100,50,self.dimension_x,self.dimension_y)
@@ -86,7 +86,7 @@ class VistaEstudiantes(QWidget):
 			
 			self.textDatosEstudiantes[0].setValidator(self.validatorN)
 			#agrego la tabla de alumnos
-			self.alumnos=MyTable()
+			self.alumnos=MyTable(self)
 			
 			
 			# creacion de pestañas

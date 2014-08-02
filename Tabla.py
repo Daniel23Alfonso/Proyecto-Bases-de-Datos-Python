@@ -1,39 +1,41 @@
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
- 
-#data = {'col1':['1','2','3'], 'col2':['4','5','6'], 'col3':['7','8','9']}
- 
-class MyTable(QTableWidget):
-	def __init__(self,*args):
-		QTableWidget.__init__(self, *args)
-        #tableWidget.setRowCount(len(entries))
-		self.rows=0
-	
-	def setHeader(self,header):
-		cad=""
-		for l in header:
-			cad=cad+";"+l
-		self.setColumnCount(len(header))
-		self.setHorizontalHeaderLabels(QString(cad[1:]).split(";"))
-		
-	
-	def vaciar(self):
-		self.clear()
 
-	def addRow(self,l):
-		i=0
-		self.insertRow(self.rows)
-		for elemento in l:
-			self.setItem(self.rows,i,QTableWidgetItem(QString("%1").arg(elemento)))
-			i=i+1
-		self.rows=self.rows+1
+class MyTable(QTableView):
+
+	def __init__(self,ventana):
+		QTableView.__init__(self,ventana)
+		self.proxy = QSortFilterProxyModel(ventana)
+		self.ventana=ventana
+		self.modelo=QStandardItemModel(self.ventana)
+		self.proxy.setSourceModel(self.modelo)
+		self.setModel(self.proxy)
+		self.row=0
+		#self.setHeader(["Nombre","Apellido","Numero de Matricula","Edad","Carrera"])
+		#self.addData(["Rodrigo","Castro","201127218","18","Ciencias Computacionales"])
+		#self.addData(["Monstruo","Ball Neuman","19506666","muchos","Astronomia"])
+
+	def setHeader(self,listaCabezeras):
+		labels=QStringList()
+		for i in range(len(listaCabezeras)):
+			labels.append(QString(listaCabezeras[i]))
+		self.modelo.setHorizontalHeaderLabels(labels)
 
 
- 
+	def addData(self,listaDatos):
+		for i in range(len(listaDatos)):
+			self.modelo.setItem(self.row,i,QStandardItem(QString(listaDatos[i])))
+		self.row=self.row+1		
 
-#app = QApplication(sys.argv)
-#table = MyTable()
-#table.show()
-#sys.exit(app.exec_())
- 
+	#callback para los lineEdit
+	def on_lineEdit_textChanged(self,text):
+		search = QRegExp(text, Qt.CaseInsensitive,QRegExp.RegExp)
+		self.proxy.setFilterRegExp(search)
+
+	#callback para los combos
+	def on_comboBox_currentIndexChanged(self, index):
+		self.proxy.setFilterKeyColumn(index)
+
+
+

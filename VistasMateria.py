@@ -19,7 +19,7 @@ class VistasMateria(QWidget):
 			self.setLayout(self.contenedor)
 			
 			#Tabla alumnos
-			self.materiasGrid=MyTable()
+			self.materiasGrid=MyTable(self)
 			
 			
 			
