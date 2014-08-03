@@ -33,3 +33,13 @@ class ManejadorBD():
 		print "numero de tablas: %d" %cont
 		self.desconectar()
 
+
+	def consulta(self,instrucion,tupla=()):
+		self.conectar()
+		cursor=self.BD.cursor()
+		cursor.execute(instrucion,tupla)
+		self.desconectar()
+		cursor.close()
+		return cursor
+
+
