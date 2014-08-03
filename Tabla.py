@@ -11,14 +11,19 @@ class MyTable(QTableView):
 		self.modelo=QStandardItemModel(self.ventana)
 		self.proxy.setSourceModel(self.modelo)
 		self.setModel(self.proxy)
+		self.labels=QStringList()
 		self.row=0
 
 
 	def setHeader(self,listaCabezeras):
-		labels=QStringList()
+		self.labels=QStringList()
 		for i in range(len(listaCabezeras)):
-			labels.append(QString(listaCabezeras[i]))
-		self.modelo.setHorizontalHeaderLabels(labels)
+			self.labels.append(QString(listaCabezeras[i]))
+		self.modelo.setHorizontalHeaderLabels(self.labels)
+	
+	def addCol(self,col):
+		self.labels.append(QString(col))
+		self.modelo.setHorizontalHeaderLabels(self.labels)
 
 
 	def addTable(self,listaTuplas):

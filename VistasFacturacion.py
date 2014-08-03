@@ -21,6 +21,8 @@ class VistaFacturacion(QWidget):
 			self.comboBusquedaAlumno.addItems(self.tipoBusqueda)
 			#Tabla alumnos
 			self.alumnos=MyTable(self)
+			self.alumnos.setHeader(["Cedula","Nombre","Apellido"])
+			self.alumnos.addCol("edad")
 			#Tabla factura
 			self.factura=MyTable(self)
 			#Tabla cliente
