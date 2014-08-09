@@ -7,6 +7,7 @@ from VistaProfesor import *
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from Tabla import *
+from ManejadorBD import *
 
 class VistaEstudiantes(QWidget):
 	dimension_x=400
@@ -18,8 +19,14 @@ class VistaEstudiantes(QWidget):
 			self.contenedor = QVBoxLayout() #layout principal de esta gui, los widgets se agregan de forma vertical
 			self.setLayout(self.contenedor)
 
+
+			#elementos de la tabla
+			self.headersTabla = [u"Matrícula",u"Número de cédula", "Nombres", "Apellidos","Sexo", 
+			"Estado Civil","Origen", "Etnia", "Fecha de Nacimiento"]
+			self.manejadorBD = ManejadorBD() 
+
 			#componentes que iran en la ventana
-			self.tipoBusqueda=[u"Cédula","Apellido","Nombre"]
+			self.tipoBusqueda=[u"Matrícula",u"Cédula","Nombres","Apellidos"]
 			self.tipoBusquedaEdit = [u"Cédula","Apellidos", "Nombre"]
 			self.paramBusqueda = QLineEdit() #entrada de texto usada para ingresar el parametro de busqueda seccion Consultas
 			self.btnBuscar = QPushButton() # boton para aceptar la busqueda
@@ -85,8 +92,15 @@ class VistaEstudiantes(QWidget):
 				self.textDatosEstudiantes[i].setValidator(self.validator)
 			
 			self.textDatosEstudiantes[0].setValidator(self.validatorN)
+
+			
 			#agrego la tabla de alumnos
 			self.alumnos=MyTable(self)
+			self.alumnos.setHeader(self.headersTabla)
+			self.alumnos.addTable(self.manejadorBD.consultarEstudiante())
+			self.paramBusqueda.textChanged.connect(self.alumnos.on_lineEdit_textChanged)
+			self.comboBusquedaEstudiante.currentIndexChanged.connect(self.alumnos.on_comboBox_currentIndexChanged)
+
 			
 			
 			# creacion de pestañas
@@ -221,3 +235,6 @@ class VistaEstudiantes(QWidget):
 			QMessageBox.about(self,"Aviso",u'Se han guardado los cambios con éxito')
 			for i in [0,1,2,5]:
 				self.textDatosEstudiantes[i].setReadOnly(True)
+
+
+

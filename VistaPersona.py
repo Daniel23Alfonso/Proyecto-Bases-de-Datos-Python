@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*- 
+
 import sys
 import time
 import threading
@@ -5,6 +7,7 @@ from VistaProfesor import *
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from Tabla import *
+from ManejadorBD import*
 
 class VistaPersona(QWidget):
 	dimension_x=400
@@ -19,6 +22,7 @@ class VistaPersona(QWidget):
 			self.contenedor.addWidget(QLabel("Personas"))
 			self.contenedor.addWidget(self.Personas)
 			self.layoutPersona=QFormLayout()
+			self.layoutBotones=QHBoxLayout()
 			#definicion cajas de texto
 			self.cedula=QLineEdit()
 			self.nombre=QLineEdit()
@@ -31,8 +35,28 @@ class VistaPersona(QWidget):
 			self.lugarTrabajo=QLineEdit()
 			self.telefono=QLineEdit()
 			self.direccion=QLineEdit()
+			#botones
+			self.btnEditar=QPushButton("Editar")
+			self.btnGuardar=QPushButton("Guardar")
+			self.btnEliminar=QPushButton("Eliminar")
+			#definicion objetos busqueda
+			self.comboBusqueda=QComboBox()
+			self.txtBusqueda=QLineEdit()
+			self.comboBusqueda.addItems([u"cédula","Nombres","Apellidos"])
+
+			#lagrego los datos a la tabla
+			self.manejador = ManejadorBD()
+			self.headers= [u"Cédula", "Nombres", "Apellidos", "Sexo", "Fecha de Nacimiento", "Estado Civil",
+			u"Ocupación", "Lugar de Trabajo", u"Teléfono", u"Dirección"]
+			self.Personas.setHeader(self.headers)
+			self.Personas.addTable(self.manejador.consultarPersonas())
+			# llenamos el layout de los botones
+			self.layoutBotones.addWidget(self.btnEditar)
+			self.layoutBotones.addWidget(self.btnGuardar)
+			self.layoutBotones.addWidget(self.btnEliminar)
 
 			#creacion de formulario
+			self.layoutPersona.addRow(self.comboBusqueda,self.txtBusqueda)
 			self.layoutPersona.addRow("cedula: ",self.cedula)
 			self.layoutPersona.addRow("Nombre: ",self.nombre)
 			self.layoutPersona.addRow("Apellido: ",self.apellido)
@@ -43,5 +67,5 @@ class VistaPersona(QWidget):
 			self.layoutPersona.addRow("Telefono: ",self.telefono)
 			self.layoutPersona.addRow("Direccion: ",self.direccion)
 			self.contenedor.addLayout(self.layoutPersona)
-
+			self.contenedor.addLayout(self.layoutBotones)
 		

@@ -7,6 +7,7 @@ import threading
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from Tabla import *
+from ManejadorBD import *
 
 class VistaSemestre(QWidget):
 
@@ -111,11 +112,11 @@ class VistaConsultaNotas(QWidget):
 		self.setLayout(self.contenedor)
 
 class VistaReporte(QWidget):
-	def __init__(self,*args):
+	def __init__(self,tabla,*args):
 		QWidget.__init__(self,*args)
 		self.layout_reportes=QVBoxLayout()
 		self.layout_reportes.addWidget(QLabel("Cursos Disponibles:"))
-		self.Estudiantes=MyTable(self)
+		self.Estudiantes=tabla
 		self.layout_reportes.addWidget(self.Estudiantes)
 		self.boton_uno=QHBoxLayout()
 		#self.boton_uno.addWidget(QLabel("                               "))
@@ -152,18 +153,21 @@ class VistaProfesor(QMainWindow):
 		self.contenedor = QVBoxLayout() #layout principal de esta gui, los widgets se agregan de forma horizontal
 		self.form_layout = QFormLayout() #layout interno
 		self.setWindowTitle("Opciones Profesor")
-		
+		self.usuarioNombre=usuarioNombre
 		self.opciones=QTabWidget()
 		
-		self.tablas=[MyTable(self),MyTable(self)]
+		self.tablas=[MyTable(self),MyTable(self),MyTable(self)]
+		self.manejador=ManejadorBD()
+		self.cursor=self.manejador.obtenerCursosPorProfesor(self.usuarioNombre)
 
 		self.consultas=QWidget()
 		self.calificaciones=QWidget()
-		self.reportes=VistaReporte()
+		self.reportes=VistaReporte(self.tablas[0])
 
 		self.layout_consultas=QVBoxLayout()
 		self.layout_consultas.addWidget(QLabel("Cursos Disponibles:"))
-		self.layout_consultas.addWidget(self.tablas[0])
+		self.layout_consultas.addWidget(self.tablas[1])
+
 		self.layout_cero=QHBoxLayout()
 		self.layout_cero.addWidget(QLabel("                               "))
 		self.layout_cero.addWidget(QLabel("                               "))
@@ -177,7 +181,7 @@ class VistaProfesor(QMainWindow):
 
 		self.layout_calificaciones=QVBoxLayout()
 		self.layout_calificaciones.addWidget(QLabel("Cursos Disponibles:"))
-		self.layout_calificaciones.addWidget(self.tablas[1])
+		self.layout_calificaciones.addWidget(self.tablas[2])
 		self.layout_dos=QHBoxLayout()
 		self.layout_dos.addWidget(QLabel("                               "))
 		self.layout_dos.addWidget(QLabel("                               "))
@@ -187,6 +191,10 @@ class VistaProfesor(QMainWindow):
 		self.layout_dos.addWidget(QLabel("                               "))
 		self.layout_dos.addWidget(QLabel("                               "))
 		self.layout_calificaciones.addLayout(self.layout_dos)
+
+		#muestra los cursos asignados al profesor 
+		for tabla_actual in self.tablas:
+			tabla_actual.addTable(self.cursor)
 
 		self.consultas.setLayout(self.layout_consultas)
 		self.calificaciones.setLayout(self.layout_calificaciones)
@@ -202,6 +210,7 @@ class VistaProfesor(QMainWindow):
 
 		self.main_widget.setLayout(self.contenedor)
 		self.setCentralWidget(self.main_widget)
+
 
 	def initCalificaciones(self):
 		if self.activarCalificaciones==False:

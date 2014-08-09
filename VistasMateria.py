@@ -7,6 +7,7 @@ from VistaProfesor import *
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from Tabla import *
+from ManejadorBD import *
 
 class VistasMateria(QWidget):
 	dimension_x=400
@@ -17,9 +18,13 @@ class VistasMateria(QWidget):
 			self.setGeometry(100,50,self.dimension_x,self.dimension_y)
 			self.contenedor = QVBoxLayout() #layout principal de esta gui, los widgets se agregan de forma horizontal
 			self.setLayout(self.contenedor)
+			self.manejador = ManejadorBD()
 			
 			#Tabla alumnos
 			self.materiasGrid=MyTable(self)
+			self.headers = [u"Código", "Nombre"]
+			self.materiasGrid.setHeader(self.headers)
+
 			
 			
 			
@@ -31,6 +36,9 @@ class VistasMateria(QWidget):
 			self.layoutMaterias1.addLayout(self.layoutMateria1Sub)
 			self.layoutMateria1Sub.addWidget(QLabel("Materias"))
 			self.layoutMateria1Sub.addWidget(self.materiasGrid)
+
+			#Agrego datos a la tabla
+			self.materiasGrid.addTable(self.manejador.consultarMaterias())
 			
 			
 			#--definicion de contenedores de cada pestaña--#

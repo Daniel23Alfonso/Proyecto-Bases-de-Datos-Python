@@ -71,3 +71,9 @@ class VistaIngresoSist(QWidget):
 		self.ventana_administrador=VistaPersAdm()
 		self.close()
 		self.ventana_administrador.show()
+
+app = QApplication(sys.argv)
+vista1 = VistaIngresoSist()
+vista1.show()
+app.exec_()
+

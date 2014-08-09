@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import sys
 import time
 import threading
@@ -5,6 +6,7 @@ from VistaProfesor import *
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from Tabla import *
+from ManejadorBD import *
 
 class VistaFacturacion(QWidget):
 	dimension_x=400
@@ -16,13 +18,11 @@ class VistaFacturacion(QWidget):
 			self.contenedor = QVBoxLayout() #layout principal de esta gui, los widgets se agregan de forma horizontal
 			self.setLayout(self.contenedor)
 			#combobox tipo busqueda
-			self.tipoBusqueda=["Cedula","Apellido","Nombre"]
+			self.tipoBusqueda=["Matricula","Cedula","Nombre","Apellido"]
 			self.comboBusquedaAlumno=QComboBox() #tipos de usuario mostrados en un combo box
 			self.comboBusquedaAlumno.addItems(self.tipoBusqueda)
 			#Tabla alumnos
 			self.alumnos=MyTable(self)
-			self.alumnos.setHeader(["Cedula","Nombre","Apellido"])
-			self.alumnos.addCol("edad")
 			#Tabla factura
 			self.factura=MyTable(self)
 			#Tabla cliente
@@ -92,7 +92,20 @@ class VistaFacturacion(QWidget):
 			self.contenedor.addLayout(self.layoutEstudiantes)
 			self.contenedor.addLayout(self.layoutFactura)
 
+			self.headerEstudainte = [u"Matrícula",u"cédula", "Nombres", "Apellidos"]
+			self.manejadorBD = ManejadorBD() 
+			#agrego la tabla de alumnos
+			self.alumnos.setHeader(self.headerEstudainte)
+			self.alumnos.addTable(self.manejadorBD.consultarEstudiante2())
+			self.estudiante.textChanged.connect(self.alumnos.on_lineEdit_textChanged)
+			self.comboBusquedaAlumno.currentIndexChanged.connect(self.alumnos.on_comboBox_currentIndexChanged)
 			
+			#lagrego los datos a la tabla
+			self.headerCliente= [u"Cédula", "Nombres", "Apellidos", "Sexo", "Fecha de Nacimiento", "Estado Civil",
+			u"Ocupación", "Lugar de Trabajo", u"Teléfono", u"Dirección"]
+			self.clientes.setHeader(self.headerCliente)
+			self.clientes.addTable(self.manejadorBD.consultarPersonas())
+			self.cliente.textChanged.connect(self.clientes.on_lineEdit_textChanged)
 		
 
 

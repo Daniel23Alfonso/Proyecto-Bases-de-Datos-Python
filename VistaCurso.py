@@ -5,6 +5,7 @@ from VistaProfesor import *
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from Tabla import *
+from ManejadorBD import *
 
 class VistaCurso(QWidget):
 	dimension_x=400
@@ -19,13 +20,13 @@ class VistaCurso(QWidget):
 			tab_widget = QTabWidget()
 			tab_Nuevo=QWidget()
 			tab_Editar=QWidget()
-			tab_CursoMateria=QWidget()
+			#tab_CursoMateria=QWidget()
 			tab_ProfesorMateria=QWidget()
 			self.layoutNuevo=QVBoxLayout()
 			self.layoutAgregar=QVBoxLayout()
 			tab_Nuevo.setLayout(self.layoutNuevo)
 			tab_widget.addTab(tab_Nuevo,"Curso")
-			tab_widget.addTab(tab_CursoMateria,"Agregar Materia")
+			#tab_widget.addTab(tab_CursoMateria,"Agregar Materia")
 			tab_widget.addTab(tab_ProfesorMateria,"Agregar Profesor a Materia")
 			self.contenedorNuevo=QVBoxLayout()
 			#botones
@@ -41,6 +42,7 @@ class VistaCurso(QWidget):
 			self.layoutCurso2=QHBoxLayout()
 			self.layoutNuevo.addLayout(self.layoutCurso1)
 			self.layoutNuevo.addLayout(self.layoutCurso2)
+
 			#definicion cajas de texto
 			self.aLectivo=QLineEdit()
 			self.curso=QComboBox()
@@ -53,7 +55,12 @@ class VistaCurso(QWidget):
 			self.layoutCurso2.addWidget(self.btnCrear)
 			self.layoutCurso2.addWidget(self.btnActualizar)
 			self.layoutCurso2.addWidget(self.btnEliminar)
+
+			#agrego datos a la tabla
+			self.manejador = ManejadorBD()
+			self.Cursos.addTable(self.manejador.obtenerCursos())
 			
+			"""
 			# agregar Materia Curso
 			self.btnAgregar=QPushButton("<<")
 			self.btnQuitar=QPushButton(">>")
@@ -73,7 +80,7 @@ class VistaCurso(QWidget):
 			self.layoutAgregarMateria.addLayout(self.layoutAgregarMateria2)
 			self.layoutAgregarMateria.addLayout(self.layoutAgregarMateria3)
 			tab_CursoMateria.setLayout(self.layoutAgregarMateria)
-
+			"""
 			self.btnLigar=QPushButton("Ligar")
 			self.btnDesLigar=QPushButton("DesLigar")
 			self.layoutProfesorMateria=QHBoxLayout()

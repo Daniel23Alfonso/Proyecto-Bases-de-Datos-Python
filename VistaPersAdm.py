@@ -28,7 +28,7 @@ class VistaPersAdm(QMainWindow):
 			tab_est = VistaEstudiantes()
 			tab_pers = VistaPersona()
 			tab_cursos = VistaCurso()
-			tab_materias = VistasMateria()
+			#tab_materias = VistasMateria()
 			tab_facturacion = VistaFacturacion()
 			tab_matriculacion = VistaMatriculacion()
 			tab_profesor=VistaProfesorAdm()
@@ -40,7 +40,7 @@ class VistaPersAdm(QMainWindow):
 			tab_widget.addTab(tab_est,"Estudiantes")
 			tab_widget.addTab(tab_pers,"Personas")
 			tab_widget.addTab(tab_cursos,"Cursos")
-			tab_widget.addTab(tab_materias,"Materias")
+			#tab_widget.addTab(tab_materias,"Materias")
 			tab_widget.addTab(tab_matriculacion,"Matriculacion")
 			tab_widget.addTab(tab_profesor,"Profesores")
 			

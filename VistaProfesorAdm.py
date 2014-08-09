@@ -7,6 +7,7 @@ from VistaProfesor import *
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from Tabla import *
+from ManejadorBD import*
 
 class VistaProfesorAdm(QWidget):
 	dimension_x=700
@@ -23,7 +24,7 @@ class VistaProfesorAdm(QWidget):
 			#COMPONENTES DE LA VENTANA CONSULTAS
 			
 
-			self.tipoBusqueda=[u"Cédula","Apellido","Nombre"]
+			self.tipoBusqueda=[u"Cédula","Nombres","Apellidos"]
 			self.paramBusqueda = QLineEdit() #entrada de texto usada para ingresar el parametro de busqueda seccion Consultas
 			self.btnBuscar = QPushButton() # boton para aceptar la busqueda
 			self.btnBuscar.setIcon(QIcon("Imagenes/buscar.jpg"))
@@ -82,8 +83,16 @@ class VistaProfesorAdm(QWidget):
 
 
 
-
 			self.profesores=MyTable(self)
+			#agrego datos a la tabla
+			self.headers= [u"Cédula", "Nombres", "Apellidos"]
+			self.profesores.setHeader(self.headers)
+			self.manejador= ManejadorBD()
+			self.profesores.addTable(self.manejador.consultarProfesores())
+			self.paramBusqueda.textChanged.connect(self.profesores.on_lineEdit_textChanged)
+			self.comboBusquedaProfesor.currentIndexChanged.connect(self.profesores.on_comboBox_currentIndexChanged)
+
+
 			
 			
 			# creacion de pestañas

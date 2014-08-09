@@ -5,7 +5,7 @@ class ManejadorBD():
 		self.direccion="127.0.0.1"
 		self.user="root"
 		self.passwor="sasukekun30"
-		self.nombreBD="BasePeliculas"
+		self.nombreBD="BaseEscuela"
 
 
 	def conectar(self):
@@ -41,5 +41,37 @@ class ManejadorBD():
 		self.desconectar()
 		cursor.close()
 		return cursor
+
+	def consultarEstudiante(self):
+		query = "SELECT* FROM Estudiante"
+		return self.consulta(query, None)
+
+	def consultarEstudiante2(self):
+		query = "SELECT numMatricula,cedula,nombres,apellidos FROM Estudiante"
+		return self.consulta(query, None)
+
+
+	def consultarMaterias(self):
+		query = "SELECT * FROM Materia"
+		return self.consulta(query, None)
+
+	def consultarPersonas(self):
+		query = "SELECT * FROM Persona"
+		return self.consulta(query, None)
+
+	def consultarProfesores(self):
+		query = "SELECT  cedula, nombres,apellidos FROM Profesor"
+		return self.consulta(query, None)
+
+	def obtenerCursosPorProfesor(self,usuarioNombre):
+		return self.consulta("SELECT numCurso,anoLectivo,paralelo FROM Profesor,Curso WHERE Curso.cedulaProfesor=Profesor.cedula and usuario=%s",(usuarioNombre))
+
+
+	def obtenerCursos(self):
+		return self.consulta("SELECT * FROM Curso " )
+
+
+
+
 
 

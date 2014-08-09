@@ -44,5 +44,3 @@ class MyTable(QTableView):
 	def on_comboBox_currentIndexChanged(self, index):
 		self.proxy.setFilterKeyColumn(index)
 
-
-
