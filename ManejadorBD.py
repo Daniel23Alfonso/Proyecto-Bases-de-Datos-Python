@@ -71,6 +71,14 @@ class ManejadorBD():
 		return self.consulta("SELECT * FROM Curso " )
 
 
+	def llamarProcedimineto(self, nombreProcedimiento, tupla=()):
+		self.conectar()
+		cursor=self.BD.cursor()
+		cursor.callproc(nombreProcedimiento)
+		resultado = cursor.fetchall()
+		return resultado
+		self.desconectar()
+
 
 
 
