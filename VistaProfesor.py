@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*- 
-
-
 import sys
 import time
 import threading
@@ -9,6 +7,115 @@ from PyQt4.QtGui import *
 from Tabla import *
 from ManejadorBD import *
 
+class VistaProfesor(QMainWindow):
+	dimension_x=700
+	dimension_y=500 
+
+	def __init__(self,usuarioNombre,*args):
+		QWidget.__init__(self,*args)
+		self.setGeometry(100,50,self.dimension_x,self.dimension_y)
+		self.setWindowTitle("Opciones Profesor")
+		self.showMaximized()
+		self.main_widget = QWidget(self)
+		self.contenedor = QVBoxLayout() #layout principal de esta gui, los widgets se agregan de forma horizontal
+		self.form_layout = QFormLayout() #layout interno
+		
+		self.usuarioNombre=usuarioNombre
+		self.opciones=QTabWidget()#opciones disponibles del profesor: Consultar Notas,Generar Reportes e Ingresar Calificaciones
+		
+		self.tablas=[MyTable(self),MyTable(self),MyTable(self)]
+		self.manejador=ManejadorBD()
+		self.resultados=self.manejador.obtenerCursosPorProfesor(self.usuarioNombre)#obtiene los cursos del profesor que ingreso al sistema
+
+		self.consultas=VistaConsulta(self.tablas[0])
+		self.calificaciones=VistaCalificaciones(self.tablas[1])
+		self.reportes=VistaReporte(self.tablas[2])
+
+		#muestra los cursos asignados al profesor 
+		for tabla_actual in self.tablas:
+			tabla_actual.setHeader(["Curso","Paralelo",u"Año Lectivo"])#establece las cabezeras de las tablas
+			tabla_actual.addTable(self.resultados)#agrega los resultados obtenidos a la tabla
+
+		self.opciones.addTab(self.consultas,"Consultas")
+		self.opciones.addTab(self.reportes,"Generar Reportes")
+		self.opciones.addTab(self.calificaciones,"Insertar Calificaciones")
+
+		self.contenedor.addWidget(QLabel("		"))
+		self.contenedor.addWidget(QLabel("Usuario: "+usuarioNombre))
+		self.contenedor.addWidget(QLabel("		"))
+		self.contenedor.addWidget(self.opciones)
+
+		self.main_widget.setLayout(self.contenedor)
+		self.setCentralWidget(self.main_widget)
+
+
+class VistaConsulta(QWidget):
+
+	def __init__(self,tablaDatos,*args):
+		QWidget.__init__(self,*args)
+		self.layout_consultas=QVBoxLayout()
+		self.layout_consultas.addWidget(QLabel("Cursos Disponibles:"))
+		self.cursos=tablaDatos
+		#self.connect(self.cursos,SIGNAL("clicked()"),self.selectedItem)
+		self.cursos.addRow(["hola","chao","dada","asasas"])
+		self.cursos.addRow(["adada","cdadsad","dddda","asasas"])
+		self.cursos.addRow(["adada","chadado","dadssa","asaaasas"])
+		self.layout_consultas.addWidget(self.cursos)#agrega los cursos del profesor para mostrarlos
+		self.layout_cero=QHBoxLayout()
+		self.layout_cero.addWidget(QLabel("                               "))
+		self.layout_cero.addWidget(QLabel("                               "))
+		self.botonConsultas=QPushButton("Consulta Calificaciones")
+		self.connect(self.botonConsultas,SIGNAL("clicked()"),self.initConsultas)
+		self.layout_cero.addWidget(self.botonConsultas)
+		self.layout_cero.addWidget(QLabel("                               "))
+		self.layout_cero.addWidget(QLabel("                               "))
+		self.layout_consultas.addLayout(self.layout_cero)
+		self.setLayout(self.layout_consultas)
+
+	def initConsultas(self):
+		self.vistaNotasPorCurso=VistaNotasPorCurso()#muestra las notas de los estudiantes del curso seleccionado por el usuario
+		self.vistaNotasPorCurso.show()
+
+	def mousePressEvent(self,evento):
+		self.cursos.getSelectedRegister()
+
+
+
+class VistaNotasPorCurso(QWidget):
+
+	def __init__(self,*args):
+		QWidget.__init__(self,*args)
+		self.setWindowTitle("Consulta Notas")
+		self.showMaximized()
+		self.contenedor = QVBoxLayout() #layout principal de esta gui, los widgets se agregan de forma horizontal	
+		self.Estudiantes=MyTable(self)	
+		self.contenedor.addWidget(QLabel("Calificaciones de los Estudiantes:"))				
+		self.contenedor.addWidget(self.Estudiantes)
+		self.setLayout(self.contenedor)
+
+
+class VistaCalificaciones(QWidget):
+
+	def __init__(self,tablaDatos,*args):
+		QWidget.__init__(self,*args)
+		self.layout_calificaciones=QVBoxLayout()
+		self.layout_calificaciones.addWidget(QLabel("Cursos Disponibles:"))
+		self.layout_calificaciones.addWidget(tablaDatos)
+		self.layout_dos=QHBoxLayout()
+		self.layout_dos.addWidget(QLabel("                               "))
+		self.layout_dos.addWidget(QLabel("                               "))
+		self.botonCalificaciones=QPushButton("Insertar Calificaciones")
+		self.connect(self.botonCalificaciones,SIGNAL("clicked()"),self.initCalificaciones)
+		self.layout_dos.addWidget(self.botonCalificaciones)
+		self.layout_dos.addWidget(QLabel("                               "))
+		self.layout_dos.addWidget(QLabel("                               "))
+		self.layout_calificaciones.addLayout(self.layout_dos)
+		self.setLayout(self.layout_calificaciones)
+
+	def initCalificaciones(self):
+		self.vistaIngresoDeCalificaciones=VistaIngresoCalificaciones()#dado un curso muestra la interfaz para ingresar las notas de los estudiantes
+		self.vistaIngresoDeCalificaciones.show()
+			
 class VistaSemestre(QWidget):
 
 	def __init__(self,numQuimestre,*args):
@@ -97,21 +204,11 @@ class VistaIngresoCalificaciones(QWidget):
 		self.setLayout(self.contenedor)
 
 
-class VistaConsultaNotas(QWidget):
-	dimension_x=800
-	dimension_y=300
 
-	def __init__(self,*args):
-		QWidget.__init__(self,*args)
-		self.setGeometry(100,50,self.dimension_x,self.dimension_y)
-		self.setWindowTitle("Consulta Notas")
-		self.contenedor = QVBoxLayout() #layout principal de esta gui, los widgets se agregan de forma horizontal	
-		self.Estudiantes=MyTable(self)	
-		self.contenedor.addWidget(QLabel("Calificaciones de los Estudiantes:"))				
-		self.contenedor.addWidget(self.Estudiantes)
-		self.setLayout(self.contenedor)
+
 
 class VistaReporte(QWidget):
+
 	def __init__(self,tabla,*args):
 		QWidget.__init__(self,*args)
 		self.layout_reportes=QVBoxLayout()
@@ -119,7 +216,6 @@ class VistaReporte(QWidget):
 		self.Estudiantes=tabla
 		self.layout_reportes.addWidget(self.Estudiantes)
 		self.boton_uno=QHBoxLayout()
-		#self.boton_uno.addWidget(QLabel("                               "))
 		self.boton_uno.addWidget(QLabel("                               "))
 		self.tiposReportes=["Lista de Estudiantes","Acta de Calificaciones","Libretas","Sabanas","Promociones"]
 		self.comboReportes=QComboBox()
@@ -138,92 +234,3 @@ class VistaReporte(QWidget):
 
 	def initReportes(self):
 		pass
-
-
-class VistaProfesor(QMainWindow):
-	dimension_x=700
-	dimension_y=500 
-
-	def __init__(self,usuarioNombre,*args):
-		QWidget.__init__(self,*args)
-		self.setGeometry(100,50,self.dimension_x,self.dimension_y)
-		self.showMaximized()
-		self.main_widget = QWidget(self)
-		self.activarCalificaciones=False
-		self.activarConsultas=False
-		self.contenedor = QVBoxLayout() #layout principal de esta gui, los widgets se agregan de forma horizontal
-		self.form_layout = QFormLayout() #layout interno
-		self.setWindowTitle("Opciones Profesor")
-		self.usuarioNombre=usuarioNombre
-		self.opciones=QTabWidget()
-		
-		self.tablas=[MyTable(self),MyTable(self),MyTable(self)]
-		self.manejador=ManejadorBD()
-		self.cursor=self.manejador.obtenerCursosPorProfesor(self.usuarioNombre)
-
-		self.consultas=QWidget()
-		self.calificaciones=QWidget()
-		self.reportes=VistaReporte(self.tablas[0])
-
-		self.layout_consultas=QVBoxLayout()
-		self.layout_consultas.addWidget(QLabel("Cursos Disponibles:"))
-		self.layout_consultas.addWidget(self.tablas[1])
-
-		self.layout_cero=QHBoxLayout()
-		self.layout_cero.addWidget(QLabel("                               "))
-		self.layout_cero.addWidget(QLabel("                               "))
-		self.botonConsultas=QPushButton("Consulta Calificaciones")
-		self.connect(self.botonConsultas,SIGNAL("clicked()"),self.initConsultas)
-		self.layout_cero.addWidget(self.botonConsultas)
-		self.layout_cero.addWidget(QLabel("                               "))
-		self.layout_cero.addWidget(QLabel("                               "))
-		self.layout_consultas.addLayout(self.layout_cero)
-
-
-		self.layout_calificaciones=QVBoxLayout()
-		self.layout_calificaciones.addWidget(QLabel("Cursos Disponibles:"))
-		self.layout_calificaciones.addWidget(self.tablas[2])
-		self.layout_dos=QHBoxLayout()
-		self.layout_dos.addWidget(QLabel("                               "))
-		self.layout_dos.addWidget(QLabel("                               "))
-		self.botonCalificaciones=QPushButton("Insertar Calificaciones")
-		self.connect(self.botonCalificaciones,SIGNAL("clicked()"),self.initCalificaciones)
-		self.layout_dos.addWidget(self.botonCalificaciones)
-		self.layout_dos.addWidget(QLabel("                               "))
-		self.layout_dos.addWidget(QLabel("                               "))
-		self.layout_calificaciones.addLayout(self.layout_dos)
-
-		#muestra los cursos asignados al profesor 
-		for tabla_actual in self.tablas:
-			tabla_actual.addTable(self.cursor)
-
-		self.consultas.setLayout(self.layout_consultas)
-		self.calificaciones.setLayout(self.layout_calificaciones)
-
-		self.opciones.addTab(self.consultas,"Consultas")
-		self.opciones.addTab(self.reportes,"Generar Reportes")
-		self.opciones.addTab(self.calificaciones,"Insertar Calificaciones")
-
-		self.contenedor.addWidget(QLabel("		"))
-		self.contenedor.addWidget(QLabel("Usuario: "+usuarioNombre))
-		self.contenedor.addWidget(QLabel("		"))
-		self.contenedor.addWidget(self.opciones)
-
-		self.main_widget.setLayout(self.contenedor)
-		self.setCentralWidget(self.main_widget)
-
-
-	def initCalificaciones(self):
-		if self.activarCalificaciones==False:
-			self.vistaCalificaciones=VistaIngresoCalificaciones()
-			self.vistaCalificaciones.show()
-			#self.layout_calificaciones.addWidget(self.vistaCalificaciones)
-			self.activarCalificaciones=True
-
-	def initConsultas(self):
-		if self.activarConsultas==False:
-			self.vistaConsultas=VistaConsultaNotas()
-			self.vistaConsultas.show()
-			#self.layout_consultas.addWidget(self.vistaConsultas)
-			self.activarConsultas=True
-
