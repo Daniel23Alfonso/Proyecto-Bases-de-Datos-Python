@@ -19,10 +19,9 @@ class VistaPersona(QWidget):
 			self.contenedor = QVBoxLayout() #layout principal de esta gui, los widgets se agregan de forma horizontal
 			self.setLayout(self.contenedor)
 			self.Personas=MyTable(self)
-			self.contenedor.addWidget(QLabel("Personas"))
-			self.contenedor.addWidget(self.Personas)
 			self.layoutPersona=QFormLayout()
 			self.layoutBotones=QHBoxLayout()
+			self.layoutBusqueda=QFormLayout()
 			#definicion cajas de texto
 			self.cedula=QLineEdit()
 			self.nombre=QLineEdit()
@@ -56,7 +55,6 @@ class VistaPersona(QWidget):
 			self.layoutBotones.addWidget(self.btnEliminar)
 
 			#creacion de formulario
-			self.layoutPersona.addRow(self.comboBusqueda,self.txtBusqueda)
 			self.layoutPersona.addRow("cedula: ",self.cedula)
 			self.layoutPersona.addRow("Nombre: ",self.nombre)
 			self.layoutPersona.addRow("Apellido: ",self.apellido)
@@ -66,6 +64,13 @@ class VistaPersona(QWidget):
 			self.layoutPersona.addRow("Lugar Trabajo: ",self.lugarTrabajo)
 			self.layoutPersona.addRow("Telefono: ",self.telefono)
 			self.layoutPersona.addRow("Direccion: ",self.direccion)
+
+			#creacion de layout busqueda
+			self.layoutBusqueda.addRow(self.comboBusqueda,self.txtBusqueda)
+
+			#agregamos los layout a la ventana
+			self.contenedor.addLayout(self.layoutBusqueda)
+			self.contenedor.addWidget(self.Personas)
 			self.contenedor.addLayout(self.layoutPersona)
 			self.contenedor.addLayout(self.layoutBotones)
 		

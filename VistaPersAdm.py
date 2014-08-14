@@ -21,6 +21,7 @@ class VistaPersAdm(QMainWindow):
 			QWidget.__init__(self,*args)
 			self.setGeometry(100,50,self.dimension_x,self.dimension_y)
 			self.main_widget = QWidget(self)
+			self.showMaximized()
 			self.contenedor= QVBoxLayout()
 			
 			#--Creacion de Pestañas---#

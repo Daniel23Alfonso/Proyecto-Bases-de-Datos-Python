@@ -25,14 +25,7 @@ class VistaFacturacion(QWidget):
 			self.alumnos=MyTable(self)
 			#Tabla factura
 			self.factura=MyTable(self)
-			#Tabla cliente
-			self.clientes=MyTable(self)
-			#combobox Cliente
-			self.tipoCliente=["Consumidor Final","Con Nombre"]
-			self.comboBusquedaCliente=QComboBox() #tipos de usuario mostrados en un combo box
-			self.comboBusquedaCliente.addItems(self.tipoCliente)
 			#cajas de texto
-			self.cliente=QLineEdit()
 			self.estudiante=QLineEdit()
 			#boton
 			self.btnGenerar=QPushButton("Generar Factura")
@@ -65,16 +58,7 @@ class VistaFacturacion(QWidget):
 			self.layoutEstudiantes2.addWidget(self.alumnos)
 			self.layoutEstudiantes2.addWidget(self.btnAgregar)
 
-			self.layoutCliente=QVBoxLayout()
-			self.layoutCliente1=QHBoxLayout()
-			self.layoutCliente1.addWidget(self.comboBusquedaCliente)
-			self.layoutCliente1.addWidget(QLabel("Cedula:"))
-			self.layoutCliente1.addWidget(self.cliente)
-			self.layoutCliente1.addWidget(self.btnNuevo)
-			self.layoutCliente1.addWidget(QLabel("                               "))
-			self.layoutCliente.addLayout(self.layoutCliente1)
-			self.layoutCliente.addWidget(self.clientes)
-
+	
 			self.layoutFactura=QVBoxLayout()
 			self.layoutFactura1=QHBoxLayout()
 			self.layoutFactura2=QHBoxLayout()
@@ -86,9 +70,6 @@ class VistaFacturacion(QWidget):
 			self.layoutFactura1.addWidget(self.lblNumeroFactura)
 			
 
-
-
-			self.contenedor.addLayout(self.layoutCliente)
 			self.contenedor.addLayout(self.layoutEstudiantes)
 			self.contenedor.addLayout(self.layoutFactura)
 
@@ -100,16 +81,3 @@ class VistaFacturacion(QWidget):
 			self.estudiante.textChanged.connect(self.alumnos.on_lineEdit_textChanged)
 			self.comboBusquedaAlumno.currentIndexChanged.connect(self.alumnos.on_comboBox_currentIndexChanged)
 			
-			#lagrego los datos a la tabla
-			self.headerCliente= [u"Cédula", "Nombres", "Apellidos", "Sexo", "Fecha de Nacimiento", "Estado Civil",
-			u"Ocupación", "Lugar de Trabajo", u"Teléfono", u"Dirección"]
-			self.clientes.setHeader(self.headerCliente)
-			self.clientes.addTable(self.manejadorBD.consultarPersonas())
-			self.cliente.textChanged.connect(self.clientes.on_lineEdit_textChanged)
-		
-
-
-#app = QApplication(sys.argv)
-#vista1 = VistaFacturacion()
-#vista1.show()
-#app.exec_()

@@ -147,6 +147,7 @@ class VistaProfesor(QMainWindow):
 	def __init__(self,usuarioNombre,*args):
 		QWidget.__init__(self,*args)
 		self.setGeometry(100,50,self.dimension_x,self.dimension_y)
+		self.showMaximized()
 		self.main_widget = QWidget(self)
 		self.activarCalificaciones=False
 		self.activarConsultas=False
