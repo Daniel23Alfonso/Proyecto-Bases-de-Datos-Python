@@ -64,6 +64,7 @@ FOREIGN KEY (id_Materia) REFERENCES Materia(id_Materia) ON DELETE CASCADE ON UPD
 FOREIGN KEY (CedulaProfesor) REFERENCES Profesor(cedula) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+
 CREATE TABLE MateriaEstudianteQuimestre
 (id_MatEsQui integer,
 id_relacion integer,
@@ -72,7 +73,6 @@ PRIMARY KEY (id_MatEsQui),
 FOREIGN KEY (numMatricula) REFERENCES Estudiante(numMatricula)ON DELETE CASCADE ON UPDATE CASCADE
 #FOREIGN KEY (id_relacion) REFERENCES CursoMateriaProfesor(id_Relacion) ON DELETE CASCADE ON UPDATE CASCADE
 );
-
 
 
 CREATE TABLE Quimestre(
@@ -93,6 +93,7 @@ id_Quimestre integer,
 PRIMARY KEY (id_Parcial),
 FOREIGN KEY (id_Quimestre) REFERENCES Quimestre(id_Quimestre) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
 
 CREATE TABLE Actividad(
 id_Actividad integer AUTO_INCREMENT,
@@ -185,32 +186,35 @@ FOREIGN KEY (numMatricula) REFERENCES Estudiante(numMatricula) ON UPDATE CASCADE
 FOREIGN KEY (id_Factura) REFERENCES Factura(id_Factura) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+#--------------------------------------------------------------------------#
+
+#TRIGGERS
 
 DELIMITER $$
 CREATE TRIGGER crearQuimestresAutomaticamente 
     AFTER INSERT ON MateriaEstudianteQuimestre
     FOR EACH ROW BEGIN
-	INSERT INTO Quimestre(numQuimestre,notaQuimestre,id_MatEstQui)
-	VALUES (1,0.00,new.id_MatEsQui);
-	INSERT INTO Quimestre(numQuimestre,notaQuimestre,id_MatEstQui)
-	VALUES (2,0.00,new.id_MatEsQui);
+
+	call crearQuimestre(1,0.00,new.id_MatEsQui);
+	call crearQuimestre(2,0.00,new.id_MatEsQui);
 
 END$$
 DELIMITER ;
+
 
 
 DELIMITER $$
 CREATE TRIGGER crearParcialesAutomaticamente 
     AFTER INSERT ON Quimestre
     FOR EACH ROW BEGIN
-	INSERT INTO Parcial(numParcial,notaParcial,id_Quimestre) 
-	VALUES (1,0.00,new.id_Quimestre);
-	INSERT INTO Parcial(numParcial,notaParcial,id_Quimestre) 
-	VALUES (2,0.00,new.id_Quimestre);
-	INSERT INTO Parcial(numParcial,notaParcial,id_Quimestre) 
-	VALUES (3,0.00,new.id_Quimestre);
+
+	call crearParcial(1, 0.00, new.id_Quimestre );
+	#call crearParcial(2,0.00,new.id_Quimestre );
+	#call crearParcial(3,0.00,new.id_Quimestre );
+
 END$$
 DELIMITER ;
+
 
 DELIMITER $$
 CREATE TRIGGER crearActividadesPorParcial
@@ -236,112 +240,6 @@ CREATE TRIGGER crearEstudiante
 END$$
 DELIMITER ;
 
-
-DELIMITER //
-CREATE PROCEDURE crearActividad(nota double, tipo varchar(20),qui integer)
-BEGIN
-	Insert Into Actividad(id_Actividad,notaActividad,tipoActividad,id_Quimestre) 
-	values(nota,tipo,qui);
-  
-END //
-DELIMITER ;
-
-DELIMITER //
-CREATE PROCEDURE actualizarActividad(id integer,nota double, tipo varchar(20),qui integer)
-BEGIN
-	update Actividad 
-	set notaActividad=nota,tipoActividad=tipo,id_Quimestre=qui 
-	where id_Actividad=id;
-  
-END //
-DELIMITER ;
-
-
-DELIMITER //
-CREATE PROCEDURE eliminarActividad(id integer)
-BEGIN
-	delete from Actividad
-	where id_Actividad=id;
-  
-END //
-DELIMITER ;
-
-
-DELIMITER //
-CREATE PROCEDURE crearParcial(num integer,nota double,id_q integer)
-BEGIN
-	
-	Insert Into Parcial(id_Parcial,numParcial,notaParcial,id_Quimestre) 
-	values(num,nota,id_q);
-  
-END //
-DELIMITER ;
-
-DELIMITER //
-CREATE PROCEDURE actualizarParcial(id integer,num integer,nota double,id_q integer)
-BEGIN
-	
-	update Parcial 
-	set numParcial=num,notaParcial=nota,id_Quimestre=id_q 
-	where id_Parcial=id;
-  
-END //
-DELIMITER ;
-
-
-DELIMITER //
-CREATE PROCEDURE eliminarParcial(id integer)
-BEGIN
-	delete from Parcial
-	where id_Parcial=id;
-  
-END //
-DELIMITER ;
-
-
-
-
-DELIMITER //
-CREATE PROCEDURE consultarEstudiante()
-BEGIN
-	SELECT * FROM Estudiante;
-  
-END //
-DELIMITER ;
-
-
-DELIMITER //
-CREATE PROCEDURE consultarEstudiante2()
-BEGIN
-	SELECT numMatricula,cedula,nombres,apellidos FROM Estudiante;
-END //
-DELIMITER ;
-
-DELIMITER //
-CREATE PROCEDURE consultarPersonas()
-BEGIN
-	SELECT * FROM Persona;
-  
-END //
-DELIMITER ;
-
-DELIMITER //
-CREATE PROCEDURE consultarCursos()
-BEGIN
-	SELECT * FROM Curso;
-  
-END //
-DELIMITER ;
-
-DELIMITER //
-CREATE PROCEDURE consultarProfesor()
-BEGIN
-	SELECT cedula,nombres,apellidos FROM Profesor;
-  
-END //
-DELIMITER ;
-
-
 DELIMITER $$
 CREATE TRIGGER validacionProfesor
     BEFORE INSERT ON Profesor
@@ -354,17 +252,6 @@ CREATE TRIGGER validacionProfesor
         signal sqlstate '45000' set message_text = msg;
     end if;
 END$$
-DELIMITER ;
-
-DELIMITER //
-CREATE PROCEDURE validarCedula(IN cedula char(10),OUT flag boolean)
-BEGIN
-    if ( length(cedula)=10 ) then
-		set flag=true;
-	else
-		set flag=false;
-    end if;
-END //
 DELIMITER ;
 
 DELIMITER $$
@@ -410,13 +297,8 @@ CREATE TRIGGER validacionPersonaFactura
 END$$
 DELIMITER ;
 
-DELIMITER //
-CREATE PROCEDURE consultarCursosDelProfesor(IN usuarioProfesor char(10))
-BEGIN
-	SELECT numCurso,anoLectivo,paralelo FROM Profesor,Curso WHERE Curso.cedulaProfesor=Profesor.cedula and usuario=usuarioProfesor;
-END //
-DELIMITER ;
-
+#--------------------------------------------------------------------------------#
+#VISTAS
 
 CREATE VIEW Lista As(Select Estudiante.nombres, Estudiante.apellidos,Curso.numCurso,
 Curso.anoLectivo,Curso.paralelo
@@ -449,6 +331,96 @@ and MEQ.id_relacion=CM.id_relacion and CM.id_Curso=C.id_Curso
 and M.id_Materia=CM.id_Materia and P.id_Quimestre=Q.id_Quimestre
 );
 
+#--------------------------------------------------------------------#
+
+#PROCEDIMIENTOS
+
+
+#procedimientos actividades
+DELIMITER //
+CREATE PROCEDURE crearActividad(nota double, tipo varchar(20),qui integer)
+BEGIN
+	Insert Into Actividad(id_Actividad,notaActividad,tipoActividad,id_Quimestre) 
+	values(nota,tipo,qui);
+  
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE actualizarActividad(id integer,nota double, tipo varchar(20),qui integer)
+BEGIN
+	update Actividad 
+	set notaActividad=nota,tipoActividad=tipo,id_Quimestre=qui 
+	where id_Actividad=id;
+  
+END //
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE eliminarActividad(id integer)
+BEGIN
+	delete from Actividad
+	where id_Actividad=id;
+  
+END //
+DELIMITER ;
+
+#procedimientos parciales
+
+DELIMITER //
+CREATE PROCEDURE crearParcial(in numParcial integer, in notaParcial numeric(4,2), in id_Quimestre  integer)
+BEGIN
+	
+	Insert Into Parcial(numParcial, notaParcial, id_Quimestre) 
+	values(numParcial, notaParcial, id_Quimestre);
+  
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE actualizarParcial(id integer,num integer,nota double,id_q integer)
+BEGIN
+	
+	update Parcial 
+	set numParcial=num,notaParcial=nota,id_Quimestre=id_q 
+	where id_Parcial=id;
+  
+END //
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE eliminarParcial(id integer)
+BEGIN
+	delete from Parcial
+	where id_Parcial=id;
+  
+END //
+DELIMITER ;
+
+
+#Procedimientos de los Cursos
+
+DELIMITER //
+CREATE PROCEDURE consultarCursos()
+BEGIN
+	SELECT * FROM Curso;
+  
+END //
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE consultarCursosDelProfesor(IN usuarioProfesor char(10))
+BEGIN
+	SELECT numCurso,anoLectivo,paralelo FROM Profesor,Curso WHERE Curso.cedulaProfesor=Profesor.cedula and usuario=usuarioProfesor;
+END //
+DELIMITER ;
+
+
+
+
 
 
 #Procedimientos acerca de Estudiantes
@@ -459,6 +431,15 @@ BEGIN
   
 END //
 DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE consultarEstudiante2()
+BEGIN
+	SELECT numMatricula,cedula,nombres,apellidos FROM Estudiante;
+END //
+DELIMITER ;
+
 
 DELIMITER //
 CREATE PROCEDURE InsertarEstudiante(in cedula char(10),in nombres varchar(100),
@@ -498,6 +479,8 @@ END //
 DELIMITER ;
 
 
+
+
 #Procedimientos acerca de las Personas
 DELIMITER //
 CREATE PROCEDURE consultarPersonas()
@@ -511,7 +494,15 @@ DELIMITER ;
 
 
 
+#Procedimientos acerca de profesores
 
+DELIMITER //
+CREATE PROCEDURE consultarProfesor()
+BEGIN
+	SELECT cedula,nombres,apellidos FROM Profesor;
+  
+END //
+DELIMITER ;
 
 DELIMITER //
 CREATE PROCEDURE InsertarProfesor(in cedula char(10),in nombres varchar(100),
@@ -585,3 +576,30 @@ Delete from PersonaFactura where cedula= cedula;
   
 END //
 DELIMITER ;
+
+
+#Procedimientos Quimestre
+
+DELIMITER //
+CREATE PROCEDURE crearQuimestre(in numQuimestre integer, in notaQuimestre numeric(4,2), in id_MatEsQui integer)
+BEGIN
+	INSERT INTO Quimestre(numQuimestre, notaQuimestre, id_MatEstQui)
+	VALUES (numQuimestre, notaQuimestre, id_MatEsQui);
+END //
+DELIMITER ;
+
+
+#Otros procedimientos:
+
+DELIMITER //
+CREATE PROCEDURE validarCedula(IN cedula char(10),OUT flag boolean)
+BEGIN
+    if ( length(cedula)=10 ) then
+		set flag=true;
+	else
+		set flag=false;
+    end if;
+END //
+DELIMITER ;
+
+
