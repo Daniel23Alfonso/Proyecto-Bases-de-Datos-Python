@@ -28,8 +28,6 @@ class VistaEstudiantes(QWidget):
 			#componentes que iran en la ventana
 			self.tipoBusqueda=[u"Matrícula",u"Cédula","Nombres","Apellidos"]
 			self.paramBusqueda = QLineEdit() #entrada de texto usada para ingresar el parametro de busqueda seccion Consultas
-			self.btnBuscar = QPushButton() # boton para aceptar la busqueda
-			self.btnBuscar.setIcon(QIcon("Imagenes/buscar.jpg"))
 			self.comboBusquedaEstudiante=QComboBox() #tipos de usuario mostrados en un combo box
 			self.comboBusquedaEstudiante.addItems(self.tipoBusqueda)
 			

@@ -36,19 +36,15 @@ class VistaPersona(QWidget):
 			self.direccion=QLineEdit()
 			#botones
 			self.btnEditar=QPushButton("Editar")
+			self.btnEditar.setIcon(QIcon("Imagenes/editar.jpg"))
 			self.btnGuardar=QPushButton("Guardar")
+			self.btnGuardar.setIcon(QIcon("Imagenes/guardar.jpg"))
 			self.btnEliminar=QPushButton("Eliminar")
 			#definicion objetos busqueda
 			self.comboBusqueda=QComboBox()
 			self.txtBusqueda=QLineEdit()
 			self.comboBusqueda.addItems([u"cédula","Nombres","Apellidos"])
 
-			#lagrego los datos a la tabla
-			self.manejador = ManejadorBD()
-			self.headers= [u"Cédula", "Nombres", "Apellidos", "Sexo", "Fecha de Nacimiento", "Estado Civil",
-			u"Ocupación", "Lugar de Trabajo", u"Teléfono", u"Dirección"]
-			self.Personas.setHeader(self.headers)
-			self.Personas.addTable(self.manejador.consultarPersonas())
 			# llenamos el layout de los botones
 			self.layoutBotones.addWidget(self.btnEditar)
 			self.layoutBotones.addWidget(self.btnGuardar)
@@ -73,4 +69,19 @@ class VistaPersona(QWidget):
 			self.contenedor.addWidget(self.Personas)
 			self.contenedor.addLayout(self.layoutPersona)
 			self.contenedor.addLayout(self.layoutBotones)
-		
+
+			#tablas
+			self.manejador = ManejadorBD()
+			self.headers= [u"Cédula", "Nombres", "Apellidos", "Sexo", "Fecha de Nacimiento", "Estado Civil",
+			u"Ocupación", "Lugar de Trabajo", u"Teléfono", u"Dirección"]
+			self.Personas.setHeader(self.headers)
+			self.Personas.addTable(self.manejador.consultarPersonas())
+
+			self.txtBusqueda.textChanged.connect(self.Personas.on_lineEdit_textChanged)
+			self.comboBusqueda.currentIndexChanged.connect(self.Personas.on_comboBox_currentIndexChanged)
+			
+			def modoBusquedaInsercion(self):
+				pass
+
+			def modoEliminacionActualizacion(self):
+				pass
