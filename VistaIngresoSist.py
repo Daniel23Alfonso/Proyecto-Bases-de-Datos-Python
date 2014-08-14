@@ -62,7 +62,7 @@ class VistaIngresoSist(QWidget):
 			self.vistaAdmin()
 
 	def vistaProfesor(self):
-		nombre=self.usuario.displayText()
+		nombre=str(self.usuario.displayText())
 		self.ventana_profesor=VistaProfesor(nombre)
 		self.close()
 		self.ventana_profesor.show()

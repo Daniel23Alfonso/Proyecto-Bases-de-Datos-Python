@@ -42,44 +42,38 @@ class ManejadorBD():
 		cursor.close()
 		return cursor
 
+	def llamarProcedimineto(self, nombreProcedimiento, tupla=()):
+		self.conectar()
+		cursor=self.BD.cursor()
+		cursor.callproc(nombreProcedimiento,tupla)
+		resultado = cursor.fetchall()
+		return resultado
+		self.desconectar()
+
+
 	def consultarEstudiante(self):
-		query = "SELECT* FROM Estudiante"
-		return self.consulta(query, None)
-
-	def consultarEstudiante2(self):
-		query = "SELECT numMatricula,cedula,nombres,apellidos FROM Estudiante"
-		return self.consulta(query, None)
-
+		return self.llamarProcedimineto("consultarEstudiante")
+		
 
 	def consultarMaterias(self):
 		query = "SELECT * FROM Materia"
 		return self.consulta(query, None)
 
 	def consultarPersonas(self):
-		query = "SELECT * FROM Persona"
-		return self.consulta(query, None)
+		return self.llamarProcedimineto("consultarPersonas")
 
 	def consultarProfesores(self):
-		query = "SELECT  cedula, nombres,apellidos FROM Profesor"
-		return self.consulta(query, None)
+		return self.llamarProcedimineto("consultarProfesor")
 
 	def obtenerCursosPorProfesor(self,usuarioNombre):
-		return self.consulta("SELECT numCurso,anoLectivo,paralelo FROM Profesor,Curso WHERE Curso.cedulaProfesor=Profesor.cedula and usuario=%s",(usuarioNombre))
+		arg= (usuarioNombre,)
+		return self.llamarProcedimineto('consultarCursosDelProfesor',arg)
 
 
 	def obtenerCursos(self):
-		return self.consulta("SELECT * FROM Curso " )
+		return self.llamarProcedimineto("consultarCursos")
 
-
-	def llamarProcedimineto(self, nombreProcedimiento, tupla=()):
-		self.conectar()
-		cursor=self.BD.cursor()
-		cursor.callproc(nombreProcedimiento)
-		resultado = cursor.fetchall()
-		return resultado
-		self.desconectar()
-
-
-
+	def consultarEstudiante2(self):
+		return self.llamarProcedimineto("consultarEstudiante2")
 
 

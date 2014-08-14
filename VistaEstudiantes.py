@@ -27,7 +27,6 @@ class VistaEstudiantes(QWidget):
 
 			#componentes que iran en la ventana
 			self.tipoBusqueda=[u"Matrícula",u"Cédula","Nombres","Apellidos"]
-			self.tipoBusquedaEdit = [u"Cédula","Apellidos", "Nombre"]
 			self.paramBusqueda = QLineEdit() #entrada de texto usada para ingresar el parametro de busqueda seccion Consultas
 			self.btnBuscar = QPushButton() # boton para aceptar la busqueda
 			self.btnBuscar.setIcon(QIcon("Imagenes/buscar.jpg"))
@@ -36,11 +35,6 @@ class VistaEstudiantes(QWidget):
 			
 
 			#elementos de la pestaña de edicion
-			self.paramBusquedaEdit = QLineEdit() #entrada de texto usada para ingresar el parametro de busqueda seccion Consultas
-			self.btnBuscarEdit = QPushButton("Buscar") # boton para aceptar la busqueda
-			self.btnBuscarEdit.setIcon(QIcon("Imagenes/buscar.jpg"))
-			self.comboBusquedaEdit=QComboBox() #tipos de usuario mostrados en un combo box
-			self.comboBusquedaEdit.addItems(self.tipoBusquedaEdit)
 			self.btnEditar = QPushButton("Editar")
 			self.btnEditar.setIcon(QIcon("Imagenes/editar.jpg"))
 			self.connect(self.btnEditar,SIGNAL("clicked()"),self.activarEdicion)
@@ -119,7 +113,10 @@ class VistaEstudiantes(QWidget):
 			
 			self.llenarTabConsultas()
 			self.llenarTabEdicion()
-			
+			self.layoutBusqueda=QHBoxLayout()
+			self.layoutBusqueda.addWidget(self.comboBusquedaEstudiante)
+			self.layoutBusqueda.addWidget(self.paramBusqueda)
+			self.contenedor.addLayout(self.layoutBusqueda)
 			self.contenedor.addWidget(self.alumnos)
 			self.contenedor.addWidget(tab_widget)
 			
@@ -131,13 +128,6 @@ class VistaEstudiantes(QWidget):
 		contenidoTab = self.cont_consulta
 		
 		# aqui estoy creando la primera fila de la pestaña
-		primeraFila = QHBoxLayout() # primera fila, contiene el combobox y la entrada de texto
-		primeraFila.addWidget(self.comboBusquedaEstudiante)
-		primeraFila.addWidget(self.paramBusqueda)
-		primeraFila.addWidget(self.btnBuscar)
-		primeraFila.addWidget(QLabel("                         "))
-		primeraFila.addWidget(QLabel("               "))
-		contenidoTab.addLayout(primeraFila)
 		
 		
 		#creacion de la tercera fila
@@ -191,13 +181,6 @@ class VistaEstudiantes(QWidget):
 		Esta funcion sirve para llenar los elementos de la pestaña consultas
 		"""
 		contenidoTab = self.cont_edicion
-		
-		# aqui estoy creando la primera fila de la pestaña
-		primeraFila = QHBoxLayout() # primera fila, contiene el combobox y la entrada de texto
-		primeraFila.addWidget(self.comboBusquedaEdit)
-		primeraFila.addWidget(self.paramBusquedaEdit)
-		primeraFila.addWidget(self.btnBuscarEdit)
-		contenidoTab.addLayout(primeraFila)
 		listDatosEst = [u"Cédula","Nombres:","Apellidos:", "Sexo:","Estado Civil:","Origen:","Etnia:" ,"Fecha de nacimiento:"]
 		form_layout = QFormLayout()
 

@@ -95,7 +95,7 @@ FOREIGN KEY (id_Quimestre) REFERENCES Quimestre(id_Quimestre) ON DELETE CASCADE 
 );
 
 CREATE TABLE Actividad(
-id_Actividad integer,
+id_Actividad integer AUTO_INCREMENT,
 notaActividad numeric(4,2),
 tipoActividad varChar(20),
 id_Parcial integer,
@@ -237,6 +237,69 @@ END$$
 DELIMITER ;
 
 
+DELIMITER //
+CREATE PROCEDURE crearActividad(nota double, tipo varchar(20),qui integer)
+BEGIN
+	Insert Into Actividad(id_Actividad,notaActividad,tipoActividad,id_Quimestre) 
+	values(nota,tipo,qui);
+  
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE actualizarActividad(id integer,nota double, tipo varchar(20),qui integer)
+BEGIN
+	update Actividad 
+	set notaActividad=nota,tipoActividad=tipo,id_Quimestre=qui 
+	where id_Actividad=id;
+  
+END //
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE eliminarActividad(id integer)
+BEGIN
+	delete from Actividad
+	where id_Actividad=id;
+  
+END //
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE crearParcial(num integer,nota double,id_q integer)
+BEGIN
+	
+	Insert Into Parcial(id_Parcial,numParcial,notaParcial,id_Quimestre) 
+	values(num,nota,id_q);
+  
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE actualizarParcial(id integer,num integer,nota double,id_q integer)
+BEGIN
+	
+	update Parcial 
+	set numParcial=num,notaParcial=nota,id_Quimestre=id_q 
+	where id_Parcial=id;
+  
+END //
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE eliminarParcial(id integer)
+BEGIN
+	delete from Parcial
+	where id_Parcial=id;
+  
+END //
+DELIMITER ;
+
+
+
 
 DELIMITER //
 CREATE PROCEDURE consultarEstudiante()
@@ -348,7 +411,7 @@ END$$
 DELIMITER ;
 
 DELIMITER //
-CREATE PROCEDURE consultarCursosDelProfesor(IN usuarioProfesor char(10) )
+CREATE PROCEDURE consultarCursosDelProfesor(IN usuarioProfesor char(10))
 BEGIN
 	SELECT numCurso,anoLectivo,paralelo FROM Profesor,Curso WHERE Curso.cedulaProfesor=Profesor.cedula and usuario=usuarioProfesor;
 END //
@@ -387,3 +450,138 @@ and M.id_Materia=CM.id_Materia and P.id_Quimestre=Q.id_Quimestre
 );
 
 
+
+#Procedimientos acerca de Estudiantes
+DELIMITER //
+CREATE PROCEDURE consultarEstudiante()
+BEGIN
+	SELECT * FROM Estudiante;
+  
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE InsertarEstudiante(in cedula char(10),in nombres varchar(100),
+in apellidos varchar(100), in sexo varchar(10), in estadoCivil varchar(25),
+in origen varchar(30), in Etnia varchar(20),in fechaNacimiento date )
+BEGIN
+	
+INSERT INTO Estudiante (cedula, nombres,apellidos, sexo, estadoCivil,origen
+,Etnia, fechaNacimiento) VALUES(cedula, nombres, apellidos,
+sexo, estadoCivil,origen, Etnia, fechaNacimiento);
+  
+END //
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE editarEstudiante(in numMatricula int, in cedula char(10),in nombres varchar(100),
+in apellidos varchar(100), in sexo varchar(10), in estadoCivil varchar(25),
+in origen varchar(30), in Etnia varchar(20),in fechaNacimiento date )
+BEGIN
+	
+UPDATE Estudiante SET cedula = cedula, nombres= nombres,apellidos= apellidos
+, sexo= sexo, estadoCivil= estadoCivil,origen= origen
+,Etnia= Etnia, fechaNacimiento= fechaNacimiento where (Estudiante.numMatricula= numMatricula);
+  
+END //
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE eliminarEstudiante(in numMatricula int)
+BEGIN
+	
+DELETE FROM Estudiante WHERE(Estudiante.numMatricula= numMatricula);
+  
+END //
+DELIMITER ;
+
+
+#Procedimientos acerca de las Personas
+DELIMITER //
+CREATE PROCEDURE consultarPersonas()
+BEGIN
+	SELECT * FROM Persona;
+  
+END //
+DELIMITER ;
+
+
+
+
+
+
+
+DELIMITER //
+CREATE PROCEDURE InsertarProfesor(in cedula char(10),in nombres varchar(100),
+in apellidos varchar(100), in usuario varchar(10), in clave varchar(16))
+BEGIN
+	
+INSERT INTO Profesor VALUES(cedula, nombres, apellidos,usuario,clave);
+  
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE editarProfesor(in cedula char(10),in nombres varchar(100),
+in apellidos varchar(100), in usuario varchar(10), in clave varchar(16))
+BEGIN
+	
+UPDATE Profesor SET cedula= cedula, nombres= nombres, apellidos= apellidos,
+usuario= usuario, contrasenia = clave WHERE (Profesor.cedula= cedula);
+  
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE eliminarProfesor(in cedula char(10))
+BEGIN
+	
+DELETE FROM Profesor WHERE (Profesor.cedula= cedula);
+  
+END //
+DELIMITER ;
+
+
+#Prosedimientos para las personas de las facturas
+
+DELIMITER //
+CREATE PROCEDURE consultarPersonaFactura()
+BEGIN
+	
+select * from PersonaFactura;
+  
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE InsertarPersonaFactura(in cedula char(10),in nombre varchar(100),
+in apellido varchar(100), in telefono char(6), in Direccion varchar(50))
+BEGIN
+	
+INSERT INTO PersonaFactura VALUES(cedula, nombre, apellido,telefono,Direccion);
+  
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE EditarPersonaFactura(in cedula char(10),in nombre varchar(100),
+in apellido varchar(100), in telefono char(6), in Direccion varchar(50))
+BEGIN
+	
+UPDATE PersonaFactura SET cedula= cedula, nombre=nombre, apellido=apellido,
+telefono= telefono, Direccion= Direccion WHERE (PersonaFactura.cedula = cedula);
+  
+END //
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE eliminarPersonaFactura(in cedula char(10))
+BEGIN
+	
+Delete from PersonaFactura where cedula= cedula;
+  
+END //
+DELIMITER ;
