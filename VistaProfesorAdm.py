@@ -20,8 +20,6 @@ class VistaProfesorAdm(QWidget):
 			self.setLayout(self.contenedor)
 
 			#componentes que iran en la ventana
-
-			#COMPONENTES DE LA VENTANA CONSULTAS
 			
 
 			self.tipoBusqueda=[u"Cédula","Nombres","Apellidos"]
@@ -30,6 +28,8 @@ class VistaProfesorAdm(QWidget):
 			self.btnBuscar.setIcon(QIcon("Imagenes/buscar.jpg"))
 			self.comboBusquedaProfesor=QComboBox() #tipos de usuario mostrados en un combo box
 			self.comboBusquedaProfesor.addItems(self.tipoBusqueda)
+			
+			#COMPONENTES DE LA VENTANA CONSULTAS
 			self.labelsProfesor = [QLabel(""),QLabel(""),QLabel(""),QLabel(""),QLabel(""),QLabel("")]
 			
 
@@ -43,11 +43,6 @@ class VistaProfesorAdm(QWidget):
 			self.regexN = QRegExp("[0-9]*")
 			self.validatorN = QRegExpValidator(self.regexN)
 
-			self.paramBusquedaEdit = QLineEdit() #entrada de texto usada para ingresar el parametro de busqueda seccion Consultas 
-			self.btnBuscarEdit = QPushButton("Buscar") # boton para aceptar la busqueda
-			self.btnBuscarEdit.setIcon(QIcon("Imagenes/buscar.jpg"))
-			self.comboBusquedaEdit=QComboBox() #tipos de usuario mostrados en un combo box
-			self.comboBusquedaEdit.addItems(self.tipoBusqueda)
 			self.btnEditar = QPushButton("Editar")
 			self.btnEditar.setIcon(QIcon("Imagenes/editar.jpg"))
 			self.connect(self.btnEditar,SIGNAL("clicked()"),self.activarEdicion)
@@ -113,6 +108,11 @@ class VistaProfesorAdm(QWidget):
 			self.llenarTabConsultas()
 			self.llenarTabEdicion()
 			self.llenarTabCreacion()
+			self.primeraFila = QHBoxLayout()
+			self.primeraFila.addWidget(self.comboBusquedaProfesor)
+			self.primeraFila.addWidget(self.paramBusqueda)
+			self.primeraFila.addWidget(self.btnBuscar)
+			self.contenedor.addLayout(self.primeraFila)
 			self.contenedor.addWidget(self.profesores)
 			self.contenedor.addWidget(tab_widget)
 			
@@ -124,28 +124,19 @@ class VistaProfesorAdm(QWidget):
 		contenidoTab = self.cont_consulta
 		
 		# aqui estoy creando la primera fila de la pestaña
-		primeraFila = QHBoxLayout() # primera fila, contiene el combobox y la entrada de texto
-		primeraFila.addWidget(self.comboBusquedaProfesor)
-		primeraFila.addWidget(self.paramBusqueda)
-		primeraFila.addWidget(self.btnBuscar)
-		primeraFila.addWidget(QLabel("                         "))
-		primeraFila.addWidget(QLabel("               "))
-		contenidoTab.addLayout(primeraFila)
 		
-		
-		#creacion de la tercera fila
-		terceraFila = QHBoxLayout()
+		primeraFila = QHBoxLayout()
 		GBoxProfInfo = QGroupBox ( "Profesor" )
 		vboxProfInfo = QFormLayout()
 		GBoxProfInfo.setLayout(vboxProfInfo)
-		terceraFila.addWidget(GBoxProfInfo)
+		primeraFila.addWidget(GBoxProfInfo)
 		
 		listDatosEProf = [u"Cédula:","Nombres:", "Apellidos:","Usuario:","Clave:"]
 		
 		for i in range (0,5):
 			vboxProfInfo.addRow(listDatosEProf[i], self.labelsProfesor[i])
 
-		contenidoTab.addLayout(terceraFila)
+		contenidoTab.addLayout(primeraFila)
 
 
 		
@@ -180,11 +171,7 @@ class VistaProfesorAdm(QWidget):
 		contenidoTab = self.cont_edicionElim
 		
 		# aqui estoy creando la primera fila de la pestaña
-		primeraFila = QHBoxLayout() # primera fila, contiene el combobox y la entrada de texto
-		primeraFila.addWidget(self.comboBusquedaEdit)
-		primeraFila.addWidget(self.paramBusquedaEdit)
-		primeraFila.addWidget(self.btnBuscarEdit)
-		contenidoTab.addLayout(primeraFila)
+		
 		textoCampos = [u"Cédula:","Nombres:", "Apellidos:","Usuario:","Clave:"]
 		form_layout = QFormLayout()
 
@@ -193,10 +180,10 @@ class VistaProfesorAdm(QWidget):
 
 		contenidoTab.addLayout(form_layout)
 
-		cuartaFila = QHBoxLayout()
-		cuartaFila.addWidget(self.btnEditar)
-		cuartaFila.addWidget(self.btnGuardar)
-		contenidoTab.addLayout(cuartaFila)
+		terceraFila = QHBoxLayout()
+		terceraFila.addWidget(self.btnEditar)
+		terceraFila.addWidget(self.btnGuardar)
+		contenidoTab.addLayout(terceraFila)
 
 
 	def activarEdicion(self):
