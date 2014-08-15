@@ -209,24 +209,27 @@ CREATE TRIGGER crearParcialesAutomaticamente
     FOR EACH ROW BEGIN
 
 	call crearParcial(1, 0.00, new.id_Quimestre );
-	#call crearParcial(2,0.00,new.id_Quimestre );
-	#call crearParcial(3,0.00,new.id_Quimestre );
+	call crearParcial(2,0.00,new.id_Quimestre );
+	call crearParcial(3,0.00,new.id_Quimestre );
 
 END$$
 DELIMITER ;
+
 
 
 DELIMITER $$
 CREATE TRIGGER crearActividadesPorParcial
     AFTER INSERT ON Parcial
     FOR EACH ROW BEGIN
-	INSERT INTO Actividad VALUES(1,0.00,"En Grupo",id_parcial);
-	INSERT INTO Actividad VALUES(2,0.00,"Individual ",id_parcial);
-	INSERT INTO Actividad VALUES(3,0.00,"En Clase",id_parcial);
-	INSERT INTO Actividad VALUES(4,0.00,"Leccion",id_parcial);
-	INSERT INTO Actividad VALUES(5,0.00,"Examen",id_parcial);
+	call crearActividad(0.00,"En Grupo",new.id_Parcial);
+	call crearActividad(0.00,"Individual ",new.id_Parcial);
+	call crearActividad(0.00,"En Clase",new.id_Parcial);
+	call crearActividad(0.00,"Leccion",new.id_Parcial);
+	call crearActividad(0.00,"Examen",new.id_Parcial);
+
 END$$
 DELIMITER ;
+
 
 
 DELIMITER $$
@@ -338,10 +341,10 @@ and M.id_Materia=CM.id_Materia and P.id_Quimestre=Q.id_Quimestre
 
 #procedimientos actividades
 DELIMITER //
-CREATE PROCEDURE crearActividad(nota double, tipo varchar(20),qui integer)
+CREATE PROCEDURE crearActividad(in nota numeric(4,2),in tipo varchar(20), in id_Parcial integer)
 BEGIN
-	Insert Into Actividad(id_Actividad,notaActividad,tipoActividad,id_Quimestre) 
-	values(nota,tipo,qui);
+	Insert Into Actividad(notaActividad,tipoActividad,id_Parcial) 
+	values(nota,tipo,id_Parcial);
   
 END //
 DELIMITER ;
@@ -368,15 +371,16 @@ DELIMITER ;
 
 #procedimientos parciales
 
+
 DELIMITER //
-CREATE PROCEDURE crearParcial(in numParcial integer, in notaParcial numeric(4,2), in id_Quimestre  integer)
+CREATE PROCEDURE crearParcial(in numParcial integer, in notaParcial numeric(4,2), in id_Quimestre integer)
 BEGIN
-	
-	Insert Into Parcial(numParcial, notaParcial, id_Quimestre) 
-	values(numParcial, notaParcial, id_Quimestre);
-  
+	INSERT INTO Parcial(numParcial, notaParcial, id_Quimestre)
+	VALUES (numParcial, notaParcial, id_Quimestre);
 END //
 DELIMITER ;
+
+
 
 DELIMITER //
 CREATE PROCEDURE actualizarParcial(id integer,num integer,nota double,id_q integer)
