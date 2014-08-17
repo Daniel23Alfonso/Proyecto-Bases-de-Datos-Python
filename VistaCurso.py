@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*- 
+
 import sys
 import time
 import threading
@@ -58,6 +60,9 @@ class VistaCurso(QWidget):
 
 			#agrego datos a la tabla
 			self.manejador = ManejadorBD()
+			self.HeadersCurso= [u"Código", u"Número", u"Año Lectivo", "Paralelo",
+			u"Cédula Profesor"]
+			self.Cursos.setHeader(self.HeadersCurso)
 			self.Cursos.addTable(self.manejador.obtenerCursos())
 			
 			"""
