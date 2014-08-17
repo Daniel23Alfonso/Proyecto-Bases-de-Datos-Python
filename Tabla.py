@@ -55,8 +55,8 @@ class MyTable(QTableView):
 			fila_actual=filasSeleccionadas[i]#objeto_actual es de tipo QModelIndex
 			#fila_actual.row() retorna el indice perteneciente a esa fila en la tabla
 			registros.append(self.getRegister(fila_actual.row()))
-		for registro in registros:
-			self.printRegistro(registro)
+		#for registro in registros:
+		#	self.printRegistro(registro)
 		return registros
 
 

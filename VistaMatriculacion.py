@@ -47,6 +47,9 @@ class VistaMatriculacion(QWidget):
 		self.HeadersCurso= [u"Código", u"Número", u"Año Lectivo", "Paralelo",u"Cédula Profesor"]
 		self.cursos.setHeader(self.HeadersCurso)
 		self.cursos.addTable(self.manejadorBD.obtenerCursos())
+
+
+		self.connect(self.botonAsignar,SIGNAL("clicked()"),self.eventoAsignar)
 		self.setLayout(self.contenedor)
 
 	def initBusqueda(self):
@@ -64,6 +67,22 @@ class VistaMatriculacion(QWidget):
 		self.vistaAgregarEst=VistaAgregarEstudiante()
 		self.vistaAgregarEst.show()
 
+	def seleccionAlumno(self):
+		self.A=self.alumnos.getSelectedRegister()
+
+	def seleccionCurso(self):
+		self.C=self.cursos.getSelectedRegister()
+
+	def eventoAsignar(self):
+		self.seleccionAlumno()
+		self.seleccionCurso()
+		alumno=self.A[len(self.A)-1]
+		curso=self.C[len(self.C)-1]
+		print alumno[0]
+		print curso[0]
+		self.manejadorBD.agregarEstudianteEnCurso(int(curso[0]),int(alumno[0]))
+		self.A=[]
+		self.B=[]
 
 
 
