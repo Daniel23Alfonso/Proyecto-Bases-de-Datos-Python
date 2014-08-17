@@ -12,7 +12,7 @@ PRIMARY KEY (cedula)
 );
 
 CREATE TABLE Curso(
-id_Curso integer,
+id_Curso integer AUTO_INCREMENT,
 numCurso integer,
 anoLectivo varChar(10),
 paralelo varchar(2),
@@ -591,6 +591,19 @@ BEGIN
 	VALUES (numQuimestre, notaQuimestre, id_MatEsQui);
 END //
 DELIMITER ;
+
+
+
+#Procedimiento estudiantes curso
+
+DELIMITER //
+CREATE PROCEDURE agregarEstudianteEnCurso(in id_Curso integer, in numMatricula integer)
+BEGIN
+	INSERT INTO CursoEstudiante(id_Curso, numMatricula)
+	VALUES (id_Curso, numMatricula);
+END //
+DELIMITER ;
+
 
 
 #Otros procedimientos:
