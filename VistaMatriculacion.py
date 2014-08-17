@@ -15,23 +15,21 @@ class VistaMatriculacion(QWidget):
 		self.contenedor = QVBoxLayout()
 		self.layout_uno=QHBoxLayout()
 
-		self.tipoBusqueda=["Cedula","Apellido","Nombre"]
+		self.headerEstudainte = [u"Matrícula",u"cédula", "Nombres", "Apellidos"]
 		self.comboBusqueda=QComboBox()
-		self.comboBusqueda.addItems(self.tipoBusqueda)
+		self.comboBusqueda.addItems(self.headerEstudainte)
 		
 		self.busqueda=QLineEdit()
 
-		self.botonBusqueda=QPushButton()
-		self.botonBusqueda.setIcon(QIcon("Imagenes/buscar.jpg"))
 		self.botonAgregar=QPushButton()
 		self.botonAgregar.setIcon(QIcon("Imagenes/agregar.jpg"))
 		
-		self.estudiantes=MyTable(self)
+		self.alumnos=MyTable(self)
 		self.cursos=MyTable(self)
 
 		self.initBusqueda()
 		self.contenedor.addWidget(QLabel("Estudiantes Existentes:"))
-		self.contenedor.addWidget(self.estudiantes)
+		self.contenedor.addWidget(self.alumnos)
 		self.contenedor.addWidget(QLabel("Cursos Disponibles:"))
 		self.layout_uno.addWidget(self.cursos)
 		self.botonAsignar=QPushButton("Asignar")
@@ -39,7 +37,16 @@ class VistaMatriculacion(QWidget):
 		self.contenedor.addLayout(self.layout_uno)
 
 		self.connect(self.botonAgregar,SIGNAL("clicked()"),self.agregarEstudiante)
-
+		self.manejadorBD = ManejadorBD()
+		#agrego la tabla de alumnos
+		self.alumnos.setHeader(self.headerEstudainte)
+		self.alumnos.addTable(self.manejadorBD.consultarEstudiante2())
+		self.busqueda.textChanged.connect(self.alumnos.on_lineEdit_textChanged)
+		self.comboBusqueda.currentIndexChanged.connect(self.alumnos.on_comboBox_currentIndexChanged)
+		#agrego datos a la tabla curso
+		self.HeadersCurso= [u"Código", u"Número", u"Año Lectivo", "Paralelo",u"Cédula Profesor"]
+		self.cursos.setHeader(self.HeadersCurso)
+		self.cursos.addTable(self.manejadorBD.obtenerCursos())
 		self.setLayout(self.contenedor)
 
 	def initBusqueda(self):
@@ -48,9 +55,9 @@ class VistaMatriculacion(QWidget):
 		primeraFila.addWidget(QLabel("Tipo de Busqueda"))
 		primeraFila.addWidget(self.comboBusqueda)
 		primeraFila.addWidget(self.busqueda)
-		primeraFila.addWidget(self.botonBusqueda)
 		primeraFila.addWidget(self.botonAgregar)
 		primeraFila.addWidget(QLabel("			"))
+		 
 		self.contenedor.addLayout(primeraFila)
 
 	def agregarEstudiante(self):
