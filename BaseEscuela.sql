@@ -1,6 +1,17 @@
 Create DataBase BaseEscuela;
 use BaseEscuela;
 
+
+CREATE TABLE PersonaFactura
+(cedula char (10),
+nombre varchar (100),
+apellido varchar (100),
+telefono char (6),
+Direccion varchar (50),
+CONSTRAINT CHECK(sexo in ('Masculino','Femenino')),
+PRIMARY KEY (cedula)
+);
+
 CREATE TABLE Profesor
 (cedula char (10),
 nombres varchar(100),
@@ -31,8 +42,10 @@ estadoCivil varchar (25),
 origen varchar (30),
 Etnia varchar (20),
 fechaNacimiento date,
+cedulaFactura char(10),
 CONSTRAINT CHECK(sexo in ('Masculino','Femenino')),
 PRIMARY KEY (numMatricula),
+FOREIGN KEY (cedulaFactura) REFERENCES PersonaFactura(cedula) ON DELETE CASCADE ON UPDATE CASCADE,
 UNIQUE (cedula)
 );
 
@@ -156,23 +169,11 @@ FOREIGN KEY (CedulaPersona) REFERENCES Persona(cedula)
 );
 
 
-CREATE TABLE PersonaFactura
-(cedula char (10),
-nombre varchar (100),
-apellido varchar (100),
-telefono char (6),
-Direccion varchar (50),
-CONSTRAINT CHECK(sexo in ('Masculino','Femenino')),
-PRIMARY KEY (cedula)
-);
-
 CREATE TABLE Factura
 (id_Factura int,
-cedula char (10),
 fecha date,
 valor float(2),
-PRIMARY KEY (id_Factura),
-FOREIGN KEY (cedula) REFERENCES PersonaFactura(cedula)
+PRIMARY KEY (id_Factura)
 );
 
 CREATE TABLE Deuda(
@@ -448,12 +449,12 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE InsertarEstudiante(in cedula char(10),in nombres varchar(100),
 in apellidos varchar(100), in sexo varchar(10), in estadoCivil varchar(25),
-in origen varchar(30), in Etnia varchar(20),in fechaNacimiento date )
+in origen varchar(30), in Etnia varchar(20),in fechaNacimiento date,in cedFac char(10) )
 BEGIN
 	
 INSERT INTO Estudiante (cedula, nombres,apellidos, sexo, estadoCivil,origen
-,Etnia, fechaNacimiento) VALUES(cedula, nombres, apellidos,
-sexo, estadoCivil,origen, Etnia, fechaNacimiento);
+,Etnia, fechaNacimiento,cedulaFactura) VALUES(cedula, nombres, apellidos,
+sexo, estadoCivil,origen, Etnia, fechaNacimiento,cedFac);
   
 END //
 DELIMITER ;
@@ -462,12 +463,13 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE editarEstudiante(in numMatricula int, in cedula char(10),in nombres varchar(100),
 in apellidos varchar(100), in sexo varchar(10), in estadoCivil varchar(25),
-in origen varchar(30), in Etnia varchar(20),in fechaNacimiento date )
+in origen varchar(30), in Etnia varchar(20),in fechaNacimiento date,in cedFac char(10) )
 BEGIN
 	
 UPDATE Estudiante SET cedula = cedula, nombres= nombres,apellidos= apellidos
 , sexo= sexo, estadoCivil= estadoCivil,origen= origen
-,Etnia= Etnia, fechaNacimiento= fechaNacimiento where (Estudiante.numMatricula= numMatricula);
+,Etnia= Etnia, fechaNacimiento= fechaNacimiento,cedulaFactura=cedFac
+ where (Estudiante.numMatricula= numMatricula);
   
 END //
 DELIMITER ;
