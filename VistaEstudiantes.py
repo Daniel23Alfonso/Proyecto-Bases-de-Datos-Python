@@ -23,14 +23,14 @@ class VistaEstudiantes(QWidget):
 			#elementos de la tabla
 			self.headersTabla = [u"Matrícula",u"Número de cédula", "Nombres", "Apellidos","Sexo", 
 			"Estado Civil","Origen", "Etnia", "Fecha de Nacimiento"]
-			self.manejadorBD = ManejadorBD() 
+			self.manejadorBD = ManejadorBD() #manejador de la base de datos
 
 			#componentes que iran en la ventana
-			self.tipoBusqueda=[u"Matrícula",u"Cédula","Nombres","Apellidos"]
+			self.tipoBusqueda=[u"Matrícula",u"Cédula","Nombres","Apellidos"] #items del combo box
 			self.paramBusqueda = QLineEdit() #entrada de texto usada para ingresar el parametro de busqueda seccion Consultas
 			self.comboBusquedaEstudiante=QComboBox() #tipos de usuario mostrados en un combo box
 			self.comboBusquedaEstudiante.addItems(self.tipoBusqueda)
-			
+			self.botonSeleccionar = QPushButton("Seleccionar") 
 
 			#elementos de la pestaña de edicion
 			self.btnEditar = QPushButton("Editar")
@@ -40,7 +40,7 @@ class VistaEstudiantes(QWidget):
 			self.btnGuardar.setIcon(QIcon("Imagenes/guardar.jpg"))
 			self.connect(self.btnGuardar,SIGNAL("clicked()"),self.accionGuadarEdicion)
 			#labels que muestran informacion 
-			self.labelsDatosEstudiantes = [ QLabel(""), QLabel(""), QLabel(""), QLabel(""),QLabel(""), QLabel(""), QLabel(""), QLabel("") ]
+			self.labelsDatosEstudiantes = [QLabel(""),  QLabel(""), QLabel(""), QLabel(""), QLabel(""),QLabel(""), QLabel(""), QLabel(""), QLabel("") ]
 			
 			#lables que muestran informacion del padre
 
@@ -58,7 +58,7 @@ class VistaEstudiantes(QWidget):
 			QLabel(""), QLabel(""), QLabel(""), QLabel(""), QLabel("") ]
 
 			#variables de la pestaña de edicion
-			self.listsexos=["MASCULINO","FEMENINO"] #lista para escoger el tipo de usuario
+			self.listsexos=["Masculino","Femenino"] #lista para escoger el tipo de usuario
 			self.listEstCivil = ["SOLTERO(A)","CASADO(A)","DIVORCIADO(A)","VIUDO(A)","UNIDO(A)" ]
 			self.listEtnia = ["BLANCO","MESTIZO","AFROECUATORIANO","INDIGENA", "MONTUBIO","NEGRO","MULATO","OTROS"]
 
@@ -115,8 +115,14 @@ class VistaEstudiantes(QWidget):
 			self.layoutBusqueda.addWidget(self.comboBusquedaEstudiante)
 			self.layoutBusqueda.addWidget(self.paramBusqueda)
 			self.contenedor.addLayout(self.layoutBusqueda)
+			self.layaoutSeleccion = QHBoxLayout()
+			self.layaoutSeleccion.addWidget(self.botonSeleccionar)
+			self.layaoutSeleccion.addWidget(QLabel("                                                  "))
 			self.contenedor.addWidget(self.alumnos)
+			self.contenedor.addLayout(self.layaoutSeleccion)
 			self.contenedor.addWidget(tab_widget)
+
+			self.connect(self.botonSeleccionar,SIGNAL("clicked()"),self.seleccionarEstudiante)
 			
 	
 	def llenarTabConsultas(self):
@@ -135,9 +141,9 @@ class VistaEstudiantes(QWidget):
 		GBoxEstudianteInfo.setLayout(vboxEstInfo)
 		terceraFila.addWidget(GBoxEstudianteInfo)
 		
-		listDatosEst = ["Nombres:","Apellidos:",u"Cédula:", "Sexo:","Estado Civil:","Origen:","Etnia:" ,"Fecha de nacimiento:"]
+		listDatosEst = [u"Número de matrícula",u"Cédula:","Nombres:","Apellidos:", "Sexo:","Estado Civil:","Origen:","Etnia:" ,"Fecha de nacimiento:"]
 		
-		for i in range (0,8):
+		for i in range (0,9):
 			vboxEstInfo.addRow(listDatosEst[i], self.labelsDatosEstudiantes[i])
 
 
@@ -146,7 +152,7 @@ class VistaEstudiantes(QWidget):
 		GBoxPadreInfo.setLayout(vboxPadreInfo)
 		terceraFila.addWidget(GBoxPadreInfo)
 		
-		listDatosPersona = ["Nombres:","Apellidos:",u"Cédula:","Sexo:","Fecha de Nacimiento:","Estado Civil:",u"Ocupación",
+		listDatosPersona = [u"Cédula:","Nombres:","Apellidos:","Sexo:","Fecha de Nacimiento:","Estado Civil:",u"Ocupación",
 		"Lugar de Trabajo:",u"Teléfono:", u"Dirección:"]
 
 		for i in range (0,10):
@@ -218,4 +224,50 @@ class VistaEstudiantes(QWidget):
 				self.textDatosEstudiantes[i].setReadOnly(True)
 
 
+	def seleccionarEstudiante(self):
+		Listestudiante = self.alumnos.getSelectedRegister()
+		estudiante = Listestudiante[-1]
+		#lleno los campos de la seccion estudiante
+		for i in range (len(self.labelsDatosEstudiantes )):
+			label= self.labelsDatosEstudiantes[i]
+			label.setText(estudiante[i])
 
+		numMatricula= estudiante[0]
+		result = self.manejadorBD.estudianteObtenerPersona(numMatricula, "Padre")
+		
+		if  result:
+			datosPadre = list(result[0])
+			for i in range (len(self.labelsDatosPadre )):
+				label= self.labelsDatosPadre[i]
+				label.setText(str(datosPadre[i]))
+		else:
+			for i in range (len(self.labelsDatosPadre )):
+				label= self.labelsDatosPadre[i]
+				label.setText("")
+
+
+		result = self.manejadorBD.estudianteObtenerPersona(numMatricula, "Madre")
+		if result:
+			datosMadre = list(result[0])
+
+			for i in range (len(self.labelsDatosMadre )):
+				label= self.labelsDatosMadre[i]
+				label.setText(str(datosMadre[i]))
+		else:
+			for i in range (len(self.labelsDatosMadre )):
+				label= self.labelsDatosMadre[i]
+				label.setText("")
+
+
+		result = self.manejadorBD.estudianteObtenerPersona(numMatricula, "Representante")
+		if result:
+			datosRep = list(result[0])
+
+			for i in range (len(self.labelsDatosRep )):
+				label= self.labelsDatosRep[i]
+				label.setText(str(datosRep[i]))
+		else:
+
+			for i in range (len(self.labelsDatosRep )):
+				label= self.labelsDatosRep[i]
+				label.setText("")

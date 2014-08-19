@@ -238,12 +238,14 @@ DELIMITER $$
 CREATE TRIGGER crearEstudiante
     AFTER INSERT ON Estudiante
     FOR EACH ROW BEGIN
-	INSERT INTO PersonaEstudiante VALUES(NULL,new.numMatricula,'Padre');
-	INSERT INTO PersonaEstudiante VALUES(NULL,new.numMatricula,'Madre');
-	INSERT INTO PersonaEstudiante VALUES(NULL,new.numMatricula,'Representante');
+	INSERT INTO PersonaEstudiante VALUES(null ,new.numMatricula,'Padre');
+	INSERT INTO PersonaEstudiante VALUES(null,new.numMatricula,'Madre');
+	INSERT INTO PersonaEstudiante VALUES(null, new.numMatricula,'Representante');
 
 END$$
 DELIMITER ;
+
+drop trigger crearEstudiante;
 
 DELIMITER $$
 CREATE TRIGGER validacionProfesor
@@ -433,10 +435,12 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE consultarEstudiante()
 BEGIN
-	SELECT * FROM Estudiante;
+	SELECT numMatricula, cedula, nombres, apellidos, sexo, estadoCivil, origen, Etnia, fechaNacimiento  FROM Estudiante;
   
 END //
 DELIMITER ;
+
+drop procedure consultarEstudiante;
 
 
 DELIMITER //
@@ -471,6 +475,30 @@ UPDATE Estudiante SET cedula = cedula, nombres= nombres,apellidos= apellidos
 , sexo= sexo, estadoCivil= estadoCivil,origen= origen
 ,Etnia= Etnia, fechaNacimiento= fechaNacimiento,cedulaFactura=cedFac
  where (Estudiante.numMatricula= numMatricula);
+  
+END //
+DELIMITER ;
+
+
+#Este procedimiento sirve para buscar al padre, madre o representante de un estudinate
+DELIMITER //
+CREATE PROCEDURE EstudianteObtenerPersona(in numMatricula integer, in tipoPersona varchar(20))
+BEGIN
+	
+select p.cedula, p.nombres, p.apellidos, p.sexo, p.fechaNacimiento,
+	p.estadoCivil, p.ocupacion, p.lugarTrabajo, p.telefono, p.direccion from Persona p, Estudiante e, PersonaEstudiante pe
+	where (e.numMatricula = numMatricula and  e.numMatricula = pe.numMatricula and pe.cedulaPersona = p.cedula and pe.tipoPersona = tipoPersona);
+  
+END //
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE EstudianteObtenerPersonaFactura(in numMatricula integer)
+BEGIN
+	
+select pf.cedula, pf.nombre, pf.apellido, pf.telefono, pf.Direccion from PersonaFactura pf, Estudiante e
+	where (e.numMatricula= numMatricula and e.cedulaFactura = pf.cedula);
   
 END //
 DELIMITER ;
@@ -609,7 +637,6 @@ DELIMITER ;
 
 
 
-
 #Otros procedimientos:
 
 DELIMITER //
@@ -622,7 +649,5 @@ BEGIN
     end if;
 END //
 DELIMITER ;
-
-
 
 
