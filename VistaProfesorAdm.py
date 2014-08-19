@@ -199,11 +199,13 @@ class VistaProfesorAdm(QWidget):
 		clave = self.textCamposProfesor[4].displayText()
 
 		if (not(len(cedula)==10)):
-			QMessageBox.about(self, 'Error',u'Cédula inválida: debe tener 10 dígitos')
+			mensaje = QMessageBox.about(self, 'Error',u'Cédula inválida: debe tener 10 dígitos')
 		elif (cedula =="" or nombre == "" or apellido == "" or usuario =="" or clave == ""):
-			QMessageBox.about(self, 'Error',u'Datos sin llenar: llene todos los datos')
+			mensaje = QMessageBox.about(self, 'Error',u'Datos sin llenar: llene todos los datos')
 		else:
-			QMessageBox.about(self,"Aviso",u'Se ha creado un nuevo profesor con éxito')
+			mensaje = QMessageBox.about(self,"Aviso",u'Se ha creado un nuevo profesor con éxito')
+			tupla = (cedula, nombre, apellido, usuario, clave)
+			self.manejador.insertarProfesor(tupla)
 			for i in self.textCamposProfesor:
 				i.setText("")
 

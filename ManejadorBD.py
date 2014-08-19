@@ -68,6 +68,12 @@ class ManejadorBD():
 		return self.llamarProcedimineto("consultarProfesor")
 		self.desconectar()
 
+	def insertarProfesor(self, tupla):
+		self.llamarProcedimineto("InsertarProfesor", tupla)
+		self.BD.commit()
+		self.desconectar()
+
+
 	def obtenerCursosPorProfesor(self,usuarioNombre):
 		arg= (usuarioNombre,)
 		return self.llamarProcedimineto('consultarCursosDelProfesor',arg)
