@@ -427,7 +427,6 @@ BEGIN
 END //
 DELIMITER ;
 
-drop procedure consultarEstudiante;
 
 
 DELIMITER //
