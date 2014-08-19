@@ -235,19 +235,6 @@ DELIMITER ;
 
 
 DELIMITER $$
-CREATE TRIGGER crearEstudiante
-    AFTER INSERT ON Estudiante
-    FOR EACH ROW BEGIN
-	INSERT INTO PersonaEstudiante VALUES(null ,new.numMatricula,'Padre');
-	INSERT INTO PersonaEstudiante VALUES(null,new.numMatricula,'Madre');
-	INSERT INTO PersonaEstudiante VALUES(null, new.numMatricula,'Representante');
-
-END$$
-DELIMITER ;
-
-drop trigger crearEstudiante;
-
-DELIMITER $$
 CREATE TRIGGER validacionProfesor
     BEFORE INSERT ON Profesor
     FOR EACH ROW BEGIN
