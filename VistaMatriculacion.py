@@ -78,9 +78,7 @@ class VistaMatriculacion(QWidget):
 		self.seleccionCurso()
 		alumno=self.A[len(self.A)-1]
 		curso=self.C[len(self.C)-1]
-		print alumno[0]
-		print curso[0]
-		self.manejadorBD.agregarEstudianteEnCurso(int(curso[0]),int(alumno[0]))
+		self.manejadorBD.agregarEstudianteEnCurso(curso[0],alumno[0])
 		self.A=[]
 		self.B=[]
 

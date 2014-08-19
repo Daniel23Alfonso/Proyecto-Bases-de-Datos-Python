@@ -45,15 +45,15 @@ class ManejadorBD():
 	def llamarProcedimineto(self, nombreProcedimiento, tupla=()):
 		self.conectar()
 		cursor=self.BD.cursor()
-		print tupla
 		cursor.callproc(nombreProcedimiento,tupla)
 		resultado = cursor.fetchall()
 		return resultado
-		self.desconectar()
+		
 
 
 	def consultarEstudiante(self):
 		return self.llamarProcedimineto("consultarEstudiante")
+		self.desconectar()
 		
 
 	def consultarMaterias(self):
@@ -62,24 +62,28 @@ class ManejadorBD():
 
 	def consultarPersonas(self):
 		return self.llamarProcedimineto("consultarPersonas")
+		self.desconectar()
 
 	def consultarProfesores(self):
 		return self.llamarProcedimineto("consultarProfesor")
+		self.desconectar()
 
 	def obtenerCursosPorProfesor(self,usuarioNombre):
 		arg= (usuarioNombre,)
 		return self.llamarProcedimineto('consultarCursosDelProfesor',arg)
-
+		self.desconectar()
 
 	def obtenerCursos(self):
 		return self.llamarProcedimineto("consultarCursos")
+		self.desconectar()
 
 	def consultarEstudiante2(self):
 		return self.llamarProcedimineto("consultarEstudiante2")
+		self.desconectar()
 
 	def agregarEstudianteEnCurso(self,curso,matricula):
 		arg=(curso,matricula)
 		self.llamarProcedimineto("agregarEstudianteEnCurso",arg)
-		print "se agrego el estudiante al curso"	
-
+		self.BD.commit()
+		self.desconectar()
 
