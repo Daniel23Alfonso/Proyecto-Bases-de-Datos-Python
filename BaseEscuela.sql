@@ -53,6 +53,7 @@ UNIQUE (cedula)
 CREATE TABLE CursoEstudiante(
 id_Curso integer,
 numMatricula integer,
+PRIMARY KEY(id_Curso,numMatricula),
 FOREIGN KEY (numMatricula) REFERENCES Estudiante(numMatricula) ON DELETE CASCADE ON UPDATE CASCADE,
 FOREIGN KEY (id_Curso) REFERENCES Curso(id_Curso) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -621,5 +622,7 @@ BEGIN
     end if;
 END //
 DELIMITER ;
+
+
 
 
