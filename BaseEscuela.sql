@@ -24,7 +24,7 @@ PRIMARY KEY (cedula)
 
 CREATE TABLE Curso(
 id_Curso integer AUTO_INCREMENT,
-numCurso integer,
+numCurso enum('Kinder','Primero','Segundo','Tercero','Cuarto','Quinto','Sexto','Septimo'),
 anoLectivo varChar(10),
 paralelo varchar(2),
 cedulaProfesor char(10),
@@ -68,7 +68,7 @@ UNIQUE (Nombre)
 
 
 CREATE TABLE CursoMateriaProfesor(
-id_Relacion integer,
+id_Relacion integer AUTO_INCREMENT ,
 id_Curso integer,
 id_Materia integer,
 CedulaProfesor varChar(10),
@@ -191,6 +191,14 @@ FOREIGN KEY (id_Factura) REFERENCES Factura(id_Factura) ON UPDATE CASCADE ON DEL
 #--------------------------------------------------------------------------#
 
 #TRIGGERS
+
+DELIMITER $$
+CREATE TRIGGER crearMateriasDeUnCurso
+    AFTER INSERT ON Curso
+    FOR EACH ROW BEGIN
+		call insertarMateriasPorCurso(new.id_Curso,new.numCurso);
+END$$
+DELIMITER ;
 
 DELIMITER $$
 CREATE TRIGGER crearQuimestresAutomaticamente 
@@ -413,11 +421,6 @@ BEGIN
 END //
 DELIMITER ;
 
-
-
-
-
-
 #Procedimientos acerca de Estudiantes
 DELIMITER //
 CREATE PROCEDURE consultarEstudiante()
@@ -500,8 +503,6 @@ END //
 DELIMITER ;
 
 
-
-
 #Procedimientos acerca de las Personas
 DELIMITER //
 CREATE PROCEDURE consultarPersonas()
@@ -510,9 +511,6 @@ BEGIN
   
 END //
 DELIMITER ;
-
-
-
 
 
 #Procedimientos acerca de profesores
@@ -524,6 +522,7 @@ BEGIN
   
 END //
 DELIMITER ;
+
 
 DELIMITER //
 CREATE PROCEDURE InsertarProfesor(in cedula char(10),in nombres varchar(100),
@@ -623,6 +622,139 @@ DELIMITER ;
 
 
 
+#Procedimientos de los Cursos
+
+DELIMITER //
+CREATE PROCEDURE crearCurso(IN numCurso integer,IN anoLectivo varChar(10),IN paralelo varchar(2))
+BEGIN
+	INSERT INTO Curso(numCurso, anoLectivo, paralelo,cedulaProfesor)
+	VALUES (numCurso, anoLectivo, paralelo,NULL);
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE actualizarCurso(IN curso integer,IN cedula char(10))
+BEGIN
+	UPDATE Curso SET cedulaProfesor=cedula WHERE (Curso.id_Curso=curso) ;
+END //
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE ligarCursoConProfesor(IN Curso integer,IN Materia integer ,IN cedulaProfesor char(10))
+BEGIN
+	UPDATE CursoMateriaProfesor SET CedulaProfesor=cedulaProfesor	where(CursoMateriaProfesor.id_Curso=Curso and CursoMateriaProfesor.id_Materia=Materia);
+END //
+DELIMITER ;
+
+
+
+DELIMITER //
+CREATE PROCEDURE desligarCursoConProfesor(IN Curso integer,IN Materia integer ,IN cedulaProfesor char(10))
+BEGIN
+	UPDATE CursoMateriaProfesor SET CedulaProfesor=NULL	where(CursoMateriaProfesor.id_Curso=Curso and CursoMateriaProfesor.id_Materia=Materia and CursoMateriaProfesor.cedulaProfesor=cedulaProfesor);
+END //
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE crearMaterias()
+BEGIN
+	INSERT INTO Materia VALUES(0,"LENGUA Y LITERATURA");
+	INSERT INTO Materia VALUES(1,"MATEMATICA");
+	INSERT INTO Materia VALUES(2,"ENTORNO NATURAL");
+	INSERT INTO Materia VALUES(3,"CIENCIAS NATURALES");
+	INSERT INTO Materia VALUES(4,"ESTUDIOS SOCIALES");
+	INSERT INTO Materia VALUES(5,"EDUCACION FISICA");
+	INSERT INTO Materia VALUES(6,"LENGUA EXTRANJERA");	
+	INSERT INTO Materia VALUES(7,"CLUBES");		
+END //
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE insertarMateriasPorCurso(IN idCurso integer,IN numCurso integer)
+BEGIN
+	if numCurso=0 then
+		call insertMateriasKinder(idCurso);
+	elseif numCurso=1 then
+		call insertarMateriasPrimero(idCurso);
+	elseif (numCurso=2 or numCurso=3) then
+		call insertarMateriasSegundo(idCurso);
+	else 
+		call insertarMateriasMayores(idCurso);
+	END IF;
+END //
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE insertMateriasKinder(IN Curso integer)
+BEGIN
+	INSERT INTO CursoMateriaProfesor(id_Curso,id_Materia,CedulaProfesor) VALUES(Curso,0,NULL);
+	INSERT INTO CursoMateriaProfesor(id_Curso,id_Materia,CedulaProfesor) VALUES(Curso,1,NULL);
+	INSERT INTO CursoMateriaProfesor(id_Curso,id_Materia,CedulaProfesor) VALUES(Curso,2,NULL);
+	INSERT INTO CursoMateriaProfesor(id_Curso,id_Materia,CedulaProfesor) VALUES(Curso,3,NULL);
+	INSERT INTO CursoMateriaProfesor(id_Curso,id_Materia,CedulaProfesor) VALUES(Curso,4,NULL);
+	INSERT INTO CursoMateriaProfesor(id_Curso,id_Materia,CedulaProfesor) VALUES(Curso,5,NULL);
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE insertarMateriasPrimero(IN Curso integer)
+BEGIN
+	INSERT INTO CursoMateriaProfesor (id_Curso,id_Materia,CedulaProfesor) VALUES(Curso,0,NULL);
+	INSERT INTO CursoMateriaProfesor (id_Curso,id_Materia,CedulaProfesor) VALUES(Curso,1,NULL);
+	INSERT INTO CursoMateriaProfesor (id_Curso,id_Materia,CedulaProfesor) VALUES(Curso,2,NULL);
+	INSERT INTO CursoMateriaProfesor (id_Curso,id_Materia,CedulaProfesor) VALUES(Curso,3,NULL);
+	INSERT INTO CursoMateriaProfesor (id_Curso,id_Materia,CedulaProfesor) VALUES(Curso,4,NULL);
+	INSERT INTO CursoMateriaProfesor (id_Curso,id_Materia,CedulaProfesor) VALUES(Curso,5,NULL);
+	INSERT INTO CursoMateriaProfesor (id_Curso,id_Materia,CedulaProfesor) VALUES(Curso,6,NULL);
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE insertarMateriasSegundo(IN Curso integer)
+BEGIN
+	INSERT INTO CursoMateriaProfesor (id_Curso,id_Materia,CedulaProfesor) VALUES(Curso,0,NULL);
+	INSERT INTO CursoMateriaProfesor (id_Curso,id_Materia,CedulaProfesor) VALUES(Curso,1,NULL);
+	INSERT INTO CursoMateriaProfesor (id_Curso,id_Materia,CedulaProfesor) VALUES(Curso,2,NULL);
+	INSERT INTO CursoMateriaProfesor (id_Curso,id_Materia,CedulaProfesor) VALUES(Curso,5,NULL);
+	INSERT INTO CursoMateriaProfesor (id_Curso,id_Materia,CedulaProfesor) VALUES(Curso,6,NULL);
+	INSERT INTO CursoMateriaProfesor (id_Curso,id_Materia,CedulaProfesor) VALUES(Curso,7,NULL);
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE insertarMateriasMayores(IN Curso integer)
+BEGIN
+	INSERT INTO CursoMateriaProfesor (id_Curso,id_Materia,CedulaProfesor) VALUES(Curso,0,NULL);
+	INSERT INTO CursoMateriaProfesor (id_Curso,id_Materia,CedulaProfesor) VALUES(Curso,1,NULL);
+	INSERT INTO CursoMateriaProfesor (id_Curso,id_Materia,CedulaProfesor) VALUES(Curso,3,NULL);
+	INSERT INTO CursoMateriaProfesor (id_Curso,id_Materia,CedulaProfesor) VALUES(Curso,4,NULL);
+	INSERT INTO CursoMateriaProfesor (id_Curso,id_Materia,CedulaProfesor) VALUES(Curso,5,NULL);
+	INSERT INTO CursoMateriaProfesor (id_Curso,id_Materia,CedulaProfesor) VALUES(Curso,6,NULL);
+	INSERT INTO CursoMateriaProfesor (id_Curso,id_Materia,CedulaProfesor) VALUES(Curso,7,NULL);
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE obtenerMateriasPorCurso(IN idCurso integer)
+BEGIN
+	SELECT Materia.id_Materia,Materia.Nombre FROM CursoMateriaProfesor,Materia WHERE  CursoMateriaProfesor.id_Materia=Materia.id_Materia and CursoMateriaProfesor.id_Curso=idCurso and CursoMateriaProfesor.CedulaProfesor IS NULL
+	ORDER BY Materia.Nombre;
+END//
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE obtenerMateriaCursoProfesor(IN idCurso integer)
+BEGIN
+	SELECT Materia.id_Materia,Materia.Nombre,Profesor.cedula,Profesor.Nombres,Profesor.apellidos FROM CursoMateriaProfesor,Materia,Profesor WHERE  CursoMateriaProfesor.CedulaProfesor IS NOT NULL and CursoMateriaProfesor.id_Curso=idCurso and CursoMateriaProfesor.id_Materia=Materia.id_Materia and CursoMateriaProfesor.CedulaProfesor=Profesor.cedula
+	ORDER BY Materia.Nombre;
+END//
+DELIMITER ;
+
+
 #Otros procedimientos:
 
 DELIMITER //
@@ -635,5 +767,3 @@ BEGIN
     end if;
 END //
 DELIMITER ;
-
-

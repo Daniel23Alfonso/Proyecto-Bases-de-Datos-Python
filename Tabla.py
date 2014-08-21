@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*- 
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
@@ -12,9 +13,13 @@ class MyTable(QTableView):
 		self.proxy.setSourceModel(self.modelo)
 		self.setModel(self.proxy)
 		self.labels=QStringList()
+		self.resizeColumnsToContents()
+		self.resizeRowsToContents()
 		self.row=0
+		self.columnas=0
 
 	def setHeader(self,listaCabezeras):
+		self.cabezeras=listaCabezeras
 		self.labels=QStringList()
 		col=0
 		for i in range(len(listaCabezeras)):
@@ -27,17 +32,30 @@ class MyTable(QTableView):
 		self.labels.append(QString(col))
 		self.modelo.setHorizontalHeaderLabels(self.labels)
 
-
 	def addTable(self,listaTuplas):
-
 		for registro in listaTuplas:
 			self.addRow(registro)
 
 	def addRow(self,listaDatos):
+		i=self.row
 		for i in range(len(listaDatos)):
 			self.modelo.setItem(self.row,i,QStandardItem(QString(str(listaDatos[i]))))
 		self.row=self.row+1		
 
+	def getSize(self):
+		return self.modelo.rowCount()
+
+	def deleteRow(self,indice):
+		if self.getSize()>0:
+			self.modelo.removeRow(indice)
+			self.row-=1
+
+	def deleteData(self):#deja la tabla en blanco
+		self.modelo=QStandardItemModel(self.ventana)
+		self.proxy.setSourceModel(self.modelo)
+		self.setModel(self.proxy)
+		self.setHeader(self.cabezeras)
+		self.row=0
 
 	def getRegister(self,fila):#retorna el registro de la posicion-fila dentro de la tabla
 		registro=[]
@@ -45,11 +63,10 @@ class MyTable(QTableView):
 			item=self.modelo.item(fila,col)#item es de tipo QStandardItem y retorna la referencia a la celda de la posicion fila,col
 			texto=item.text()#texto es de tipo QString y obtiene el texto de la celda
 			registro.append(texto)
-		#self.printRegistro(registro)
 		return registro
 
 	def getSelectedRegister(self):#obtiene todos los registros seleccionados
-		filasSeleccionadas=self.selectedIndexes()#retorna una lista con todos las filas seleccionadas dentro de la tabla
+		filasSeleccionadas=self.getIndexSelected()#retorna una lista con todos las filas seleccionadas dentro de la tabla
 		registros=[]
 		for i in range(len(filasSeleccionadas)):
 			fila_actual=filasSeleccionadas[i]#objeto_actual es de tipo QModelIndex
@@ -59,10 +76,18 @@ class MyTable(QTableView):
 		#	self.printRegistro(registro)
 		return registros
 
-
+	def getIndexSelected(self):
+		return self.selectedIndexes()
+		
 	def printRegistro(self,lista):
 		for r in lista:
 			print r
+
+	def setEditable(self,flag):
+		for i in range(self.row):
+			for j in range(self.columnas):	
+				item=self.modelo.item(i,j)
+				item.setEditable(flag)
 
 	#callback para los lineEdit
 	def on_lineEdit_textChanged(self,text):
