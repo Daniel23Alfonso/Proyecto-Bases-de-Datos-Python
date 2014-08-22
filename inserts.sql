@@ -87,17 +87,6 @@ INSERT INTO Profesor  VALUES("0706356706", "Martha del Carmen", "Zambrano Meza",
 "marthita93", "deberbaseslargo");
 
 
-
-
-#Materias
-INSERT INTO Materia  VALUES(11, "Matemáticas");
-INSERT INTO Materia  VALUES(21, "Lenguaje");
-INSERT INTO Materia  VALUES(33, "Ciencias Naturales");
-INSERT INTO Materia  VALUES(41, "Ciencias Sociales");
-INSERT INTO Materia  VALUES(54, "Musica");
-INSERT INTO Materia  VALUES(61, "Educación Física");
-INSERT INTO Materia  VALUES(77, "Recreo");
-
 #Administrativo
 INSERT INTO Administrativo VALUES("096743688", "Janeth Rosa", "Romero Saltos", 
 "jrrs", "kiko");
@@ -180,13 +169,6 @@ INSERT INTO Persona  VALUES("0946863345", "Mario Luigui", "Flores Pazos",
 
 INSERT INTO Persona  VALUES("0723458899", "Vladimir Israel", "Arosemena Martillo",
 "Masculino", "1959-3-12", "Casado", "Ingeniero", "Empresa u", "896789", "via u");
-
-
-
-
-
-
-
 
 
 call crearMaterias();

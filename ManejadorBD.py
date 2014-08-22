@@ -2,14 +2,14 @@ import MySQLdb
 
 class ManejadorBD():
 	def __init__(self):
-		self.direccion="127.0.0.1"
+		self.direccion="localhost"
 		self.user="root"
-		self.passwor="sasukekun30"
+		self.passwor="rodrigo"
 		self.nombreBD="BaseEscuela"
-
 
 	def conectar(self):
 		self.BD = MySQLdb.connect(self.direccion,self.user,self.passwor,self.nombreBD )
+		self.BD.autocommit(True)
 
 
 	def desconectar(self):
@@ -48,17 +48,10 @@ class ManejadorBD():
 		cursor.callproc(nombreProcedimiento,tupla)
 		resultado = cursor.fetchall()
 		return resultado
-		
-
 
 	def consultarEstudiante(self):
 		return self.llamarProcedimineto("consultarEstudiante")
 		self.desconectar()
-		
-
-	def consultarMaterias(self):
-		query = "SELECT * FROM Materia"
-		return self.consulta(query, None)
 
 	def consultarPersonas(self):
 		return self.llamarProcedimineto("consultarPersonas")
@@ -73,10 +66,9 @@ class ManejadorBD():
 		self.BD.commit()
 		self.desconectar()
 
-
-	def obtenerCursosPorProfesor(self,usuarioNombre):
-		arg= (usuarioNombre,)
-		return self.llamarProcedimineto('consultarCursosDelProfesor',arg)
+	def editarProfesor(self,tupla):
+		self.llamarProcedimineto("editarProfesor",tupla)
+		self.BD.commit()
 		self.desconectar()
 
 	def obtenerCursos(self):
@@ -90,7 +82,51 @@ class ManejadorBD():
 	def estudianteObtenerPersona(self, numCedula, tipoPersona):
 		return self.llamarProcedimineto("EstudianteObtenerPersona",(numCedula, tipoPersona))
 		self.desconectar()
+	
+	def agregarEstudianteEnCurso(self,curso,matricula):
+		arg=(curso,matricula)
+		self.llamarProcedimineto("agregarEstudianteEnCurso",arg)
+		self.BD.commit()
+		self.desconectar()
 
+	def obtenerCursosPorProfesor(self,usuarioNombre):
+		arg= (usuarioNombre,)
+		return self.llamarProcedimineto('consultarCursosDelProfesor',arg)
+		self.desconectar()
+
+	def obtenerMateriasPorCurso(self,idCurso):
+		return self.llamarProcedimineto("obtenerMateriasPorCurso",(idCurso,))
+		self.desconectar()
+
+	def agregarProfesorAMateriaDeCurso(self,curso,materia,profesor):
+		arg=(curso,materia,profesor)
+		self.llamarProcedimineto("ligarCursoConProfesor",arg)
+		self.desconectar()
+
+	def quitarProfesorDeMateria(self,curso,materia,profesor):
+		arg=(curso,materia,profesor)
+		self.llamarProcedimineto("desligarCursoConProfesor",arg)
+		self.desconectar()
+
+	def obtenerMateriaCursoProfesor(self,idCurso):
+		return self.llamarProcedimineto("obtenerMateriaCursoProfesor",(idCurso,))
+		self.desconectar()
+
+	def obtenerInfoProfesor(self,cedula):
+		return self.llamarProcedimineto("mostrarInfoProfesor",(cedula,))
+		self.desconectar()
+
+	def existeUsuarioProfesor(self,user):
+		return self.llamarProcedimineto("existeUsuario",(user,))
+		self.desconectar()
+
+	def existeUsuarioRepetido(self,cedula,user):
+		return self.llamarProcedimineto("existeUsuarioRepetido",(cedula,user))
+		self.desconectar()
+
+	def estudianteObtenerPersona(self, numCedula, tipoPersona):
+		return self.llamarProcedimineto("EstudianteObtenerPersona",(numCedula, tipoPersona))
+		self.desconectar()
 
 	def agregarEstudianteEnCurso(self,curso,matricula):
 		arg=(curso,matricula)
@@ -102,4 +138,5 @@ class ManejadorBD():
 		self.llamarProcedimineto("editarPersonas",datos)
 		self.BD.commit()
 		self.desconectar()
+
 

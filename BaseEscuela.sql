@@ -786,3 +786,26 @@ BEGIN
     end if;
 END //
 DELIMITER ;
+
+#Procedimientos del profesor
+
+DELIMITER //
+CREATE PROCEDURE mostrarInfoProfesor(IN cedula char(10))
+BEGIN
+    SELECT * FROM Profesor Where Profesor.cedula=cedula;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE existeUsuario(IN user char(10))
+BEGIN
+    SELECT * FROM Profesor Where Profesor.usuario=user; 
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE existeUsuarioRepetido(IN cedula char(10),In user char(10))
+BEGIN
+    SELECT * FROM Profesor Where Profesor.cedula<>cedula and Profesor.usuario=user; 
+END //
+DELIMITER ;

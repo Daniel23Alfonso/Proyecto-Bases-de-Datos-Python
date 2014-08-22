@@ -32,7 +32,6 @@ class VistaProfesorAdm(QWidget):
 			#COMPONENTES DE LA VENTANA CONSULTAS
 			self.labelsProfesor = [QLabel(""),QLabel(""),QLabel(""),QLabel(""),QLabel(""),QLabel("")]
 			
-
 			#elementos de la pestaña de EDICION
 			
 			# expresion regular`para validar nombres
@@ -48,7 +47,7 @@ class VistaProfesorAdm(QWidget):
 			self.connect(self.btnEditar,SIGNAL("clicked()"),self.activarEdicion)
 			self.btnGuardar = QPushButton("Guardar")
 			self.btnGuardar.setIcon(QIcon("Imagenes/guardar.jpg"))
-			self.connect(self.btnGuardar,SIGNAL("clicked()"),self.accionGuadarEdicion)
+			self.connect(self.btnGuardar,SIGNAL("clicked()"),self.accionGuardarEdicion)
 			#cuadros de texto que permiten editar
 			self.editorProfesor = [ QLineEdit(), QLineEdit(), QLineEdit(), QLineEdit(),QLineEdit(), QLineEdit()]
 			
@@ -74,21 +73,17 @@ class VistaProfesorAdm(QWidget):
 
 			self.btnCrear = QPushButton("Guardar")
 			self.btnCrear.setIcon(QIcon("Imagenes/guardar.jpg"))
-			self.connect(self.btnCrear,SIGNAL("clicked()"),self.accionGuadarCreacion)
-
-
+			self.connect(self.btnCrear,SIGNAL("clicked()"),self.accionGuardarCreacion)
 
 			self.profesores=MyTable(self)
 			#agrego datos a la tabla
-			self.headers= [u"Cédula", "Nombres", "Apellidos"]
+			self.headers= [u"Cédula", "Apellidos","Nombres"]
 			self.profesores.setHeader(self.headers)
 			self.manejador= ManejadorBD()
 			self.profesores.addTable(self.manejador.consultarProfesores())
+			self.profesores.setEditable(False)
 			self.paramBusqueda.textChanged.connect(self.profesores.on_lineEdit_textChanged)
 			self.comboBusquedaProfesor.currentIndexChanged.connect(self.profesores.on_comboBox_currentIndexChanged)
-
-
-			
 			
 			# creacion de pestañas
 			tab_widget = QTabWidget()
@@ -101,10 +96,13 @@ class VistaProfesorAdm(QWidget):
 			self.cont_creacion = QVBoxLayout(tab_creacion)
 			self.cont_edicionElim = QVBoxLayout(tab_edicionElim)
 			
-			tab_widget.addTab(tab_consultas,u"Consultas")
 			tab_widget.addTab(tab_creacion,"Crear")
+			tab_widget.addTab(tab_consultas,u"Consultar")
 			tab_widget.addTab(tab_edicionElim,u"Edición")
-			
+
+			self.botonObtenerInfo=QPushButton("Obtener Informacion del Profesor")
+			self.connect(self.botonObtenerInfo,SIGNAL("clicked()"),self.mostrarInfoProfesor)
+
 			self.llenarTabConsultas()
 			self.llenarTabEdicion()
 			self.llenarTabCreacion()
@@ -125,22 +123,18 @@ class VistaProfesorAdm(QWidget):
 		
 		# aqui estoy creando la primera fila de la pestaña
 		
-		primeraFila = QHBoxLayout()
+		primeraFila = QVBoxLayout()
 		GBoxProfInfo = QGroupBox ( "Profesor" )
 		vboxProfInfo = QFormLayout()
 		GBoxProfInfo.setLayout(vboxProfInfo)
+		primeraFila.addWidget(self.botonObtenerInfo)
 		primeraFila.addWidget(GBoxProfInfo)
-		
 		listDatosEProf = [u"Cédula:","Nombres:", "Apellidos:","Usuario:","Clave:"]
 		
 		for i in range (0,5):
 			vboxProfInfo.addRow(listDatosEProf[i], self.labelsProfesor[i])
 
 		contenidoTab.addLayout(primeraFila)
-
-
-		
-
 
 
 	def llenarTabCreacion(self):
@@ -161,8 +155,13 @@ class VistaProfesorAdm(QWidget):
 		contenidoTab.addLayout(fila)
 
 
-
-
+	def mostrarInfoProfesor(self):
+		profesoresSeleccionados=self.profesores. getSelectedRegister()
+		profesor=profesoresSeleccionados[0]#el primer registro seleccionado
+		resultados=self.manejador.obtenerInfoProfesor(profesor[0])
+		registro=resultados[0]
+		for i in range(len(registro)):
+			self.labelsProfesor[i].setText(QString(str(registro[i])))  
 
 	def llenarTabEdicion(self):
 		"""
@@ -187,42 +186,74 @@ class VistaProfesorAdm(QWidget):
 
 
 	def activarEdicion(self):
-		for i in self.editorProfesor:
-			i.setReadOnly(False)
+		profesoresSeleccionados=self.profesores.getSelectedRegister()
+		profesor=profesoresSeleccionados[0]#el primer registro seleccionado
+		resultados=self.manejador.obtenerInfoProfesor(profesor[0])
+		registro=resultados[0]
+		for i in range(len(registro)):
+			if i!=0:
+				self.editorProfesor[i].setReadOnly(False)
+			else:
+				self.editorProfesor[i].setEnabled(False)
+			self.editorProfesor[i].setText(QString(str(registro[i])))  
 
 
-	def accionGuadarCreacion(self):
-		cedula = self.textCamposProfesor[0].displayText()
-		nombre = self.textCamposProfesor[1].displayText()
-		apellido = self.textCamposProfesor[2].displayText()
-		usuario = self.textCamposProfesor[3].displayText()
-		clave = self.textCamposProfesor[4].displayText()
+	def accionGuardarCreacion(self):
+		try:
+			cedula = self.textCamposProfesor[0].displayText()
+			nombre = self.textCamposProfesor[1].displayText()
+			apellido = self.textCamposProfesor[2].displayText()
+			usuario = self.textCamposProfesor[3].displayText()
+			clave = self.textCamposProfesor[4].displayText()
 
-		if (not(len(cedula)==10)):
-			mensaje = QMessageBox.about(self, 'Error',u'Cédula inválida: debe tener 10 dígitos')
-		elif (cedula =="" or nombre == "" or apellido == "" or usuario =="" or clave == ""):
-			mensaje = QMessageBox.about(self, 'Error',u'Datos sin llenar: llene todos los datos')
-		else:
-			mensaje = QMessageBox.about(self,"Aviso",u'Se ha creado un nuevo profesor con éxito')
-			tupla = (cedula, nombre, apellido, usuario, clave)
-			self.manejador.insertarProfesor(tupla)
-			for i in self.textCamposProfesor:
-				i.setText("")
+			if (not(len(cedula)==10)):
+				mensaje = QMessageBox.about(self, 'Error',u'Cédula inválida: debe tener 10 dígitos')
+			elif (cedula =="" or nombre == "" or apellido == "" or usuario =="" or clave == ""):
+				mensaje = QMessageBox.about(self, 'Error',u'Datos sin llenar: llene todos los datos')
+			else:
+				tupla = (cedula, nombre, apellido, usuario, clave)
+				resultado=self.manejador.existeUsuarioProfesor(usuario)
+				if(len(resultado)==0):#el usuario que se desea insertar no existe
+					self.manejador.insertarProfesor(tupla)
+					QMessageBox.about(self,"Aviso",u'Se ha creado un nuevo profesor con éxito')
+				else:#el usuario que se desea insertar si existe
+					mensaje = QMessageBox.about(self, 'Error',u'Usuario ya existente en el Sistema')
+
+				for i in self.textCamposProfesor:
+					i.setText("")
+
+				self.actualizarProfesores()
+		except:
+			QMessageBox.about(self, 'Error',u'Datos Invalidos')
 
 
-	def accionGuadarEdicion(self):
-		cedula = self.editorProfesor[0].displayText()
-		nombre = self.editorProfesor[1].displayText()
-		apellido = self.editorProfesor[2].displayText()
-		usuario = self.editorProfesor[3].displayText()
-		clave = self.editorProfesor[4].displayText()
+	def accionGuardarEdicion(self):
+		try:
+			cedula = self.editorProfesor[0].displayText()
+			nombre = self.editorProfesor[1].displayText()
+			apellido = self.editorProfesor[2].displayText()
+			usuario = self.editorProfesor[3].displayText()
+			clave = self.editorProfesor[4].displayText()
+			if (not(len(cedula)==10)):
+				QMessageBox.about(self, 'Error',u'Cédula inválida: debe tener 10 dígitos')
+			elif (cedula =="" or nombre == "" or apellido == "" or usuario =="" or clave == ""):
+				QMessageBox.about(self, 'Error',u'Datos sin llenar: llene todos los datos')
+			else:
+				tupla=(cedula,nombre,apellido,usuario,clave)
+				resultados=self.manejador.existeUsuarioRepetido(cedula,usuario)
+				if(len(resultados)==0):
+					self.manejador.editarProfesor(tupla)
+					QMessageBox.about(self,"Aviso",u'Se han guardado los cambios con éxito')		
+					for i in self.editorProfesor:
+						i.setReadOnly(True)
+					self.actualizarProfesores()
+				else:
+					QMessageBox.about(self,"Error",u'Usuario ya existente en el sistema')				
+		except:
+			QMessageBox.about(self, 'Error',u'Datos invalidos')
 
-		if (not(len(cedula)==10)):
-			QMessageBox.about(self, 'Error',u'Cédula inválida: debe tener 10 dígitos')
-		elif (cedula =="" or nombre == "" or apellido == "" or usuario =="" or clave == ""):
-			QMessageBox.about(self, 'Error',u'Datos sin llenar: llene todos los datos')
-		else:
-			QMessageBox.about(self,"Aviso",u'Se han guardado los cambios con éxito')
-			for i in self.editorProfesor:
-				i.setReadOnly(True)
 
+	def actualizarProfesores(self):
+		self.profesores.deleteData()
+		self.profesores.addTable(self.manejador.consultarProfesores())
+		self.profesores.setEditable(False)
