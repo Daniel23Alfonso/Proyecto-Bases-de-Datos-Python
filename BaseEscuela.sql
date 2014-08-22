@@ -513,6 +513,19 @@ END //
 DELIMITER ;
 
 
+DELIMITER //
+CREATE PROCEDURE editarPersonas(in ced char(10), in nom char(100), in ape char(100),
+in sex char(10), in fecha date, in estado char(25),in ocup char(25), in ltrab char(100),
+in telf char(6), in dir char(100))
+BEGIN
+
+	UPDATE Persona set nombres= nom, apellidos=apre,sexo=sex,fechaNacimiento=fecha,
+	estadoCivil=estado,ocupacion=ocup,lugarTrabajo=ltrab,telefono=telf,direccion=dir
+	where Cedula=ced;
+  
+END //
+DELIMITER ;
+
 #Procedimientos acerca de profesores
 
 DELIMITER //
@@ -612,14 +625,20 @@ DELIMITER ;
 
 #Procedimiento estudiantes curso
 
+
 DELIMITER //
 CREATE PROCEDURE agregarEstudianteEnCurso(in id_Curso integer, in numMatricula integer)
 BEGIN
-	INSERT INTO CursoEstudiante(id_Curso, numMatricula)
-	VALUES (id_Curso, numMatricula);
+	select COUNT(*) INTO @contador from CursoEstudiante,Curso
+	where Curso.id_Curso=CursoEstudiante.id_Curso and Curso.id_Curso=id_Curso
+	and CursoEstudiante.numMatricula=numMatricula;
+
+	if(select @contador=0) then
+		INSERT INTO CursoEstudiante(id_Curso, numMatricula)
+		VALUES (id_Curso, numMatricula);
+	end if;
 END //
 DELIMITER ;
-
 
 
 #Procedimientos de los Cursos

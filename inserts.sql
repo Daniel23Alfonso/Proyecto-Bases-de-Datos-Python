@@ -189,18 +189,23 @@ INSERT INTO Persona  VALUES("0723458899", "Vladimir Israel", "Arosemena Martillo
 
 
 
-#CURSOS
-INSERT INTO Curso (numCurso, anoLectivo, paralelo, cedulaProfesor) VALUES(0,"2014-2015","A","0946863345");
-INSERT INTO Curso (numCurso, anoLectivo, paralelo, cedulaProfesor) VALUES(1,"2014-2015","A","0706356706");
-INSERT INTO Curso (numCurso, anoLectivo, paralelo, cedulaProfesor) VALUES(2,"2014-2015","A","0746863325");
-INSERT INTO Curso (numCurso, anoLectivo, paralelo, cedulaProfesor) VALUES(3,"2014-2015","A","0723458899");
+call crearMaterias();
 
-INSERT INTO Curso (numCurso, anoLectivo, paralelo, cedulaProfesor) VALUES(4,"2014-2015","A","0956743399");
-INSERT INTO Curso (numCurso, anoLectivo, paralelo, cedulaProfesor) VALUES(3,"2014-2015","B","0956743399");
-INSERT INTO Curso (numCurso, anoLectivo, paralelo, cedulaProfesor) VALUES(2,"2014-2015","A","0956743399");
-INSERT INTO Curso (numCurso, anoLectivo, paralelo, cedulaProfesor) VALUES(7,"2014-2015","C","0956743399");
-INSERT INTO Curso (numCurso, anoLectivo, paralelo, cedulaProfesor) VALUES(5,"2014-2015","C","0956743399");
+call crearCurso(1,"2011-2012",1);
 
+call crearCurso(1,"2012-2014",2);
+
+call crearCurso(1,"2011-2012",3);
+
+call crearCurso(2,"2011-2012",1);
+
+call crearCurso(3,"2011-2012",4);
+
+call crearCurso(4,"2012-2014",2);
+
+call crearCurso(4,"2011-2012",5);
+
+call crearCurso(7,"2011-2012",7);
 #INSERT INTO Curso VALUES(7,6,"2014-2015","A","0956763397");
 #INSERT INTO Curso VALUES(8,7,"2014-2015","A","0965643377"); 
 
@@ -215,3 +220,5 @@ INSERT INTO MateriaEstudianteQuimestre  values(45,3, 10);
 call agregarEstudianteEnCurso(1,1);
 
 select * from CursoEstudiante;
+
+select * from Materia;

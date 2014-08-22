@@ -4,7 +4,7 @@ class ManejadorBD():
 	def __init__(self):
 		self.direccion="127.0.0.1"
 		self.user="root"
-		self.passwor=""
+		self.passwor="sasukekun30"
 		self.nombreBD="BaseEscuela"
 
 
@@ -95,6 +95,11 @@ class ManejadorBD():
 	def agregarEstudianteEnCurso(self,curso,matricula):
 		arg=(curso,matricula)
 		self.llamarProcedimineto("agregarEstudianteEnCurso",arg)
+		self.BD.commit()
+		self.desconectar()
+
+	def actualizarPersona(self,datos):
+		self.llamarProcedimineto("editarPersonas",datos)
 		self.BD.commit()
 		self.desconectar()
 

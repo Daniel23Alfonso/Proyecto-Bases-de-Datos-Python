@@ -111,8 +111,12 @@ class VistaCurso(QWidget):
 			self.layoutProfesorMateria.addLayout(self.layoutProfesorMateria3)
 			self.layoutProfesorMateria.addLayout(self.layoutProfesorMateria4)
 			self.tab_ProfesorMateria.setLayout(self.layoutProfesorMateria)
+			self.modoCrear()
+			self.paralelo.setEnabled(False)
+
 			
 	def obtenerInfoCurso(self):
+		self.modoEdicion()
 		self.idCurso=0
 		cursos=self.Cursos.getSelectedRegister()
 		if len(cursos)>0:
@@ -185,3 +189,16 @@ class VistaCurso(QWidget):
 		indice=registro.row()#obtiene el indice del registro dentro del grid
 		self.MateriasSinProfesor.deleteRow(indice)#borra la fila de la materia a la cual ya se le asigno un profesor
 		self.MateriasSinProfesor.setEditable(False)
+
+	def modoCrear(self):
+		self.btnCrear.setEnabled(True)
+		self.btnActualizar.setEnabled(False)
+		self.btnEliminar.setEnabled(False)
+
+
+
+	def modoEdicion(self):
+		self.btnCrear.setEnabled(False)
+		self.btnActualizar.setEnabled(True)
+		self.btnEliminar.setEnabled(True)
+
