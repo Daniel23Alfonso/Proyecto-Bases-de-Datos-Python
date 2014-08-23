@@ -201,10 +201,10 @@ class VistaProfesorAdm(QWidget):
 	def accionGuardarCreacion(self):
 		try:
 			cedula = self.textCamposProfesor[0].displayText()
-			nombre = self.textCamposProfesor[1].displayText()
-			apellido = self.textCamposProfesor[2].displayText()
-			usuario = self.textCamposProfesor[3].displayText()
-			clave = self.textCamposProfesor[4].displayText()
+			nombre = unicode(self.textCamposProfesor[1].displayText())
+			apellido = unicode(self.textCamposProfesor[2].displayText())
+			usuario = unicode(self.textCamposProfesor[3].displayText())
+			clave = unicode(self.textCamposProfesor[4].displayText())
 
 			if (not(len(cedula)==10)):
 				mensaje = QMessageBox.about(self, 'Error',u'Cédula inválida: debe tener 10 dígitos')
