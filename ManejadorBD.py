@@ -139,4 +139,11 @@ class ManejadorBD():
 		self.BD.commit()
 		self.desconectar()
 
+	def consultarEstudiantesPorMateria(self,idCurso,materia,quimestre,parcial):
+		return self.llamarProcedimineto("consultarEstudiantesPorMateria",(idCurso,materia,quimestre,parcial))
 
+	def actualizarEstudianteActividad(self,idCurso,materia,quimestre,parcial,tipoActividad,matriculaEstudiante,nota):
+		arg=(str(idCurso),str(materia),str(quimestre),str(parcial),str(tipoActividad),str(matriculaEstudiante),str(nota))
+		self.llamarProcedimineto("actualizarEstudianteActividad",arg)
+		self.BD.commit()
+		self.desconectar()

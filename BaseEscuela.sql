@@ -78,14 +78,13 @@ FOREIGN KEY (id_Materia) REFERENCES Materia(id_Materia) ON DELETE CASCADE ON UPD
 FOREIGN KEY (CedulaProfesor) REFERENCES Profesor(cedula) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-
 CREATE TABLE MateriaEstudianteQuimestre
-(id_MatEsQui integer,
+(id_MatEsQui integer AUTO_INCREMENT,
 id_relacion integer,
 numMatricula integer,
 PRIMARY KEY (id_MatEsQui),
-FOREIGN KEY (numMatricula) REFERENCES Estudiante(numMatricula)ON DELETE CASCADE ON UPDATE CASCADE
-#FOREIGN KEY (id_relacion) REFERENCES CursoMateriaProfesor(id_Relacion) ON DELETE CASCADE ON UPDATE CASCADE
+FOREIGN KEY (numMatricula) REFERENCES Estudiante(numMatricula)ON DELETE CASCADE ON UPDATE CASCADE,
+FOREIGN KEY (id_relacion) REFERENCES CursoMateriaProfesor(id_Relacion) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 
@@ -200,11 +199,11 @@ CREATE TRIGGER crearMateriasDeUnCurso
 END$$
 DELIMITER ;
 
+
 DELIMITER $$
 CREATE TRIGGER crearQuimestresAutomaticamente 
     AFTER INSERT ON MateriaEstudianteQuimestre
     FOR EACH ROW BEGIN
-
 	call crearQuimestre(1,0.00,new.id_MatEsQui);
 	call crearQuimestre(2,0.00,new.id_MatEsQui);
 
@@ -299,6 +298,18 @@ CREATE TRIGGER validacionPersonaFactura
 END$$
 DELIMITER ;
 
+
+
+DELIMITER $$
+CREATE TRIGGER ligarEstudianteQuimestre
+    AFTER INSERT ON CursoEstudiante
+    FOR EACH ROW BEGIN
+		call insertarMateriaEstudianteQuimestre(new.id_Curso,new.numMatricula);
+END$$
+DELIMITER ;
+
+
+
 #--------------------------------------------------------------------------------#
 #VISTAS
 
@@ -336,7 +347,6 @@ and M.id_Materia=CM.id_Materia and P.id_Quimestre=Q.id_Quimestre
 #--------------------------------------------------------------------#
 
 #PROCEDIMIENTOS
-
 
 #procedimientos actividades
 DELIMITER //
@@ -413,11 +423,13 @@ BEGIN
 END //
 DELIMITER ;
 
-
 DELIMITER //
 CREATE PROCEDURE consultarCursosDelProfesor(IN usuarioProfesor char(10))
 BEGIN
-	SELECT numCurso,anoLectivo,paralelo FROM Profesor,Curso WHERE Curso.cedulaProfesor=Profesor.cedula and usuario=usuarioProfesor;
+	SELECT Materia.Nombre,Curso.id_curso,Curso.numCurso,Curso.paralelo,Curso.anoLectivo FROM CursoMateriaProfesor,Profesor,Curso,Materia WHERE usuarioProfesor=Profesor.usuario 
+																											and Profesor.cedula=CursoMateriaProfesor.cedulaProfesor 
+																											and CursoMateriaProfesor.id_Curso=Curso.id_Curso 
+																											and CursoMateriaProfesor.id_Materia=Materia.id_Materia;
 END //
 DELIMITER ;
 
@@ -439,6 +451,84 @@ BEGIN
 END //
 DELIMITER ;
 
+
+DELIMITER //
+CREATE PROCEDURE insertarMateriaEstudianteQuimestre(in id_curso integer,in numMatricula integer)
+BEGIN
+	Insert Into MateriaEstudianteQuimestre(id_Relacion,numMatricula) 
+	SELECT id_Relacion,numMatricula 
+	FROM CursoMateriaProfesor,CursoEstudiante 
+	WHERE CursoMateriaProfesor.id_Curso=CursoEstudiante.id_Curso 
+	and CursoEstudiante.id_Curso=id_curso 
+	and CursoEstudiante.numMatricula=numMatricula;		
+
+END //
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE consultarEstudiantesPorMateria(IN id_curso integer,IN materia varchar(20),IN quimestre integer,IN parcial integer)
+BEGIN
+	SELECT Estudiante.numMatricula,Estudiante.apellidos,Estudiante.nombres,Actividad.tipoActividad,Actividad.notaActividad
+	FROM MateriaEstudianteQuimestre,Estudiante,CursoMateriaProfesor,Curso,Materia,Quimestre,Parcial,Actividad
+	WHERE MateriaEstudianteQuimestre.numMatricula=Estudiante.numMatricula and
+	MateriaEstudianteQuimestre.id_Relacion=CursoMateriaProfesor.id_Relacion and
+	CursoMateriaProfesor.id_Curso=Curso.id_Curso and
+	CursoMateriaProfesor.id_Materia=Materia.id_Materia and
+	MateriaEstudianteQuimestre.id_MatEsQui=Quimestre.id_MatEstQui and
+	Quimestre.id_Quimestre=Parcial.id_Quimestre and
+	Parcial.id_Parcial=Actividad.id_Parcial 
+	and Curso.id_Curso=id_Curso
+	and Materia.nombre=materia
+	and Quimestre.numQuimestre=quimestre
+	and Parcial.numParcial=parcial
+	order by Estudiante.apellidos,Actividad.tipoActividad;
+END //
+DELIMITER ;
+
+
+#query para consultar las notas del curso de ciencias naturales del primer quimestres del primer parcial
+SELECT Estudiante.nombres,Materia.Nombre,Curso.numCurso,Quimestre.numQuimestre,Parcial.numParcial,Actividad.tipoActividad,Actividad.notaActividad
+	FROM MateriaEstudianteQuimestre,Estudiante,CursoMateriaProfesor,Curso,Materia,Quimestre,Parcial,Actividad
+	WHERE MateriaEstudianteQuimestre.numMatricula=Estudiante.numMatricula and
+	MateriaEstudianteQuimestre.id_Relacion=CursoMateriaProfesor.id_Relacion and
+	CursoMateriaProfesor.id_Curso=Curso.id_Curso and
+	CursoMateriaProfesor.id_Materia=Materia.id_Materia and
+	MateriaEstudianteQuimestre.id_MatEsQui=Quimestre.id_MatEstQui and
+	Quimestre.id_Quimestre=Parcial.id_Quimestre and
+	Parcial.id_Parcial=Actividad.id_Parcial and
+	Quimestre.numQuimestre=1 and
+	Parcial.numParcial=1 and
+	Materia.Nombre="CIENCIAS NATURALES"
+	Order by Materia.Nombre, Actividad.tipoActividad
+	;
+#drop procedure actualizarEstudianteActividad;
+
+DELIMITER //
+CREATE PROCEDURE actualizarEstudianteActividad
+(IN id_curso integer,IN materia varchar(20),IN quimestre integer,
+IN parcial integer,IN tipoActividad varchar(20),IN matricula integer,IN nota integer)
+BEGIN
+UPDATE Actividad SET Actividad.notaActividad=nota WHERE Actividad.id_Actividad in ( Select * FROM(
+SELECT Actividad.id_Actividad
+FROM MateriaEstudianteQuimestre,Estudiante,CursoMateriaProfesor,Curso,Materia,Quimestre,Parcial,Actividad
+WHERE MateriaEstudianteQuimestre.numMatricula=Estudiante.numMatricula and
+	MateriaEstudianteQuimestre.id_Relacion=CursoMateriaProfesor.id_Relacion and
+	CursoMateriaProfesor.id_Curso=Curso.id_Curso and
+	CursoMateriaProfesor.id_Materia=Materia.id_Materia and
+	MateriaEstudianteQuimestre.id_MatEsQui=Quimestre.id_MatEstQui and
+	Quimestre.id_Quimestre=Parcial.id_Quimestre and
+	Parcial.id_Parcial=Actividad.id_Parcial and
+	Curso.id_Curso=id_Curso and
+	Quimestre.numQuimestre=quimestre and
+	Parcial.numParcial=parcial and
+	Materia.Nombre=materia and
+	Actividad.tipoActividad=tipoActividad and
+	Estudiante.numMatricula=matricula
+)as result )
+;	
+END //
+DELIMITER ;
 
 DELIMITER //
 CREATE PROCEDURE InsertarEstudiante(in cedula char(10),in nombres varchar(100),
@@ -608,6 +698,7 @@ BEGIN
 Delete from PersonaFactura where cedula= cedula;
   
 END //
+
 DELIMITER ;
 
 
@@ -622,9 +713,7 @@ END //
 DELIMITER ;
 
 
-
 #Procedimiento estudiantes curso
-
 
 DELIMITER //
 CREATE PROCEDURE agregarEstudianteEnCurso(in id_Curso integer, in numMatricula integer)
@@ -632,14 +721,12 @@ BEGIN
 	select COUNT(*) INTO @contador from CursoEstudiante,Curso
 	where Curso.id_Curso=CursoEstudiante.id_Curso and Curso.id_Curso=id_Curso
 	and CursoEstudiante.numMatricula=numMatricula;
-
 	if(select @contador=0) then
 		INSERT INTO CursoEstudiante(id_Curso, numMatricula)
 		VALUES (id_Curso, numMatricula);
 	end if;
 END //
 DELIMITER ;
-
 
 #Procedimientos de los Cursos
 
@@ -760,7 +847,11 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE obtenerMateriasPorCurso(IN idCurso integer)
 BEGIN
-	SELECT Materia.id_Materia,Materia.Nombre FROM CursoMateriaProfesor,Materia WHERE  CursoMateriaProfesor.id_Materia=Materia.id_Materia and CursoMateriaProfesor.id_Curso=idCurso and CursoMateriaProfesor.CedulaProfesor IS NULL
+	SELECT Materia.id_Materia,Materia.Nombre 
+	FROM CursoMateriaProfesor,Materia 
+	WHERE  CursoMateriaProfesor.id_Materia=Materia.id_Materia 
+	and CursoMateriaProfesor.id_Curso=idCurso 
+	and CursoMateriaProfesor.CedulaProfesor IS NULL
 	ORDER BY Materia.Nombre;
 END//
 DELIMITER ;
