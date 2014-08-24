@@ -106,11 +106,14 @@ class VistaPersona(QWidget):
 
 	def clik_Seleccionar(self):
 		self.seleccionarPersona()
-		persona=self.P[len(self.P)-1]
-		print persona
-		self.llenarPersona(persona)
-		self.P=[]
-		self.modoEdicion()
+		if(len(self.P)!=0):
+			persona=self.P[len(self.P)-1]
+			self.llenarPersona(persona)
+			self.P=[]
+			self.modoEdicion()
+		else:
+			QMessageBox.about(self,'Error!',u'Seleccione una Persona')
+			
 
 	def llenarPersona(self,l):
 		self.cedula.setText(l[0])
@@ -120,7 +123,8 @@ class VistaPersona(QWidget):
 			self.sexo.setCurrentIndex(0)
 		else:
 			self.sexo.setCurrentIndex(1)
-
+		# se necesita un QDate
+		#self.calendarioFecha.setSelectedDate (l[4])
 		if(l[5]==self.lEstadoCivil[0]):
 			self.estadoCivil.setCurrentIndex(0)
 		elif(l[5]==self.lEstadoCivil[1]):
@@ -152,10 +156,19 @@ class VistaPersona(QWidget):
 		self.limpiar()
 
 	def clik_Guardar(self):
+		self.fecha=self.calendarioFecha.selectedDate()
+		datos=(self.cedula.displayText(),self.nombre.displayText(),self.apellido.displayText(),self.sexo.currentText(),self.fecha,
+					self.estadoCivil.currentText(),self.ocupacion.displayText(),self.lugarTrabajo.displayText(),self.telefono.displayText(),
+					self.direccion.displayText())
 		self.modoSeleccion()
 		self.limpiar()
-		datos=()
 		try:
 			self.manejador.actualizarPersona(datos)
+			QMessageBox.about(self,'Informacion!',u'Se ha actualizado correctamente la persona')
+			self.Actualizar_Personas()
 		except:
 			QMessageBox.about(self,'Error!',u'No se ha podido actualizar a la Persona')
+
+	def Actualizar_Personas(self):
+		self.Personas.deleteData()
+		self.Personas.addTable(self.manejador.consultarPersonas())

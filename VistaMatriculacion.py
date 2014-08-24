@@ -14,7 +14,8 @@ class VistaMatriculacion(QWidget):
 		QWidget.__init__(self,*args)
 		self.contenedor = QVBoxLayout()
 		self.layout_uno=QHBoxLayout()
-
+		self.A=[]
+		self.B=[]
 		self.headerEstudainte = [u"Matrícula",u"cédula", "Nombres", "Apellidos"]
 		self.comboBusqueda=QComboBox()
 		self.comboBusqueda.addItems(self.headerEstudainte)
@@ -76,11 +77,15 @@ class VistaMatriculacion(QWidget):
 	def eventoAsignar(self):
 		self.seleccionAlumno()
 		self.seleccionCurso()
-		alumno=self.A[len(self.A)-1]
-		curso=self.C[len(self.C)-1]
-		self.manejadorBD.agregarEstudianteEnCurso(curso[0],alumno[0])
-		self.A=[]
-		self.B=[]
+		if(len(self.A) !=0 and len(self.C) != 0):
+			alumno=self.A[len(self.A)-1]
+			curso=self.C[len(self.C)-1]
+			self.manejadorBD.agregarEstudianteEnCurso(curso[0],alumno[0])
+			self.A=[]
+			self.C=[]
+			QMessageBox.about(self,'Informacion',u'Se agrego el estudiante en el curso de forma satisfactoria')
+		else:
+			QMessageBox.about(self,'Error!',u'No se ha seleccionado curso y estudiante')
 
 
 

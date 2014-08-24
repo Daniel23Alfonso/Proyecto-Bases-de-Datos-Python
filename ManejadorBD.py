@@ -4,7 +4,7 @@ class ManejadorBD():
 	def __init__(self):
 		self.direccion="localhost"
 		self.user="root"
-		self.passwor="rodrigo"
+		self.passwor="sasukekun30"
 		self.nombreBD="BaseEscuela"
 
 	def conectar(self):
@@ -139,6 +139,11 @@ class ManejadorBD():
 		self.BD.commit()
 		self.desconectar()
 
+	def crearPersona(self,datos):
+		self.llamarProcedimineto("crearPersonas",datos)
+		self.BD.commit()
+		self.desconectar()
+
 	def consultarEstudiantesPorMateria(self,idCurso,materia,quimestre,parcial):
 		return self.llamarProcedimineto("consultarEstudiantesPorMateria",(idCurso,materia,quimestre,parcial))
 
@@ -147,3 +152,7 @@ class ManejadorBD():
 		self.llamarProcedimineto("actualizarEstudianteActividad",arg)
 		self.BD.commit()
 		self.desconectar()
+
+	
+
+

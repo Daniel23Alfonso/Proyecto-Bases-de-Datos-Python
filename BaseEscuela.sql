@@ -602,6 +602,15 @@ BEGIN
 END //
 DELIMITER ;
 
+DELIMITER //
+CREATE PROCEDURE crearPersonas(in ced char(10), in nom char(100), in ape char(100),
+in sex char(10), in fecha date, in estado char(25),in ocup char(25), in ltrab char(100),
+in telf char(6), in dir char(100))
+BEGIN
+	Insert into Persona VALUES(ced,nom,ape,sex,fecha,estado,ocup,ltrab,telf,dir);
+  
+END //
+DELIMITER ;
 
 DELIMITER //
 CREATE PROCEDURE editarPersonas(in ced char(10), in nom char(100), in ape char(100),
@@ -609,13 +618,12 @@ in sex char(10), in fecha date, in estado char(25),in ocup char(25), in ltrab ch
 in telf char(6), in dir char(100))
 BEGIN
 
-	UPDATE Persona set nombres= nom, apellidos=apre,sexo=sex,fechaNacimiento=fecha,
+	UPDATE Persona set nombres= nom, apellidos=ape,sexo=sex,fechaNacimiento=fecha,
 	estadoCivil=estado,ocupacion=ocup,lugarTrabajo=ltrab,telefono=telf,direccion=dir
 	where Cedula=ced;
   
 END //
 DELIMITER ;
-
 #Procedimientos acerca de profesores
 
 DELIMITER //
