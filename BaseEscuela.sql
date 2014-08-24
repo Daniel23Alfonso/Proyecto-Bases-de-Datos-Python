@@ -452,6 +452,10 @@ END //
 DELIMITER ;
 
 
+
+
+
+
 DELIMITER //
 CREATE PROCEDURE insertarMateriaEstudianteQuimestre(in id_curso integer,in numMatricula integer)
 BEGIN
@@ -541,7 +545,7 @@ INSERT INTO Estudiante (cedula, nombres,apellidos, sexo, estadoCivil,origen
 sexo, estadoCivil,origen, Etnia, fechaNacimiento,cedFac);
   
 END //
-DELIMITER ;
+DELIMITER;
 
 
 DELIMITER //
@@ -737,12 +741,14 @@ END //
 DELIMITER ;
 
 #Procedimientos de los Cursos
-
 DELIMITER //
-CREATE PROCEDURE crearCurso(IN numCurso integer,IN anoLectivo varChar(10),IN paralelo varchar(2))
+CREATE PROCEDURE crearCurso(IN num integer,IN anoL varChar(10))
 BEGIN
+	select count(*) INTO @contador from Curso 
+	Where numCurso=num and anoLectivo=anoL;
+
 	INSERT INTO Curso(numCurso, anoLectivo, paralelo,cedulaProfesor)
-	VALUES (numCurso, anoLectivo, paralelo,NULL);
+	VALUES (num, anoL,(select @contador)+1 ,NULL);
 END //
 DELIMITER ;
 

@@ -191,7 +191,7 @@ class VistaAgregarEstudiante(QWidget):
 			self.layout_Madre.addRow(self.ListaDatosMadre[i],self.ListaEntradasMadre[i])
 		self.madre.setLayout(self.layout_Madre)
 		#seteo las validaciones
-		#self.ListaEntradasMadre[0].setValidator(self.validatorN)
+		self.ListaEntradasMadre[0].setValidator(self.validatorN)
 
 	def initRepresentante(self):
 		self.layout_Representante=QFormLayout()
@@ -202,4 +202,7 @@ class VistaAgregarEstudiante(QWidget):
 			self.layout_Representante.addRow(self.ListaDatosRepresentante[i],self.ListaEntradasRepresentante[i])
 		self.representante.setLayout(self.layout_Representante)
 		#seteo las validaciones
-		#self.ListaEntradasRepresentante[0].setValidator(self.validatorN)
+		self.ListaEntradasRepresentante[0].setValidator(self.validatorN)
+
+	def guardarEstudiante(self):
+		pass

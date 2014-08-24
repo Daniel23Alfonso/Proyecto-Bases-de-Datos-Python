@@ -48,6 +48,8 @@ class VistaProfesorAdm(QWidget):
 			self.btnGuardar = QPushButton("Guardar")
 			self.btnGuardar.setIcon(QIcon("Imagenes/guardar.jpg"))
 			self.connect(self.btnGuardar,SIGNAL("clicked()"),self.accionGuardarEdicion)
+			self.btnCancelar=QPushButton("Cancelar")
+			self.connect(self.btnCancelar,SIGNAL("clicked()"),self.accionCancelar)
 			#cuadros de texto que permiten editar
 			self.editorProfesor = [ QLineEdit(), QLineEdit(), QLineEdit(), QLineEdit(),QLineEdit(), QLineEdit()]
 			
@@ -113,6 +115,7 @@ class VistaProfesorAdm(QWidget):
 			self.contenedor.addLayout(self.primeraFila)
 			self.contenedor.addWidget(self.profesores)
 			self.contenedor.addWidget(tab_widget)
+			self.modoSeleccion()
 			
 	
 	def llenarTabConsultas(self):
@@ -182,6 +185,7 @@ class VistaProfesorAdm(QWidget):
 		terceraFila = QHBoxLayout()
 		terceraFila.addWidget(self.btnEditar)
 		terceraFila.addWidget(self.btnGuardar)
+		terceraFila.addWidget(self.btnCancelar)
 		contenidoTab.addLayout(terceraFila)
 
 
@@ -193,6 +197,7 @@ class VistaProfesorAdm(QWidget):
 		for i in range(len(registro)):
 			if i!=0:
 				self.editorProfesor[i].setReadOnly(False)
+				self.modoEdicion()
 			else:
 				self.editorProfesor[i].setEnabled(False)
 			self.editorProfesor[i].setText(QString(str(registro[i])))  
@@ -244,11 +249,13 @@ class VistaProfesorAdm(QWidget):
 				if(len(resultados)==0):
 					self.manejador.editarProfesor(tupla)
 					QMessageBox.about(self,"Aviso",u'Se han guardado los cambios con éxito')		
+					self.actualizarProfesores()
 					for i in self.editorProfesor:
 						i.setReadOnly(True)
-					self.actualizarProfesores()
+						i.setText("")
 				else:
-					QMessageBox.about(self,"Error",u'Usuario ya existente en el sistema')				
+					QMessageBox.about(self,"Error",u'Usuario ya existente en el sistema')
+			self.modoSeleccion()				
 		except:
 			QMessageBox.about(self, 'Error',u'Datos invalidos')
 
@@ -257,3 +264,22 @@ class VistaProfesorAdm(QWidget):
 		self.profesores.deleteData()
 		self.profesores.addTable(self.manejador.consultarProfesores())
 		self.profesores.setEditable(False)
+
+	def modoEdicion(self):
+		self.btnEditar.setEnabled(False)
+		self.btnGuardar.setEnabled(True)
+		self.btnCancelar.setEnabled(True)
+
+
+	def modoSeleccion(self):
+		self.btnEditar.setEnabled(True)
+		self.btnGuardar.setEnabled(False)
+		self.btnCancelar.setEnabled(False)
+
+	def accionCancelar(self):
+		self.modoSeleccion()
+		for i in self.editorProfesor:
+			i.setText("")
+			i.setReadOnly(True)
+			
+					

@@ -153,6 +153,10 @@ class ManejadorBD():
 		self.BD.commit()
 		self.desconectar()
 
-	
+	def crearEstudiante(self,estudiante,padre,madre,representante,personaFactura):
+		pass
+
+	def crearCurso(self,datos):
+		pass
 
 

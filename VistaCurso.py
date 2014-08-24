@@ -34,8 +34,11 @@ class VistaCurso(QWidget):
 			self.contenedorNuevo=QVBoxLayout()
 			#botones
 			self.btnCrear=QPushButton("Crear")
-			self.btnActualizar=QPushButton("Actualizar")
-			self.btnEliminar=QPushButton("Eliminar")
+			self.connect(self.btnCrear,SIGNAL("clicked()"),self.accionCrear)
+			self.btnActualizar=QPushButton("Guardar")
+			self.connect(self.btnActualizar,SIGNAL("clicked()"),self.accionGuardar)
+			self.btnCancelar=QPushButton("Cancelar")
+			self.connect(self.btnCancelar,SIGNAL("clicked()"),self.accionCancelar)
 			#layaouts
 			self.Cursos=MyTable(self)
 			self.contenedor.addWidget(QLabel("Cursos"))
@@ -55,15 +58,16 @@ class VistaCurso(QWidget):
 			#definicion cajas de texto
 			self.aLectivo=QLineEdit()
 			self.curso=QComboBox()
-			self.paralelo=QComboBox()
-			self.curso.addItems(["Kinder","Primero","Segundo","Tercero","Cuarto","Quinto","Sexto","Septimo"])
+			self.paralelo=QLineEdit()
+			self.listaCurso=["Kinder","Primero","Segundo","Tercero","Cuarto","Quinto","Sexto","Septimo"]
+			self.curso.addItems(self.listaCurso)
 			#creacion de formulario
 			self.layoutCurso1.addRow("Ano Lectivo: ",self.aLectivo)
 			self.layoutCurso1.addRow("curso: ",self.curso)
 			self.layoutCurso1.addRow("Paralelo: ",self.paralelo)
 			self.layoutCurso2.addWidget(self.btnCrear)
 			self.layoutCurso2.addWidget(self.btnActualizar)
-			self.layoutCurso2.addWidget(self.btnEliminar)
+			self.layoutCurso2.addWidget(self.btnCancelar)
 
 			#agrego datos a la tabla
 			self.manejador = ManejadorBD()
@@ -111,19 +115,24 @@ class VistaCurso(QWidget):
 			self.layoutProfesorMateria.addLayout(self.layoutProfesorMateria3)
 			self.layoutProfesorMateria.addLayout(self.layoutProfesorMateria4)
 			self.tab_ProfesorMateria.setLayout(self.layoutProfesorMateria)
-			self.modoCrear()
+			self.modoConsulta()
 			self.paralelo.setEnabled(False)
 
 			
 	def obtenerInfoCurso(self):
-		self.modoEdicion()
+		self.modoConsulta()
 		self.idCurso=0
 		cursos=self.Cursos.getSelectedRegister()
 		if len(cursos)>0:
-			cursoSeleccionado=cursos[0]#el primer registro seleccionado
+			cursoSeleccionado=cursos[len(cursos)-1]#el primer registro seleccionado
 			self.idCurso=cursoSeleccionado[0]#el primer atributo es el id, almacena la referencia del idCurso actual
 			self.obtenerMateriasSinProfesor(self.idCurso)
 			self.actualizarMateriasProfesor(self.idCurso)
+			#llenamos la consulta
+			self.aLectivo.setText(cursoSeleccionado[0])
+			i=self.listaCurso.index(cursoSeleccionado[1])
+			self.curso.setCurrentIndex(i)
+			self.paralelo.setText(cursoSeleccionado[2])
 
 	def obtenerMateriasSinProfesor(self,idCurso):#actualiza el grid con la informacion de las materias sin profesor
 		materiasDelCurso=self.manejador.obtenerMateriasPorCurso(idCurso)#obtiene las materias sin profesor del curso
@@ -191,14 +200,32 @@ class VistaCurso(QWidget):
 		self.MateriasSinProfesor.setEditable(False)
 
 	def modoCrear(self):
-		self.btnCrear.setEnabled(True)
-		self.btnActualizar.setEnabled(False)
-		self.btnEliminar.setEnabled(False)
-
-
-
-	def modoEdicion(self):
 		self.btnCrear.setEnabled(False)
 		self.btnActualizar.setEnabled(True)
-		self.btnEliminar.setEnabled(True)
+		self.btnCancelar.setEnabled(True)
+		self.aLectivo.setEnabled(True)
+		self.curso.setEnabled(True)
+		self.paralelo.setEnabled(False)
+
+
+	def modoConsulta(self):
+		self.btnCrear.setEnabled(True)
+		self.btnActualizar.setEnabled(False)
+		self.btnCancelar.setEnabled(False)
+		self.aLectivo.setEnabled(False)
+		self.curso.setEnabled(False)
+		self.paralelo.setEnabled(False)
+
+	def accionCrear(self):
+		self.aLectivo.setText("")
+		self.paralelo.setText("")
+		self.modoCrear()
+
+	def accionGuardar(self):
+		pass
+
+	def accionCancelar(self):
+		self.aLectivo.setText("")
+		self.paralelo.setText("")
+		self.modoConsulta()
 

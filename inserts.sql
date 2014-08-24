@@ -173,21 +173,21 @@ INSERT INTO Persona  VALUES("0723458899", "Vladimir Israel", "Arosemena Martillo
 
 call crearMaterias();
 
-call crearCurso(1,"2011-2012",1);
+call crearCurso(1,"2011-2012");
 
-call crearCurso(1,"2012-2014",2);
+call crearCurso(1,"2012-2014");
 
-call crearCurso(1,"2011-2012",3);
+call crearCurso(1,"2011-2012");
 
-call crearCurso(2,"2011-2012",1);
+call crearCurso(2,"2011-2012");
 
-call crearCurso(3,"2011-2012",4);
+call crearCurso(3,"2011-2012");
 
-call crearCurso(4,"2012-2014",2);
+call crearCurso(4,"2012-2014");
 
-call crearCurso(4,"2011-2012",5);
+call crearCurso(4,"2011-2012");
 
-call crearCurso(7,"2011-2012",7);
+call crearCurso(7,"2011-2012");
 #INSERT INTO Curso VALUES(7,6,"2014-2015","A","0956763397");
 #INSERT INTO Curso VALUES(8,7,"2014-2015","A","0965643377"); 
 
@@ -204,3 +204,5 @@ call agregarEstudianteEnCurso(1,1);
 select * from CursoEstudiante;
 
 select * from Materia;
+
+select * from Curso;
