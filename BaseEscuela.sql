@@ -892,6 +892,15 @@ BEGIN
 END //
 DELIMITER ;
 
+DELIMITER //
+CREATE PROCEDURE AsignarDirigente(IN cedula char(10),IN Curso integer)
+BEGIN
+    UPDATE Curso SET cedulaProfesor=cedula
+	WHERE id_Curso=Curso;
+END //
+DELIMITER ;
+
+
 #Procedimientos del profesor
 
 DELIMITER //

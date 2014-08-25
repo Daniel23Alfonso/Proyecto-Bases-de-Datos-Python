@@ -157,6 +157,13 @@ class ManejadorBD():
 		pass
 
 	def crearCurso(self,datos):
-		pass
+		self.llamarProcedimineto("crearCurso",datos)
+		self.BD.commit()
+		self.desconectar()
+
+	def AsignarDirigente(self,datos):
+		self.llamarProcedimineto("AsignarDirigente",datos)
+		self.BD.commit()
+		self.desconectar()
 
 

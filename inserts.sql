@@ -201,6 +201,8 @@ INSERT INTO MateriaEstudianteQuimestre  values(45,3, 10);
 
 call agregarEstudianteEnCurso(1,1);
 
+call AsignarDirigente("0956743399",1);
+
 select * from CursoEstudiante;
 
 select * from Materia;

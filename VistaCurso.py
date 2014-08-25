@@ -21,16 +21,15 @@ class VistaCurso(QWidget):
 			#creamos las opciones
 			self.tab_widget = QTabWidget()
 			tab_Nuevo=QWidget()
-			tab_Editar=QWidget()
-			#tab_CursoMateria=QWidget()
+			self.tab_ElegirDirigente=QWidget()
 			self.tab_ProfesorMateria=QWidget()
 
 			self.layoutNuevo=QVBoxLayout()
 			self.layoutAgregar=QVBoxLayout()
 			tab_Nuevo.setLayout(self.layoutNuevo)
 			self.tab_widget.addTab(tab_Nuevo,"Curso")
-			#tab_widget.addTab(tab_CursoMateria,"Agregar Materia")
 			self.tab_widget.addTab(self.tab_ProfesorMateria,"Asignar Profesor a Materias")
+			self.tab_widget.addTab(self.tab_ElegirDirigente,"Asignar Dirigente a Curso")
 			self.contenedorNuevo=QVBoxLayout()
 			#botones
 			self.btnCrear=QPushButton("Crear")
@@ -117,6 +116,15 @@ class VistaCurso(QWidget):
 			self.tab_ProfesorMateria.setLayout(self.layoutProfesorMateria)
 			self.modoConsulta()
 			self.paralelo.setEnabled(False)
+			self.layoutDirigente=QHBoxLayout()
+			self.ProfesoresDirigentes=MyTable(self.tab_widget)
+			self.ProfesoresDirigentes.setHeader([u"Cédula","Nombre","Apellido"])
+			self.ProfesoresDirigentes.addTable(self.manejador.consultarProfesores())
+			self.btnAsignarDirigente=QPushButton("Asignar Dirigente")
+			self.layoutDirigente.addWidget(self.ProfesoresDirigentes)
+			self.layoutDirigente.addWidget(self.btnAsignarDirigente)
+			self.tab_ElegirDirigente.setLayout(self.layoutDirigente)
+			self.connect(self.btnAsignarDirigente,SIGNAL("clicked()"),self.ligarDirigente)
 
 			
 	def obtenerInfoCurso(self):
@@ -129,10 +137,10 @@ class VistaCurso(QWidget):
 			self.obtenerMateriasSinProfesor(self.idCurso)
 			self.actualizarMateriasProfesor(self.idCurso)
 			#llenamos la consulta
-			self.aLectivo.setText(cursoSeleccionado[0])
+			self.aLectivo.setText(cursoSeleccionado[2])
 			i=self.listaCurso.index(cursoSeleccionado[1])
 			self.curso.setCurrentIndex(i)
-			self.paralelo.setText(cursoSeleccionado[2])
+			self.paralelo.setText(cursoSeleccionado[3])
 
 	def obtenerMateriasSinProfesor(self,idCurso):#actualiza el grid con la informacion de las materias sin profesor
 		materiasDelCurso=self.manejador.obtenerMateriasPorCurso(idCurso)#obtiene las materias sin profesor del curso
@@ -209,6 +217,8 @@ class VistaCurso(QWidget):
 
 
 	def modoConsulta(self):
+		self.aLectivo.setText("")
+		self.paralelo.setText("")
 		self.btnCrear.setEnabled(True)
 		self.btnActualizar.setEnabled(False)
 		self.btnCancelar.setEnabled(False)
@@ -222,10 +232,57 @@ class VistaCurso(QWidget):
 		self.modoCrear()
 
 	def accionGuardar(self):
-		pass
+		datos=(self.curso.currentIndex()+1,self.aLectivo.displayText())
+		try:
+			if(self.validarAnoLectivo(self.aLectivo.displayText())):
+				self.manejador.crearCurso(datos)
+				QMessageBox.about(self,'Aviso!',u'Se ha creado el Curso Correctamente')
+				self.modoConsulta()
+				self.actualizarCursos()
+			else:
+				QMessageBox.about(self,'Error!',u'Año lectivo invalido')	
+		except:
+			QMessageBox.about(self,'Error!',u'No se ha podido Crear el Curso')
 
 	def accionCancelar(self):
 		self.aLectivo.setText("")
 		self.paralelo.setText("")
 		self.modoConsulta()
 
+	def actualizarCursos(self):
+		self.Cursos.deleteData()
+		self.Cursos.addTable(self.manejador.obtenerCursos())
+
+
+	def validarAnoLectivo(self,a):
+		 anos= a.split('-')
+		 if(len(anos)!=2):
+		 	return False
+		 else:
+		 	try:
+		 		ano1=int(anos[0])
+		 		ano2=int(anos[1])
+		 		if((ano2-ano1)==1):
+		 			return True
+		 		else:
+		 			return False
+		 	except Exception, e:
+		 		return False
+
+
+	def ligarDirigente(self):
+		cursoSel=self.Cursos.getSelectedRegister()
+		ProfSel=self.ProfesoresDirigentes.getSelectedRegister()
+		if(len(cursoSel)>0 and len(ProfSel)>0):
+			curso=cursoSel[len(cursoSel)-1]
+			prof=ProfSel[len(ProfSel)-1]
+			idCurso=curso[0]
+			idProfesor=prof[0]
+			datos=(idProfesor,idCurso)
+			try:
+				self.manejador.AsignarDirigente(datos)	
+				self.actualizarCursos()		
+			except Exception, e:
+				QMessageBox.about(self,'Error!',u'No se puede Asignar el Dirigente al Curso')			
+		else:
+			QMessageBox.about(self,'Error!',u'No se ha escogido el profesor y el curso')
