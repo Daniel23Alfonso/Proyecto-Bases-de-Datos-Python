@@ -187,3 +187,78 @@ class GeneradorReporte:
     elements.append(tablaCalif)
     elements.append(tablaFinal)
     doc.build(elements)
+
+
+
+  def GenerarFactura (self,telefono,cliente, direccion, listCantDetallePrecio,valorTotal):
+
+    fecha = time.strftime("%d/%m/%y")  
+
+    namefile = "Factura_%s.pdf"%cliente
+    doc = SimpleDocTemplate(namefile, pagesize=letter)
+    elements = []
+    styleSheet = getSampleStyleSheet()
+
+    titulo = Paragraph('''<b>ESCUELA PARTICULAR MIXTA #851</b>''',styleSheet["BodyText"])
+
+    nombreEscuela = Paragraph('''<b>&quot;DR. JAIME ASPIAZU SEMINARIO&quot;</b>''',styleSheet["BodyText"])
+    
+    dirEscuela = u"Dirección: M S/N entre 26ava. y 25ava.\nTeléfono: 04-3092761"
+    telfEscuela = "Telf.: 3092761 Guayaquil - Ecuador"
+    ruc = "R.U.C.: 0914720057001"
+    FechaAut = "21/Julio/2014"
+
+    FACTURA = Paragraph('''<b>FACTURA</b>''',styleSheet["BodyText"])
+
+
+    datosHeader = [[titulo],[nombreEscuela],[dirEscuela],[telfEscuela],[ruc],[FACTURA]]
+    tablaHeader = Table(datosHeader)
+    tablaHeader.setStyle(TableStyle([ ('ALIGN',(0,0),(-1,-1),'CENTER'),
+                       ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                       ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
+                       ]))
+
+
+    Stringfilafechatelf = "FECHA: <u>%s    </u> TELF: <u>%s    </u>"%(fecha,telefono)
+    pfecha = Paragraph(Stringfilafechatelf,styleSheet["BodyText"])
+    StringCliente = "CLIENTE: <u>%s      </u>"%cliente
+    pcliente = Paragraph(StringCliente, styleSheet["BodyText"])
+    StrignDireccion = "DIRECCION: <u>%s     </u>"%direccion
+    pdireccion = Paragraph(StrignDireccion,styleSheet["BodyText"])
+
+    datosCliente = [[pfecha],[pcliente],[pdireccion],[]]
+    tablaCliente = Table(datosCliente)
+    tablaHeader.setStyle(TableStyle([ ('ALIGN',(0,0),(-1,-1),'CENTER'),
+                       ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                       ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
+                       ]))
+
+    headerFactura  = [["CANT.","DETALLE","P.UNIT", "V.TOTAL"]]
+    datosfatura = headerFactura + listCantDetallePrecio
+    datosfatura.append(["","", "VALOR TOTAL $", valorTotal])
+
+    tablaDatosFactura = Table(datosfatura)
+
+    tablaDatosFactura.setStyle(TableStyle([ ('ALIGN',(0,0),(-1,-1),'LEFT'),
+                       ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                       ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
+                       ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                       ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                       ('BACKGROUND',(0,0),(3,0),colors.gray)
+                       ]))
+
+    firmas = [["",""] ,["__________________","______________" ],["Entregado Por", "Recibido Por"]]
+    tablafirmas = Table(firmas)
+    tablafirmas.setStyle(TableStyle([ ('ALIGN',(0,0),(-1,-1),'CENTER'),
+                       ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                       ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
+                       ]))
+
+
+
+    elements.append(tablaHeader);
+    elements.append(tablaCliente);
+    elements.append(tablaDatosFactura)
+    elements.append(tablafirmas)
+    doc.build(elements)
+
