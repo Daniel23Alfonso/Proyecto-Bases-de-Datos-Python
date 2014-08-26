@@ -4,7 +4,7 @@ class ManejadorBD():
 	def __init__(self):
 		self.direccion="localhost"
 		self.user="root"
-		self.passwor="sasukekun30"
+		self.passwor="rodrigo"
 		self.nombreBD="BaseEscuela"
 
 	def conectar(self):
@@ -145,16 +145,20 @@ class ManejadorBD():
 		self.desconectar()
 
 	def consultarEstudiantesPorMateria(self,idCurso,materia,quimestre,parcial):
-		return self.llamarProcedimineto("consultarEstudiantesPorMateria",(idCurso,materia,quimestre,parcial))
+		arg=(idCurso,materia,quimestre,parcial)
+		return self.llamarProcedimineto("consultarEstudiantesPorMateria",arg)
 
 	def actualizarEstudianteActividad(self,idCurso,materia,quimestre,parcial,tipoActividad,matriculaEstudiante,nota):
-		arg=(str(idCurso),str(materia),str(quimestre),str(parcial),str(tipoActividad),str(matriculaEstudiante),str(nota))
+		arg=(idCurso,materia,quimestre,parcial,tipoActividad,matriculaEstudiante,nota)
 		self.llamarProcedimineto("actualizarEstudianteActividad",arg)
 		self.BD.commit()
 		self.desconectar()
 
 	def consultarEstudiantesPorMateria(self,idCurso,materia,quimestre,parcial):
 		return self.llamarProcedimineto("consultarEstudiantesPorMateria",(idCurso,materia,quimestre,parcial))
+
+	def consultarExamenesPorCurso(self,idCurso,materia):
+		return self.llamarProcedimineto("consultarExamenesPorCurso",(idCurso,materia))
 
 	def consultarExamenPorQuimestre(self,idCurso,materia,quimestre):
 		arg=(idCurso,materia,quimestre)
@@ -166,14 +170,17 @@ class ManejadorBD():
 		self.BD.commit()
 		self.desconectar()
 
-	def actualizarNotaParcial(self,id_parcial):
-		self.llamarProcedimineto("actualizarNotaParcial",(id_parcial,))
+	def actualizarNotasParcial(self,id_curso,materia,quimestre,parcial,matriculaEstudiante):
+		arg=(id_curso,materia,quimestre,parcial,matriculaEstudiante)
+		self.llamarProcedimineto("actualizarNotasParcial",arg)
 		self.BD.commit()
 		self.desconectar()
 
-	def encontrarIDParcial(self,id_curso,materia,quimestre,numParcial,matriculaEstudiante):
-		arg=(id_curso,materia,quimestre,numParcial,matriculaEstudiante)
-		return self.llamarProcedimineto("encontrarIDParcial",arg)
+	def actualizarNotaQuimestre(self,id_curso,materia,quimestre,matriculaEstudiante):
+		arg=(id_curso,materia,quimestre,matriculaEstudiante)
+		self.llamarProcedimineto("actualizarNotaQuimestre",arg)
+		self.BD.commit()
+		self.desconectar()
 
 	def consultarNotasParcial(self,id_curso,materia,quimestre):
 		arg=(id_curso,materia,quimestre)
@@ -191,8 +198,6 @@ class ManejadorBD():
 		self.llamarProcedimineto("AsignarDirigente",datos)
 		self.BD.commit()
 		self.desconectar()
-
-
 
 	def obtenerDeudas(self,matricula):
 		return self.llamarProcedimineto("obtenerDeudas",(matricula,))

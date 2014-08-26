@@ -135,30 +135,32 @@ class VistaNotasPorCurso(QWidget):
 
 
 	def unir(self,notas_parcial,examenes):
+		#el objetivo de esta funcion es reubicar los datos a ser mostrados en el grid
 		registro_actual=[]
 		registro_nuevo=[]
 		resultados=[]
 		i=0
 		for registro_actual in notas_parcial:
 			registro_nuevo=[]
-			for i in range(6):
-				registro_nuevo.append(registro_actual[i])
+			for i in range(6):#registro actual tiene los campos: matricula,apellidos,nombres,notaParcial1,notaParcial2,notaParcial3
+				registro_nuevo.append(registro_actual[i])#copia los datos en una lista nueva
 			matricula_estudiante=registro_actual[0]#matricula del estudiante
-			examen=self.obtenerExamen(matricula_estudiante,examenes)
-			if examen !=None:
-				registro_nuevo.append(examen)
+			examen,notaQuimestre=self.obtenerInfoQuimestre(matricula_estudiante,examenes)
+			if examen !=None and notaQuimestre!=None:
+				registro_nuevo.append(examen)#se añade la nota del examene
+				registro_nuevo.append(notaQuimestre)#se añade el promedio del quimestre
 			resultados.append(registro_nuevo)
 		return resultados
 
-	def obtenerExamen(self,matricula_estudiante,examenes):
+	def obtenerInfoQuimestre(self,matricula_estudiante,examenes):
 		#esta funcion va a buscar entre los examenes la matricula=matricula_estudiante
-		#los elementos de la lista examenes son de la forma: estudiante.matricula, estudiante.apellidos,estudiante.nombre,quimestre.notaExamen
+		#los elementos de la lista examenes son de la forma: estudiante.matricula, estudiante.apellidos,estudiante.nombre,quimestre.notaExamen,quimestre.notaQuimestre
 		for registro in examenes:
 			matricula_actual=registro[0]
 			if(matricula_actual==matricula_estudiante):
 				examen=registro[3]
-				return examen
-
+				notaQuimestre=registro[4]
+				return examen,notaQuimestre
 
 
 class VistaCalificaciones(QWidget):
@@ -181,6 +183,7 @@ class VistaCalificaciones(QWidget):
 		self.layout_dos.addWidget(QLabel("                               "))
 		self.layout_calificaciones.addLayout(self.layout_dos)
 		self.setLayout(self.layout_calificaciones)
+		self.i=0
 
 	def initCalificaciones(self):
 		resultados=self.cursos.getSelectedRegister()
@@ -231,13 +234,11 @@ class VistaSemestre(QWidget):
 		
 		self.manejador=ManejadorBD()
 		self.botonesGuardar=[QPushButton("Guardar"),QPushButton("Guardar"),QPushButton("Guardar"),QPushButton("Guardar")]#botones para guardar las notas que se ingresen
-		self.idCurso=curso
-		self.materia=materia
+		self.idCurso=str(curso)
+		self.materia=str(materia)
 		self.numQuimestre=numQuimestre
-		print"id de curso de vista de semestre"+str(self.idCurso)
 		self.initTab()
 		self.setLayout(self.layout_uno)
-
 		self.botonesGuardar[0].clicked.connect(lambda:self.guardarNotasActividades(1))
 		self.botonesGuardar[1].clicked.connect(lambda:self.guardarNotasActividades(2))
 		self.botonesGuardar[2].clicked.connect(lambda:self.guardarNotasActividades(3))
@@ -250,41 +251,45 @@ class VistaSemestre(QWidget):
 		self.tab_uno.addTab(self.parciales_uno[2],"3er Parcial")
 		self.tab_uno.addTab(self.parciales_uno[3],"Examen")
 		self.estudiantes=[MyTable(self),MyTable(self),MyTable(self),MyTable(self)]
+		consulta=[]
 		for i in range(3):
 			self.layouts[i].addWidget(QLabel("Lista de Estudiantes:"))		
 			consulta=self.manejador.consultarEstudiantesPorMateria(self.idCurso,self.materia,self.numQuimestre,i+1)
-			resultados=self.ordenarDatos(consulta)
-			self.estudiantes[i].addTable(resultados)
 			self.estudiantes[i].setHeader(["Matricula","Apellidos","Nombres","En Clase", "En Grupo","Examen","Individual","Leccion"])
+			self.estudiantes[i].addTable(self.ordenarDatos(consulta))
 			self.estudiantes[i].hideColumn(0)#esconde la columna matricula
 			self.layouts[i].addWidget(self.estudiantes[i])
 			self.layouts[i].addWidget(self.botonesGuardar[i])
 			self.parciales_uno[i].setLayout(self.layouts[i])
+
 		#Componenes para la pestaáña de las notas del examen del quimestre
 		examen=3
-		self.estudiantes[examen].setHeader(["Matricula","Apellidos","Nombres","Examen"])
-		self.estudiantes[examen].hideColumn(0)
+		self.estudiantes[examen].setHeader(["Matricula","Apellidos","Nombres","Examen",""])
+		self.estudiantes[examen].hideColumn(0)#se esconde la fila de la matricula
 		self.layouts[examen].addWidget(self.estudiantes[examen])
 		self.layouts[examen].addWidget(self.botonesGuardar[examen])
 		resultados=self.manejador.consultarExamenPorQuimestre(self.idCurso,self.materia,self.numQuimestre)
 		self.estudiantes[examen].addTable(resultados)
+		self.estudiantes[examen].hideColumn(4)#se esconde la fila del promedio
 		self.parciales_uno[examen].setLayout(self.layouts[examen])
 		self.layout_uno.addWidget(self.tab_uno)#se añaden las pestañas de los parciales y el examen
 
-
 	def ordenarDatos(self,lista):
 		resultados=[]
+		registro_actual=[]
+		registro_siguiente=[]
 		i=0
-		acumular=1
+		acumular=0
 		while i<len(lista):
 			registro_actual=lista[i]
 			registro_nuevo=[]
+			registro_siguiente=[]
 			registro_nuevo.append(registro_actual[0])
 			registro_nuevo.append(registro_actual[1])
 			registro_nuevo.append(registro_actual[2])
 			registro_nuevo.append(registro_actual[4])
 			j=0
-			for j in range(4):
+			for j in range(1,5):
 				registro_siguiente=lista[acumular+j]
 				registro_nuevo.append(registro_siguiente[4])
 			resultados.append(registro_nuevo)
@@ -297,6 +302,7 @@ class VistaSemestre(QWidget):
 			resultados=[]
 			for i in range(self.estudiantes[Parcial-1].getSize()):
 				registro=self.estudiantes[Parcial-1].getRegister(i)
+				print "registro:"+str(registro)
 				j=0
 				for j in range(5):
 					registro_nuevo=[]
@@ -307,13 +313,12 @@ class VistaSemestre(QWidget):
 					resultados.append(registro_nuevo)
 			tipoActividad=["En Clase","En Grupo","Examen","Individual","Leccion"]
 			i=0
-			for registro in resultados:		
+			registro=[]
+			for registro in resultados:	
 				self.manejador.actualizarEstudianteActividad(self.idCurso,self.materia,self.numQuimestre,Parcial,tipoActividad[i],str(registro[0]),str(registro[3]))
-				res=self.manejador.encontrarIDParcial(self.idCurso,self.materia,self.numQuimestre,Parcial,str(registro[0]))
-				registro=res[0]
-				idParcial=registro[0]
-				self.manejador.actualizarNotaParcial(idParcial)
 				if i==4: 
+					self.manejador.actualizarNotasParcial(self.idCurso,self.materia,self.numQuimestre,Parcial,str(registro[0]))
+					self.manejador.actualizarNotaQuimestre(self.idCurso,self.materia,self.numQuimestre,str(registro[0]))
 					i=0#empieza a barrer de nuevo el arreglo tipo de actividad
 				else:
 					i+=1
@@ -326,6 +331,7 @@ class VistaSemestre(QWidget):
 			for i in range(self.estudiantes[3].getSize()):
 				estudiante=self.estudiantes[3].getRegister(i)
 				self.manejador.actualizarExamenPorQuimestre(self.idCurso,self.materia,self.numQuimestre,str(estudiante[0]),str(estudiante[3]))
+				self.manejador.actualizarNotaQuimestre(self.idCurso,self.materia,self.numQuimestre,str(estudiante[0]))
 			QMessageBox.about(self, 'Aviso',u'Se han guardado las calificaciones de forma correcta')
 		except:
 			QMessageBox.about(self, 'Error',u'Inserte calificaciones validas')
