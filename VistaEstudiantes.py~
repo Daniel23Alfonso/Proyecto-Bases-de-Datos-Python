@@ -271,4 +271,3 @@ class VistaEstudiantes(QWidget):
 			for i in range (len(self.labelsDatosRep )):
 				label= self.labelsDatosRep[i]
 				label.setText("")
-

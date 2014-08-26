@@ -286,4 +286,3 @@ class VistaCurso(QWidget):
 				QMessageBox.about(self,'Error!',u'No se puede Asignar el Dirigente al Curso')			
 		else:
 			QMessageBox.about(self,'Error!',u'No se ha escogido el profesor y el curso')
-

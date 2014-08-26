@@ -111,31 +111,17 @@ class VistaAgregarEstudiante(QWidget):
 		self.padre=QWidget()
 		self.madre=QWidget()
 		self.representante=QWidget()
-		self.personaFactura=QWidget()
 		self.tab_uno.addTab(self.estudiante,"Estudiante")
 		self.tab_uno.addTab(self.padre,"Padre")
 		self.tab_uno.addTab(self.madre,"Madre")
 		self.tab_uno.addTab(self.representante,"Representante")
-		self.tab_uno.addTab(self.personaFactura,"Persona Factura")
 		self.contenedor.addWidget(self.tab_uno)
 		self.initEstudiante()
 		self.initPadre()
 		self.initMadre()
 		self.initRepresentante()
-		self.initPersonaFacura()
 		self.setLayout(self.contenedor)
-		
 
-	def initPersonaFacura(self):
-		self.layout_PersonaFactura=QFormLayout()
-		self.lisDatosPersona=[u"Cédula: ","Nombres: ","Telefono: ","Direccion: "]
-		self.lisEntradasPersona=[QLineEdit(),QLineEdit(),QLineEdit(),QLineEdit()]
-		self.lisEntradasPersona[0].setValidator(self.validatorN)
-		i=0
-		for l in self.lisDatosPersona:
-			self.layout_PersonaFactura.addRow(l,self.lisEntradasPersona[i])
-			i=i+1
-		self.personaFactura.setLayout(self.layout_PersonaFactura)
 
 	def initEstudiante(self):
 		self.layout_estudiante=QVBoxLayout()
@@ -151,15 +137,12 @@ class VistaAgregarEstudiante(QWidget):
 		for i in range(0,3):
 			self.listaLayouts[0].addRow(QLabel(listDatosEst[i]),self.textos[i])
 
-		self.sexos=["MASCULINO","FEMENINO"]
-		self.EstadoCivil=["SOLTERO(A)","CASADO(A)","DIVORCIADO(A)","VIUDO(A)","UNIDO(A)"]
-
 		self.comboSexo=QComboBox()
-		
+		self.sexos=["MASCULINO","FEMENINO"]
 		self.comboSexo.addItems(self.sexos)
 
 		self.comboEstadoCivil=QComboBox()
-		
+		self.EstadoCivil=["SOLTERO(A)","CASADO(A)","DIVORCIADO(A)","VIUDO(A)","UNIDO(A)"]
 		self.comboEstadoCivil.addItems(self.EstadoCivil)
 
 		self.listaLayouts[0].addRow(QLabel(listDatosEst[indiceSexo]),self.comboSexo)
@@ -198,9 +181,6 @@ class VistaAgregarEstudiante(QWidget):
 		self.padre.setLayout(self.layout_Padre)
 		#seteo las validaciones
 		self.ListaEntradasPadre[0].setValidator(self.validatorN)
-		self.ListaEntradasPadre[3].addItems(self.sexos)
-		self.ListaEntradasPadre[5].addItems(self.EstadoCivil)
-
 
 	def initMadre(self):
 		self.layout_Madre=QFormLayout()
@@ -212,8 +192,6 @@ class VistaAgregarEstudiante(QWidget):
 		self.madre.setLayout(self.layout_Madre)
 		#seteo las validaciones
 		self.ListaEntradasMadre[0].setValidator(self.validatorN)
-		self.ListaEntradasMadre[3].addItems(self.sexos)
-		self.ListaEntradasMadre[5].addItems(self.EstadoCivil)
 
 	def initRepresentante(self):
 		self.layout_Representante=QFormLayout()
@@ -225,8 +203,6 @@ class VistaAgregarEstudiante(QWidget):
 		self.representante.setLayout(self.layout_Representante)
 		#seteo las validaciones
 		self.ListaEntradasRepresentante[0].setValidator(self.validatorN)
-		self.ListaEntradasRepresentante[3].addItems(self.sexos)
-		self.ListaEntradasRepresentante[5].addItems(self.EstadoCivil)
 
 	def guardarEstudiante(self):
 		pass
