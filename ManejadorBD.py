@@ -4,7 +4,7 @@ class ManejadorBD():
 	def __init__(self):
 		self.direccion="localhost"
 		self.user="root"
-		self.passwor="rodrigo"
+		self.passwor="sasukekun30"
 		self.nombreBD="BaseEscuela"
 
 	def conectar(self):

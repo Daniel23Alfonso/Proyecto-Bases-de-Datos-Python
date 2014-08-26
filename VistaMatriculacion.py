@@ -185,6 +185,7 @@ class VistaAgregarEstudiante(QWidget):
 
 
 		self.estudiante.setLayout(self.layout_estudiante)
+		self.obtenerEstudiante()
 		#validaciones
 
 
@@ -230,3 +231,31 @@ class VistaAgregarEstudiante(QWidget):
 
 	def guardarEstudiante(self):
 		pass
+
+	def obtenerEstudiante(self):
+		fecha=self.calendario.selectedDate ()
+		strFecha=self.obtenerFechaString(fecha)
+		return (self.textos[0],self.textos[1],self.textos[2], self.comboSexo.currentText(),self.comboEstadoCivil.currentText(),self.textos[3],self.comboEtnia.currentText(),strFecha)
+
+	def obtenerPadre(self):
+		fecha=self.calendario.selectedDate ()
+		strFecha=self.obtenerFechaString(fecha)
+		return (self.textos[0],self.textos[1],self.textos[2], self.comboSexo.currentText(),self.comboEstadoCivil.currentText(),self.textos[3],self.comboEtnia.currentText(),strFecha)
+
+	def obtenerMadre(self):
+		fecha=self.calendario.selectedDate ()
+		strFecha=self.obtenerFechaString(fecha)
+		return (self.textos[0],self.textos[1],self.textos[2], self.comboSexo.currentText(),self.comboEstadoCivil.currentText(),self.textos[3],self.comboEtnia.currentText(),strFecha)
+
+	def obtenerRepresentante(self):
+		fecha=self.calendario.selectedDate ()
+		strFecha=self.obtenerFechaString(fecha)
+		return (self.textos[0],self.textos[1],self.textos[2], self.comboSexo.currentText(),self.comboEstadoCivil.currentText(),self.textos[3],self.comboEtnia.currentText(),strFecha)
+
+		
+
+	def obtenerFechaString(self,date):
+		dia=date.day()
+		mes=date.month()
+		anio=date.year()
+		return "%d-%d-%d" %(anio,mes,dia)

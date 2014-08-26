@@ -7,6 +7,8 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from Tabla import *
 from ManejadorBD import *
+import os
+from GeneradorReporte import *
 
 class VistaFacturacion(QWidget):
 	dimension_x=400
@@ -97,6 +99,7 @@ class VistaFacturacion(QWidget):
 			self.total=0.0
 			self.subTotal=0.0
 			self.iva=0.0
+			self.gReporte=GeneradorReporte()
 
 	def modoSeleccion(self):
 		self.btnSeleccionar.setEnabled(True)
@@ -149,7 +152,6 @@ class VistaFacturacion(QWidget):
 			self.total=0.00
 			self.actualizarValores()
 			self.modoSeleccion()
-
 		except Exception, e:
 			QMessageBox.about(self,'Error!',u'Problemas al generar la factura')			
 	

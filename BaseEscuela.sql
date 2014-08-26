@@ -380,7 +380,7 @@ and M.id_Materia=CM.id_Materia and P.id_Quimestre=Q.id_Quimestre
 
 CREATE VIEW cursosDeEstudiantes AS(
 SELECT Curso.id_Curso,Estudiante.numMatricula,Estudiante.apellidos,Estudiante.nombres,
-Materia.id_Materia,Materia.nombre as materia,
+Materia.id_Materia,Materia.Nombre as materia,
 Quimestre.id_Quimestre,Quimestre.numQuimestre,Quimestre.notaQuimestre,Quimestre.notaExamen as examenQuimestre,
 Parcial.id_Parcial,Parcial.numParcial,Parcial.notaParcial,
 Actividad.tipoActividad,Actividad.notaActividad
@@ -392,7 +392,7 @@ and MateriaEstudianteQuimestre.numMatricula=Estudiante.numMatricula
 and MateriaEstudianteQuimestre.id_MatEsQui=Quimestre.id_MatEstQui
 and Quimestre.id_Quimestre=Parcial.id_Quimestre
 and Parcial.id_Parcial=Actividad.id_Parcial
-order by Curso.id_Curso,Estudiante.apellidos, materia.nombre
+order by Curso.id_Curso,Estudiante.apellidos, Materia.Nombre
 );
 
 #--------------------------------------------------------------------#
