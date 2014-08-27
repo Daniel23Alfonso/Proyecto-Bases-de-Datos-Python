@@ -33,7 +33,7 @@ FOREIGN KEY (cedulaProfesor) REFERENCES Profesor(cedula) ON DELETE CASCADE ON UP
 );
 
 CREATE TABLE Estudiante
-(numMatricula integer,
+(numMatricula integer AUTO_INCREMENT,
 cedula char (10),
 nombres varchar(100),
 apellidos varchar(100),
@@ -47,15 +47,6 @@ CONSTRAINT CHECK(sexo in ('Masculino','Femenino')),
 PRIMARY KEY (numMatricula),
 FOREIGN KEY (cedulaFactura) REFERENCES PersonaFactura(cedula) ON DELETE CASCADE ON UPDATE CASCADE,
 UNIQUE (cedula)
-);
-
-
-CREATE TABLE CursoEstudiante(
-id_Curso integer,
-numMatricula integer,
-PRIMARY KEY(id_Curso,numMatricula),
-FOREIGN KEY (numMatricula) REFERENCES Estudiante(numMatricula) ON DELETE CASCADE ON UPDATE CASCADE,
-FOREIGN KEY (id_Curso) REFERENCES Curso(id_Curso) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 
@@ -158,17 +149,25 @@ ocupacion varchar (25),
 lugarTrabajo varchar (100),
 telefono char (6),
 direccion varchar (100),
-CONSTRAINT CHECK(sexo in ('Masculino','Femenino')),
-PRIMARY KEY (cedula)
+PRIMARY KEY (cedula),
+CONSTRAINT CHECK(sexo in ('Masculino','Femenino'))
+);
+
+CREATE TABLE CursoEstudiante(
+id_Curso integer,
+numMatricula integer,
+PRIMARY KEY(id_Curso,numMatricula),
+FOREIGN KEY (numMatricula) REFERENCES Estudiante(numMatricula) ON DELETE CASCADE ON UPDATE CASCADE,
+FOREIGN KEY (id_Curso) REFERENCES Curso(id_Curso) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE PersonaEstudiante
 (cedulaPersona char (10),
 numMatricula integer,
-tipoPersona varchar(20),
-CONSTRAINT CHECK(tipoPersona in ('Padre','Madre','Representante')),
-FOREIGN KEY (numMatricula) REFERENCES Estudiante(numMatricula),
-FOREIGN KEY (CedulaPersona) REFERENCES Persona(cedula)
+tipoPersona enum ('Padre','Madre','Representante'),
+PRIMARY KEY (cedulaPersona , numMatricula),
+FOREIGN KEY (numMatricula) REFERENCES Estudiante(numMatricula) ON UPDATE CASCADE ON DELETE CASCADE,
+FOREIGN KEY (cedulaPersona) REFERENCES Persona(cedula) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE Factura
@@ -340,6 +339,25 @@ CREATE TRIGGER ligarEstudianteQuimestre
 		call insertarMateriaEstudianteQuimestre(new.id_Curso,new.numMatricula);
 		call insertarMateriaExamenEstudiante(new.id_Curso,new.numMatricula);
 END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER generarDeudas
+	AFTER INSERT ON Estudiante
+	FOR EACH ROW BEGIN
+	
+	call crearDeuda(1,30.00,new.numMatricula);
+	call crearDeuda(2,30.00,new.numMatricula);
+	call crearDeuda(3,30.00,new.numMatricula);
+	call crearDeuda(4,30.00,new.numMatricula);
+	call crearDeuda(5,30.00,new.numMatricula);
+	call crearDeuda(6,30.00,new.numMatricula);
+	call crearDeuda(7,30.00,new.numMatricula);
+	call crearDeuda(8,30.00,new.numMatricula);
+	call crearDeuda(9,30.00,new.numMatricula);
+	call crearDeuda(10,30.00,new.numMatricula);
+	
+END $$
 DELIMITER ;
 
 
@@ -1194,6 +1212,35 @@ BEGIN
 		set val:= 1;
 	end if; 
 	
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE ligarEstudiantePersona(in cedPers char(10), in matricula integer,in tipo integer)
+BEGIN
+
+	Insert Into PersonaEstudiante(cedulaPersona,numMatricula,tipoPersona) 
+	Values(cedPers,matricula,tipo);
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE obtenerMatriculaEstudiante(in ced integer)
+BEGIN
+	select numMatricula from Estudiante
+	where cedula=ced;
+END //
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE obtenerPersonaFactura(in ced integer)
+BEGIN
+	select cedulaFactura into @persona from Estudiante
+	where cedula=ced;
+
+	select * from PersonaFactura 
+	where cedula in (select @persona);
 END //
 DELIMITER ;
 

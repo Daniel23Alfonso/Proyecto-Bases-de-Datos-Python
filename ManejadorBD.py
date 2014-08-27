@@ -4,7 +4,7 @@ class ManejadorBD():
 	def __init__(self):
 		self.direccion="localhost"
 		self.user="root"
-		self.passwor=""
+		self.passwor="sasukekun30"
 		self.nombreBD="BaseEscuela"
 
 	def conectar(self):
@@ -82,12 +82,6 @@ class ManejadorBD():
 	def estudianteObtenerPersona(self, numCedula, tipoPersona):
 		return self.llamarProcedimineto("EstudianteObtenerPersona",(numCedula, tipoPersona))
 		self.desconectar()
-
-	def editarEstudiante(self, tupla):
-		self.llamarProcedimineto("editarEstudiante", tupla)
-		self.BD.commit()
-		self.desconectar()
-
 	
 	def agregarEstudianteEnCurso(self,curso,matricula):
 		arg=(curso,matricula)
@@ -147,8 +141,6 @@ class ManejadorBD():
 
 	def crearPersona(self,datos):
 		self.llamarProcedimineto("crearPersonas",datos)
-		self.BD.commit()
-		self.desconectar()
 
 	def consultarEstudiantesPorMateria(self,idCurso,materia,quimestre,parcial):
 		arg=(idCurso,materia,quimestre,parcial)
@@ -194,10 +186,23 @@ class ManejadorBD():
 
 	def crearEstudiante(self,estudiante,padre,madre,representante,personaFactura):
 		self.llamarProcedimineto("InsertarPersonaFactura",personaFactura)
-		self.BD.commit()
 		self.llamarProcedimineto("InsertarEstudiante",estudiante)
+		self.crearPersona(padre)
+		self.crearPersona(madre)
+		self.crearPersona(representante)
+		print padre[0]
+		print madre[0]
+		print representante[0]
+		matricula=self.obtenerMatriculaEstudiante(estudiante[0])
+		print matricula[0][0]
+		tuplaPadre=(str(padre[0]),matricula[0][0],1)
+		tuplaMadre=(str(madre[0]),matricula[0][0],2)
+		tuplaRepre=(str(representante[0]),matricula[0][0],3)
+		self.ligarEstudiantePersona(tuplaPadre)
+		self.ligarEstudiantePersona(tuplaMadre)
+		self.ligarEstudiantePersona(tuplaRepre)
 		self.BD.commit()
-
+		self.desconectar()
 
 
 	def crearCurso(self,datos):
@@ -230,6 +235,18 @@ class ManejadorBD():
 		self.BD.commit()
 		self.desconectar()
 
+
+	def ligarEstudiantePersona(self,tupla):
+		self.llamarProcedimineto("ligarEstudiantePersona",tupla)
+
+
 	def validarLogguin(self,user,contra):
 		pass
 
+	def obtenerPersonaFactura(self,estudiante):
+		return self.llamarProcedimineto("obtenerPersonaFactura",(estudiante,))
+		self.desconectar()
+
+	def obtenerMatriculaEstudiante(self,cedula):
+		return self.llamarProcedimineto("obtenerMatriculaEstudiante",(cedula,))
+		self.desconectar()

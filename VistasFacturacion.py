@@ -100,6 +100,7 @@ class VistaFacturacion(QWidget):
 			self.subTotal=0.0
 			self.iva=0.0
 			self.gReporte=GeneradorReporte()
+			self.personaFactura=()
 
 	def modoSeleccion(self):
 		self.btnSeleccionar.setEnabled(True)
@@ -119,6 +120,8 @@ class VistaFacturacion(QWidget):
 			self.modoAgregar()
 			try:
 				self.deudas=self.manejadorBD.obtenerDeudas(idAlumno)
+				self.personaFactura=self.manejadorBD.obtenerPersonaFactura(alumno[1])
+				print self.personaFactura
 				self.idDeudas=[]
 			except Exception, e:
 				raise e
@@ -150,6 +153,7 @@ class VistaFacturacion(QWidget):
 			self.factura.deleteData()
 			self.subTotal=0.00
 			self.total=0.00
+			self.personaFactura=()
 			self.actualizarValores()
 			self.modoSeleccion()
 		except Exception, e:

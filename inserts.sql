@@ -1,57 +1,57 @@
 use BaseEscuela;
 
-INSERT INTO Estudiante  VALUES(1,"0987564295", "Bruno Camilo", "Bonzano Euler",
+call InsertarEstudiante("0987564295", "Bruno Camilo", "Bonzano Euler",
 "Masculino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2008-7-04',NULL);
 
-INSERT INTO Estudiante  VALUES(2,"0914690458", "Karen Lola", "Yambay Castro",
+call InsertarEstudiante("0914690458", "Karen Lola", "Yambay Castro",
 "Femenino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2007-6-12',NULL);
 
-INSERT INTO Estudiante  VALUES(3,"0967850399", "Ricardo Manuel", "De la A Angulo",
+call InsertarEstudiante("0967850399", "Ricardo Manuel", "De la A Angulo",
 "Masculino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2007-4-24',NULL);
 
 
-INSERT INTO Estudiante  VALUES(4,"0976885544", "Jose Rolando", "Caicedo Mora",
+call InsertarEstudiante("0976885544", "Jose Rolando", "Caicedo Mora",
 "Masculino", "Soltero","Guayas-Guayaquil", "BLANCO", '2007-6-06',NULL);
 
 
-INSERT INTO Estudiante  VALUES(5,"0967850396", "Lucía Angélica", "De Jesus Andrade",
+call InsertarEstudiante("0967850396", "Lucía Angélica", "De Jesus Andrade",
 "Femenino", "Soltero","Guayas-Guayaquil", "NEGRO", '2007-12-05',NULL);
 
 
-INSERT INTO Estudiante  VALUES(6,"0977870398", "Jesus Gabriel", "Aumala De Nazaret",
+call InsertarEstudiante("0977870398", "Jesus Gabriel", "Aumala De Nazaret",
 "Masculino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2007-12-25',NULL);
 
-INSERT INTO Estudiante  VALUES(7,"1301910816", "Melissa Carla", "Romero Quinde",
+call InsertarEstudiante("1301910816", "Melissa Carla", "Romero Quinde",
 "Femenino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2005-7-04',NULL);
 
-INSERT INTO Estudiante  VALUES(8,"0914720057", "Melannie Lorenley", "Posligua Pasmiño",
+call InsertarEstudiante("0914720057", "Melannie Lorenley", "Posligua Pasmiño",
 "Femenino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2007-6-12',NULL);
 
-INSERT INTO Estudiante  VALUES(9,"0951060185", "Jorge Enrique", "Vergara Palma",
+call InsertarEstudiante("0951060185", "Jorge Enrique", "Vergara Palma",
 "Masculino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2009-4-30',NULL);
 
-INSERT INTO Estudiante  VALUES(10,"0987654390", "Coronel oswaldo", "Mora Benitez",
+call InsertarEstudiante("0987654390", "Coronel oswaldo", "Mora Benitez",
 "Masculino", "Soltero","Guayas-Guayaquil", "BLANCO", '2002-8-06',NULL);
 
-INSERT INTO Estudiante  VALUES(11,"1311810617", "kimberly Patricia", "De Jesus Valarezo",
+call InsertarEstudiante("1311810617", "kimberly Patricia", "De Jesus Valarezo",
 "Femenino", "Soltero","Guayas-Guayaquil", "NEGRO", '2003-12-10',NULL);
 
-INSERT INTO Estudiante  VALUES(12,"0915741185", "Cristina Estefania", "Casilla Navaz",
+call InsertarEstudiante("0915741185", "Cristina Estefania", "Casilla Navaz",
 "Femenino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2004-12-25',NULL);
 
-INSERT INTO Estudiante  VALUES(13,"0915742185", "Estefania Fernanda", "Parrales Montero",
+call InsertarEstudiante("0915742185", "Estefania Fernanda", "Parrales Montero",
 "Femenino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2004-12-25',NULL);
 
-INSERT INTO Estudiante  VALUES(14,"0706367890", "Maria Mercedes", "Caicedo Valencia",
+call InsertarEstudiante("0706367890", "Maria Mercedes", "Caicedo Valencia",
 "Femenino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2003-10-25',NULL);
 
-INSERT INTO Estudiante  VALUES(15,"0706367850", "Luis Alfredo", "Paredes Martillo",
+call InsertarEstudiante("0706367850", "Luis Alfredo", "Paredes Martillo",
 "Masculino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2004-05-12',NULL);
 
-INSERT INTO Estudiante  VALUES(16,"0706367340", "Cristhian Jose", "Delgado Murillo",
+call InsertarEstudiante("0706367340", "Cristhian Jose", "Delgado Murillo",
 "Masculino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2005-03-15',NULL);
 
-INSERT INTO Estudiante  VALUES(17,"0706467890", "Carlos Javier", "Torres Nieto",
+call InsertarEstudiante("0706467890", "Carlos Javier", "Torres Nieto",
 "Masculino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2004-09-17',NULL);
 
 
@@ -161,6 +161,7 @@ INSERT INTO Persona  VALUES("0665643387", "Silvia Selena", "Correa Ponce",
 INSERT INTO Persona  VALUES("0956743356", "Dennisse Jhon", "Maternal Smith",
 "Masculino", "1956-11-12", "Casado", "Profesor", "Celex", "235002", "calle x12");
 
+
 INSERT INTO Persona  VALUES("0946443345", "Ufredo Arturo", "Molina Lainez",
 "Masculino", "1989-9-09", "Casado", "Ingeniero", "Empresa yz", "565599", "av j");
 
@@ -206,3 +207,18 @@ call AsignarDirigente("0956743399",1);
 call InsertarPersonaFactura("0914720057","nombre","apellido","telefono","direccion");
 
 select * from PersonaFactura;
+select * from Estudiante;
+select * from Persona;
+select numMatricula from Estudiante
+	where cedula=5914720057;
+
+Insert Into PersonaEstudiante(cedulaPersona,numMatricula,tipoPersona) 
+	Values("0956743356",1,1);
+select * from PersonaEstudiante;
+
+select numMatricula into @matricula from Estudiante
+	where cedula="0977870398";
+select @matricula;
+
+select * from PersonaEstudiante; 
+select * from Persona;

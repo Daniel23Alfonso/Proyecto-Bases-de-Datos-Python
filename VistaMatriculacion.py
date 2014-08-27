@@ -199,9 +199,9 @@ class VistaAgregarEstudiante(QWidget):
 	def initPadre(self):
 		self.layout_Padre=QFormLayout()
 		#creacion de cajas de texto
-		self.ListaDatosPadre=["Cedula:","Nombres:","Apellidos:","Sexo:","Fecha de Nacimiento:","Estado Civil:","Ocupacion:","Lugar de Trabajo:","Ocupacion:"]
-		self.ListaEntradasPadre=[QLineEdit(),QLineEdit(),QLineEdit(),QComboBox(),QCalendarWidget(),QComboBox(),QLineEdit(),QLineEdit()]
-		for i in range(0,8):
+		self.ListaDatosPadre=["Cedula:","Nombres:","Apellidos:","Sexo:","Fecha de Nacimiento:","Estado Civil:","Ocupacion:","Lugar de Trabajo:","Ocupacion:","Telefono: ","Direccion: "]
+		self.ListaEntradasPadre=[QLineEdit(),QLineEdit(),QLineEdit(),QComboBox(),QCalendarWidget(),QComboBox(),QLineEdit(),QLineEdit(),QLineEdit(),QLineEdit()]
+		for i in range(0,10):
 			self.layout_Padre.addRow(self.ListaDatosPadre[i],self.ListaEntradasPadre[i])
 		self.padre.setLayout(self.layout_Padre)
 		#seteo las validaciones
@@ -213,9 +213,9 @@ class VistaAgregarEstudiante(QWidget):
 	def initMadre(self):
 		self.layout_Madre=QFormLayout()
 		#creacion de cajas de texto
-		self.ListaDatosMadre=["Cedula:","Nombres:","Apellidos:","Sexo:","Fecha de Nacimiento:","Estado Civil:","Ocupacion:","Lugar de Trabajo:","Ocupacion:"]
-		self.ListaEntradasMadre=[QLineEdit(),QLineEdit(),QLineEdit(),QComboBox(),QCalendarWidget(),QComboBox(),QLineEdit(),QLineEdit()]
-		for i in range(0,8):
+		self.ListaDatosMadre=["Cedula:","Nombres:","Apellidos:","Sexo:","Fecha de Nacimiento:","Estado Civil:","Ocupacion:","Lugar de Trabajo:","Ocupacion:","Telefono: ","Direccion: "]
+		self.ListaEntradasMadre=[QLineEdit(),QLineEdit(),QLineEdit(),QComboBox(),QCalendarWidget(),QComboBox(),QLineEdit(),QLineEdit(),QLineEdit(),QLineEdit()]
+		for i in range(0,10):
 			self.layout_Madre.addRow(self.ListaDatosMadre[i],self.ListaEntradasMadre[i])
 		self.madre.setLayout(self.layout_Madre)
 		#seteo las validaciones
@@ -226,9 +226,9 @@ class VistaAgregarEstudiante(QWidget):
 	def initRepresentante(self):
 		self.layout_Representante=QFormLayout()
 		#creacion de cajas de texto
-		self.ListaDatosRepresentante=["Cedula:","Nombres:","Apellidos:","Sexo:","Fecha de Nacimiento:","Estado Civil:","Ocupacion:","Lugar de Trabajo:","Ocupacion:"]
-		self.ListaEntradasRepresentante=[QLineEdit(),QLineEdit(),QLineEdit(),QComboBox(),QCalendarWidget(),QComboBox(),QLineEdit(),QLineEdit()]
-		for i in range(0,8):
+		self.ListaDatosRepresentante=["Cedula:","Nombres:","Apellidos:","Sexo:","Fecha de Nacimiento:","Estado Civil:","Ocupacion:","Lugar de Trabajo:","Ocupacion:","Telefono: ","Direccion: "]
+		self.ListaEntradasRepresentante=[QLineEdit(),QLineEdit(),QLineEdit(),QComboBox(),QCalendarWidget(),QComboBox(),QLineEdit(),QLineEdit(),QLineEdit(),QLineEdit()]
+		for i in range(0,10):
 			self.layout_Representante.addRow(self.ListaDatosRepresentante[i],self.ListaEntradasRepresentante[i])
 		self.representante.setLayout(self.layout_Representante)
 		#seteo las validaciones
@@ -242,7 +242,12 @@ class VistaAgregarEstudiante(QWidget):
 		tuplaMadre=self.obtenerMadre()
 		tuplaRepresentante=self.obtenerRepresentante()
 		tuplaPersonaF=self.obtenerPersonaFactura()
+		#try:
 		self.manejadorBD.crearEstudiante(tuplaEstudiante,tuplaPadre,tuplaMadre,tuplaRepresentante,tuplaPersonaF)
+		#QMessageBox.about(self,'Aviso!',u'Se Creo Correctamente a el Estudiante')
+		#except Exception, e:
+		#	QMessageBox.about(self,'Error!',u'No se ha podido Crear el Estudiante')
+		
 
 
 
@@ -254,18 +259,18 @@ class VistaAgregarEstudiante(QWidget):
 	def obtenerPadre(self):
 		fecha=self.ListaEntradasRepresentante[4].selectedDate ()
 		strFecha=self.obtenerFechaString(fecha)
-		return (self.ListaEntradasPadre[0].displayText(),self.ListaEntradasPadre[1].displayText(),self.ListaEntradasPadre[2].displayText(), self.ListaEntradasPadre[3].currentText(),strFecha,self.ListaEntradasPadre[5].currentText(),self.ListaEntradasPadre[6].displayText(),self.ListaEntradasPadre[7].displayText())
+		return (self.ListaEntradasPadre[0].displayText(),self.ListaEntradasPadre[1].displayText(),self.ListaEntradasPadre[2].displayText(), self.ListaEntradasPadre[3].currentText(),strFecha,self.ListaEntradasPadre[5].currentText(),self.ListaEntradasPadre[6].displayText(),self.ListaEntradasPadre[7].displayText(),self.ListaEntradasPadre[8].displayText(),self.ListaEntradasPadre[9].displayText())
 		
 	def obtenerMadre(self):
 		fecha=self.ListaEntradasMadre[4].selectedDate ()
 		strFecha=self.obtenerFechaString(fecha)
-		return (self.ListaEntradasMadre[0].displayText(),self.ListaEntradasMadre[1].displayText(),self.ListaEntradasMadre[2].displayText(), self.ListaEntradasMadre[3].currentText(),strFecha,self.ListaEntradasMadre[5].currentText(),self.ListaEntradasMadre[6].displayText(),self.ListaEntradasMadre[7].displayText())
+		return (self.ListaEntradasMadre[0].displayText(),self.ListaEntradasMadre[1].displayText(),self.ListaEntradasMadre[2].displayText(), self.ListaEntradasMadre[3].currentText(),strFecha,self.ListaEntradasMadre[5].currentText(),self.ListaEntradasMadre[6].displayText(),self.ListaEntradasMadre[7].displayText(),self.ListaEntradasMadre[8].displayText(),self.ListaEntradasMadre[9].displayText())
 		
 
 	def obtenerRepresentante(self):
 		fecha=self.ListaEntradasRepresentante[4].selectedDate ()
 		strFecha=self.obtenerFechaString(fecha)
-		return (self.ListaEntradasRepresentante[0].displayText(),self.ListaEntradasRepresentante[1].displayText(),self.ListaEntradasRepresentante[2].displayText(), self.ListaEntradasRepresentante[3].currentText(),strFecha,self.ListaEntradasRepresentante[5].currentText(),self.ListaEntradasRepresentante[6].displayText(),self.ListaEntradasRepresentante[7].displayText())
+		return (self.ListaEntradasRepresentante[0].displayText(),self.ListaEntradasRepresentante[1].displayText(),self.ListaEntradasRepresentante[2].displayText(), self.ListaEntradasRepresentante[3].currentText(),strFecha,self.ListaEntradasRepresentante[5].currentText(),self.ListaEntradasRepresentante[6].displayText(),self.ListaEntradasRepresentante[7].displayText(),self.ListaEntradasRepresentante[8].displayText(),self.ListaEntradasRepresentante[9].displayText())
 	
 	def obtenerPersonaFactura(self):
 		return(self.lisEntradasPersona[0].displayText(),self.lisEntradasPersona[1].displayText(),self.lisEntradasPersona[2].displayText(),self.lisEntradasPersona[3].displayText(),self.lisEntradasPersona[4].displayText())
