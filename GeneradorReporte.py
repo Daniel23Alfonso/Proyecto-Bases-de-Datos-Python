@@ -262,3 +262,91 @@ class GeneradorReporte:
     elements.append(tablafirmas)
     doc.build(elements)
 
+
+  def generarLibreta(self, nombreEstudiante, calificaciones, grado, anioLectivo, representante,
+    profesor):
+
+    namefile = "Libreta_%s_%s.pdf"%(nombreEstudiante, grado)
+    elementos = []
+    styleSheet = getSampleStyleSheet()
+    doc = SimpleDocTemplate(namefile, pagesize=letter)
+    styles = getSampleStyleSheet()
+    titulo = Paragraph("""<font size="9">ESCUELA PARTICULAR MIXTA # 851 &quot;Dr. JAIME ASPIAZU SEMINARIO&quot;</font>""", styleSheet["BodyText"])
+    stringEstudiante = u"ESTUDIANTE:                    %s"%nombreEstudiante
+
+    strigngradoAnio = u"GRADO:                         %s GRADO                            AÑO LECTIVO %s"%(grado, anioLectivo)
+
+    datosHeader = [[titulo],[stringEstudiante],[strigngradoAnio],[]]
+    tablaH = Table(datosHeader)
+    tablaH.setStyle(TableStyle([ ('ALIGN',(0,0),(-1,-1),'LEFT'),
+                       ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                       ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
+                       ('BOX', (0,0), (-1,-1), 0.25, colors.black)]))
+
+    tablaH._argW[0]=7*inch
+
+    elementos.append(tablaH)
+
+    m1 = ["Lengua y literatura"]
+    m2 = [u"Matemática" ]
+    m3 = ["Ciencias Naturales"]
+    m4 = ["Estudio Sociales" ]
+    m5 = [u"Cultura Estética"]
+    m6 =        [u"Cultura Física" ]
+    m7 = [u"Inglés"]
+    m8 =  ["Optativa"]
+    m9 =  ["Suma total"]
+    m10 = ["PROMEDIO"]
+
+    materias = []
+    i =0
+    for f in [m1, m2, m3,m4,m5,m6,m7,m8,m9,m10]:
+      materias.append(f + calificaciones[i])
+      i = i+1
+
+
+    headerGrill = [["ASIGNATURA         ","1   ","2   ","3   ","EXA ","Prom", "1   ","2   ","3   ","EXA ",
+                  "Prom", "PRO ", "SUP ", "PF  " ]] 
+
+
+
+
+    for f in materias:
+      headerGrill.append(f)
+
+
+    tablaLibreta = Table(headerGrill)
+    tablaLibreta.setStyle(TableStyle([ ('ALIGN',(0,0),(-1,-1),'LEFT'),
+                       ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                       ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
+                       ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                       ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                       ('FONTSIZE', (1, 1), (-1, -1), 8), 
+                       ]))
+
+
+
+    elementos.append(tablaLibreta)
+
+    listaFinal = [["REPRESENTANTE ", representante],[u"PROFESOR GUÍA", profesor]]
+    tablafinal = Table(listaFinal)
+    tablafinal.setStyle(TableStyle([ ('ALIGN',(0,0),(-1,-1),'LEFT'),
+                       ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                       ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
+                       ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                       ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                       ]))
+
+    tablafinal._argW[0]=3.49*inch
+    tablafinal._argW[1]=3.49*inch
+
+    elementos.append(tablafinal)
+
+    doc.build(elementos)
+
+
+
+
+
+
+

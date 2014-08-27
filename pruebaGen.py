@@ -25,3 +25,10 @@ listaCantDetallesPUnitTotal = [["2","Pencion","$70","$140" ],
 
 								]
 gener.GenerarFactura("2456789","Oswaldo Bayona", "33 y San Martin", listaCantDetallesPUnitTotal,"150")
+
+
+listaCalificaciones = [["10", "10"], ["2", "3"], ["4", "7"], ["9", "10"], ["10", "10"],
+                       ["2", "10"], ["10", "9,88"], ["7", "9"], ["8", "9"], ["10", "9"] ]
+
+
+gener.generarLibreta("Oswaldo",listaCalificaciones, "6to","2014-2015", "YADIRA MEDINA", "Lic. Yule Palma de Vergara")
