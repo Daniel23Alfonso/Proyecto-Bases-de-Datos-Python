@@ -1,58 +1,69 @@
 use BaseEscuela;
 
+call InsertarPersonaFactura("0914720050","nombre0","apellido0","telefono","direccion");
+call InsertarPersonaFactura("0914720051","nombre1","apellido1","telefono","direccion");
+call InsertarPersonaFactura("0914720052","nombre2","apellido2","telefono","direccion");
+call InsertarPersonaFactura("0914720053","nombre3","apellido3","telefono","direccion");
+call InsertarPersonaFactura("0914720054","nombre4","apellido4","telefono","direccion");
+call InsertarPersonaFactura("0914720055","nombre5","apellido5","telefono","direccion");
+call InsertarPersonaFactura("0914720056","nombre6","apellido6","telefono","direccion");
+call InsertarPersonaFactura("0914720057","nombre7","apellido7","telefono","direccion");
+call InsertarPersonaFactura("0914720058","nombre8","apellido8","telefono","direccion");
+call InsertarPersonaFactura("0914720059","nombre9","apellido9","telefono","direccion");
+
 call InsertarEstudiante("0987564295", "Bruno Camilo", "Bonzano Euler",
-"Masculino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2008-7-04',NULL);
+"Masculino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2008-7-04',"0914720050");
 
 call InsertarEstudiante("0914690458", "Karen Lola", "Yambay Castro",
-"Femenino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2007-6-12',NULL);
+"Femenino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2007-6-12',"0914720051");
 
 call InsertarEstudiante("0967850399", "Ricardo Manuel", "De la A Angulo",
-"Masculino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2007-4-24',NULL);
+"Masculino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2007-4-24',"0914720052");
 
 
 call InsertarEstudiante("0976885544", "Jose Rolando", "Caicedo Mora",
-"Masculino", "Soltero","Guayas-Guayaquil", "BLANCO", '2007-6-06',NULL);
+"Masculino", "Soltero","Guayas-Guayaquil", "BLANCO", '2007-6-06',"0914720053");
 
 
 call InsertarEstudiante("0967850396", "Lucía Angélica", "De Jesus Andrade",
-"Femenino", "Soltero","Guayas-Guayaquil", "NEGRO", '2007-12-05',NULL);
+"Femenino", "Soltero","Guayas-Guayaquil", "NEGRO", '2007-12-05',"0914720054");
 
 
 call InsertarEstudiante("0977870398", "Jesus Gabriel", "Aumala De Nazaret",
-"Masculino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2007-12-25',NULL);
+"Masculino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2007-12-25',"0914720055");
 
 call InsertarEstudiante("1301910816", "Melissa Carla", "Romero Quinde",
-"Femenino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2005-7-04',NULL);
+"Femenino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2005-7-04',"09147200506");
 
 call InsertarEstudiante("0914720057", "Melannie Lorenley", "Posligua Pasmiño",
-"Femenino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2007-6-12',NULL);
+"Femenino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2007-6-12',"0914720057");
 
 call InsertarEstudiante("0951060185", "Jorge Enrique", "Vergara Palma",
-"Masculino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2009-4-30',NULL);
+"Masculino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2009-4-30',"0914720058");
 
 call InsertarEstudiante("0987654390", "Coronel oswaldo", "Mora Benitez",
-"Masculino", "Soltero","Guayas-Guayaquil", "BLANCO", '2002-8-06',NULL);
+"Masculino", "Soltero","Guayas-Guayaquil", "BLANCO", '2002-8-06',"0914720059");
 
 call InsertarEstudiante("1311810617", "kimberly Patricia", "De Jesus Valarezo",
-"Femenino", "Soltero","Guayas-Guayaquil", "NEGRO", '2003-12-10',NULL);
+"Femenino", "Soltero","Guayas-Guayaquil", "NEGRO", '2003-12-10',"0914720052");
 
 call InsertarEstudiante("0915741185", "Cristina Estefania", "Casilla Navaz",
-"Femenino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2004-12-25',NULL);
+"Femenino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2004-12-25',"0914720053");
 
 call InsertarEstudiante("0915742185", "Estefania Fernanda", "Parrales Montero",
-"Femenino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2004-12-25',NULL);
+"Femenino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2004-12-25',"0914720051");
 
 call InsertarEstudiante("0706367890", "Maria Mercedes", "Caicedo Valencia",
-"Femenino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2003-10-25',NULL);
+"Femenino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2003-10-25',"0914720057");
 
 call InsertarEstudiante("0706367850", "Luis Alfredo", "Paredes Martillo",
-"Masculino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2004-05-12',NULL);
+"Masculino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2004-05-12',"0914720053");
 
 call InsertarEstudiante("0706367340", "Cristhian Jose", "Delgado Murillo",
-"Masculino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2005-03-15',NULL);
+"Masculino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2005-03-15',"0914720054");
 
 call InsertarEstudiante("0706467890", "Carlos Javier", "Torres Nieto",
-"Masculino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2004-09-17',NULL);
+"Masculino", "Soltero","Guayas-Guayaquil", "MESTIZO", '2004-09-17',"0914720052");
 
 
 #Profesores
@@ -204,21 +215,12 @@ call agregarEstudianteEnCurso(1,1);
 
 call AsignarDirigente("0956743399",1);
 
-call InsertarPersonaFactura("0914720057","nombre","apellido","telefono","direccion");
+
 
 select * from PersonaFactura;
 select * from Estudiante;
 select * from Persona;
-select numMatricula from Estudiante
-	where cedula=5914720057;
-
-Insert Into PersonaEstudiante(cedulaPersona,numMatricula,tipoPersona) 
-	Values("0956743356",1,1);
-select * from PersonaEstudiante;
-
-select numMatricula into @matricula from Estudiante
-	where cedula="0977870398";
-select @matricula;
 
 select * from PersonaEstudiante; 
 select * from Persona;
+call obtenerPersonaFactura("0951060180");

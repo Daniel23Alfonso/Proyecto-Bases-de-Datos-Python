@@ -242,11 +242,12 @@ class VistaAgregarEstudiante(QWidget):
 		tuplaMadre=self.obtenerMadre()
 		tuplaRepresentante=self.obtenerRepresentante()
 		tuplaPersonaF=self.obtenerPersonaFactura()
-		#try:
-		self.manejadorBD.crearEstudiante(tuplaEstudiante,tuplaPadre,tuplaMadre,tuplaRepresentante,tuplaPersonaF)
-		#QMessageBox.about(self,'Aviso!',u'Se Creo Correctamente a el Estudiante')
-		#except Exception, e:
-		#	QMessageBox.about(self,'Error!',u'No se ha podido Crear el Estudiante')
+		try:
+			self.manejadorBD.crearEstudiante(tuplaEstudiante,tuplaPadre,tuplaMadre,tuplaRepresentante,tuplaPersonaF)
+			QMessageBox.about(self,'Aviso!',u'Se Creo Correctamente a el Estudiante')
+		except Exception, e:
+			QMessageBox.about(self,'Error!',u'No se ha podido Crear el Estudiante')
+			self.close()
 		
 
 

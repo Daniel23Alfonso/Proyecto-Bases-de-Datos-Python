@@ -104,3 +104,6 @@ class MyTable(QTableView):
 	#callback para los combos
 	def on_comboBox_currentIndexChanged(self, index):
 		self.proxy.setFilterKeyColumn(index)
+
+	def get_Row(self):
+		return self.row

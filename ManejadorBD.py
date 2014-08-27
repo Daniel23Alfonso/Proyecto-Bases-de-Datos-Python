@@ -220,15 +220,12 @@ class ManejadorBD():
 		self.desconectar()
 
 	def generarFactura(self,deudas):
-		print "es factura"
 		self.llamarProcedimineto("crearFactura")
 		self.BD.commit()
-		print "es SELECT"
 		facturas=self.llamarProcedimineto("obtenerFacturas")
 		self.desconectar()
 		factura=facturas[0]
 		id_Factura=factura[0]
-		print "es deuda"
 		for deuda in deudas:
 			self.llamarProcedimineto("cancelarDeuda",(deuda,id_Factura))
 		

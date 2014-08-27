@@ -120,8 +120,10 @@ class VistaFacturacion(QWidget):
 			self.modoAgregar()
 			try:
 				self.deudas=self.manejadorBD.obtenerDeudas(idAlumno)
-				self.personaFactura=self.manejadorBD.obtenerPersonaFactura(alumno[1])
+				self.personaFactura=self.manejadorBD.obtenerPersonaFactura(alumno[1])[0]
 				print self.personaFactura
+				strPersonaFactura="Cedula: %s Nombres: %s %s Telefono: %s Direccion: %s"%self.personaFactura[0]
+				self.lblNumeroFactura.setText(strPersonaFactura)
 				self.idDeudas=[]
 			except Exception, e:
 				raise e
@@ -131,6 +133,7 @@ class VistaFacturacion(QWidget):
 	def AccionCancelar(self):
 		self.factura.deleteData()
 		self.modoSeleccion()
+		self.lblNumeroFactura.setText("")
 
 	
 	def agregarElemntoFactura(self):
@@ -148,14 +151,27 @@ class VistaFacturacion(QWidget):
 
 	def genrarFactura(self):
 		try:
+			listaCantDetallesPUnitTotal = []
 			self.manejadorBD.generarFactura(self.idDeudas)
-			QMessageBox.about(self,'Aviso!',u'Se genero Correctamente la Factura')
-			self.factura.deleteData()
+			strNombre="%s %s"%(self.personaFactura[1],self.personaFactura[2])
+			telefono=self.personaFactura[3]
+			direccion=self.personaFactura[4]
+			print "es lista"
+			for i in range(self.factura.get_Row()):
+				print self.factura.getRegister(i)
+				listaCantDetallesPUnitTotal.append(self.factura.getRegister(i))
+			print "no es lista"
+			print "es generador"
+			self.gReporte.GenerarFactura(telefono,strNombre,direccion,listaCantDetallesPUnitTotal,str(self.total))
+			print "no es generador"
 			self.subTotal=0.00
 			self.total=0.00
+			self.factura.deleteData()
+			self.lblNumeroFactura.setText("")
 			self.personaFactura=()
 			self.actualizarValores()
 			self.modoSeleccion()
+			QMessageBox.about(self,'Aviso!',u'Se genero Correctamente la Factura')
 		except Exception, e:
 			QMessageBox.about(self,'Error!',u'Problemas al generar la factura')			
 	
