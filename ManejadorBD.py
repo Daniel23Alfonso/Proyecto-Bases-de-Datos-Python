@@ -187,7 +187,10 @@ class ManejadorBD():
 		return self.llamarProcedimineto("consultarNotasParcial",arg)
 
 	def crearEstudiante(self,estudiante,padre,madre,representante,personaFactura):
-		pass
+		self.llamarProcedimineto("InsertarPersonaFactura",personaFactura)
+		self.BD.commit()
+		self.llamarProcedimineto("InsertarEstudiante",estudiante)
+		self.BD.commit()
 
 	def crearCurso(self,datos):
 		self.llamarProcedimineto("crearCurso",datos)

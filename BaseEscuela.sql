@@ -6,7 +6,7 @@ CREATE TABLE PersonaFactura
 (cedula char (10),
 nombre varchar (100),
 apellido varchar (100),
-telefono char (6),
+telefono char (10),
 Direccion varchar (50),
 CONSTRAINT CHECK(sexo in ('Masculino','Femenino')),
 PRIMARY KEY (cedula)
@@ -879,7 +879,7 @@ DELIMITER ;
 
 DELIMITER //
 CREATE PROCEDURE InsertarPersonaFactura(in cedula char(10),in nombre varchar(100),
-in apellido varchar(100), in telefono char(6), in Direccion varchar(50))
+in apellido varchar(100), in telefono char(10), in Direccion varchar(50))
 BEGIN
 	
 INSERT INTO PersonaFactura VALUES(cedula, nombre, apellido,telefono,Direccion);
@@ -1181,9 +1181,10 @@ BEGIN
 END //
 DELIMITER ;
 
+
 #logguin
 DELIMITER //
-CREATE PROCEDURE validarUsuario(in user varchar(50),in contra varchar(50),out val integer )
+CREATE PROCEDURE validarUsuario(in tipo integer,in user varchar(50),in contra varchar(50),out val integer )
 BEGIN
 	select count(*) into @contador from Administrativo
 	where usuario=user and contrasenia=contra;

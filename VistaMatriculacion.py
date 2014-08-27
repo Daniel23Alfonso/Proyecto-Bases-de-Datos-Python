@@ -98,6 +98,7 @@ class VistaAgregarEstudiante(QWidget):
 		QWidget.__init__(self,*args)
 		self.setWindowTitle("Agregar Estudiante")
 		self.setGeometry(100,50,self.dimension_x,self.dimension_y)
+		self.manejadorBD = ManejadorBD()
 		#validadores
 		#expresiones regulares para los nombres
 		self.regex = QRegExp(u"^[À-Ÿà-ÿA-Za-z\\s*\\u'\xf1'*]+$")
@@ -124,17 +125,24 @@ class VistaAgregarEstudiante(QWidget):
 		self.initRepresentante()
 		self.initPersonaFacura()
 		self.setLayout(self.contenedor)
+		self.connect(self.btnGuardar,SIGNAL("clicked()"),self.guardarEstudiante)
 		
 
 	def initPersonaFacura(self):
-		self.layout_PersonaFactura=QFormLayout()
-		self.lisDatosPersona=[u"Cédula: ","Nombres: ","Telefono: ","Direccion: "]
-		self.lisEntradasPersona=[QLineEdit(),QLineEdit(),QLineEdit(),QLineEdit()]
+		self.layout_PersonaFactura=QVBoxLayout()
+		self.layout_PersonaFactura1=QFormLayout()
+		self.layout_PersonaFactura2=QHBoxLayout()
+		self.lisDatosPersona=[u"Cédula: ","Nombres: ","Apellidos: ","Telefono: ","Direccion: "]
+		self.lisEntradasPersona=[QLineEdit(),QLineEdit(),QLineEdit(),QLineEdit(),QLineEdit()]
 		self.lisEntradasPersona[0].setValidator(self.validatorN)
+		self.btnGuardar=QPushButton("Guardar")
 		i=0
 		for l in self.lisDatosPersona:
-			self.layout_PersonaFactura.addRow(l,self.lisEntradasPersona[i])
-			i=i+1
+			self.layout_PersonaFactura1.addRow(l,self.lisEntradasPersona[i])
+			i=i+1	
+		self.layout_PersonaFactura.addLayout(self.layout_PersonaFactura1)
+		self.layout_PersonaFactura2.addWidget(self.btnGuardar)
+		self.layout_PersonaFactura.addLayout(self.layout_PersonaFactura2)
 		self.personaFactura.setLayout(self.layout_PersonaFactura)
 
 	def initEstudiante(self):
@@ -185,7 +193,6 @@ class VistaAgregarEstudiante(QWidget):
 
 
 		self.estudiante.setLayout(self.layout_estudiante)
-		self.obtenerEstudiante()
 		#validaciones
 
 
@@ -230,29 +237,38 @@ class VistaAgregarEstudiante(QWidget):
 		self.ListaEntradasRepresentante[5].addItems(self.EstadoCivil)
 
 	def guardarEstudiante(self):
-		pass
+		tuplaEstudiante=self.obtenerEstudiante()
+		tuplaPadre=self.obtenerPadre()
+		tuplaMadre=self.obtenerMadre()
+		tuplaRepresentante=self.obtenerRepresentante()
+		tuplaPersonaF=self.obtenerPersonaFactura()
+		self.manejadorBD.crearEstudiante(tuplaEstudiante,tuplaPadre,tuplaMadre,tuplaRepresentante,tuplaPersonaF)
+
+
 
 	def obtenerEstudiante(self):
 		fecha=self.calendario.selectedDate ()
 		strFecha=self.obtenerFechaString(fecha)
-		return (self.textos[0],self.textos[1],self.textos[2], self.comboSexo.currentText(),self.comboEstadoCivil.currentText(),self.textos[3],self.comboEtnia.currentText(),strFecha)
+		return (self.textos[0].displayText(),self.textos[1].displayText(),self.textos[2].displayText(), self.comboSexo.currentText(),self.comboEstadoCivil.currentText(),self.textos[3].displayText(),self.comboEtnia.currentText(),strFecha,self.lisEntradasPersona[0].displayText())
 
 	def obtenerPadre(self):
-		fecha=self.calendario.selectedDate ()
+		fecha=self.ListaEntradasRepresentante[4].selectedDate ()
 		strFecha=self.obtenerFechaString(fecha)
-		return (self.textos[0],self.textos[1],self.textos[2], self.comboSexo.currentText(),self.comboEstadoCivil.currentText(),self.textos[3],self.comboEtnia.currentText(),strFecha)
-
+		return (self.ListaEntradasPadre[0].displayText(),self.ListaEntradasPadre[1].displayText(),self.ListaEntradasPadre[2].displayText(), self.ListaEntradasPadre[3].currentText(),strFecha,self.ListaEntradasPadre[5].currentText(),self.ListaEntradasPadre[6].displayText(),self.ListaEntradasPadre[7].displayText())
+		
 	def obtenerMadre(self):
-		fecha=self.calendario.selectedDate ()
+		fecha=self.ListaEntradasMadre[4].selectedDate ()
 		strFecha=self.obtenerFechaString(fecha)
-		return (self.textos[0],self.textos[1],self.textos[2], self.comboSexo.currentText(),self.comboEstadoCivil.currentText(),self.textos[3],self.comboEtnia.currentText(),strFecha)
+		return (self.ListaEntradasMadre[0].displayText(),self.ListaEntradasMadre[1].displayText(),self.ListaEntradasMadre[2].displayText(), self.ListaEntradasMadre[3].currentText(),strFecha,self.ListaEntradasMadre[5].currentText(),self.ListaEntradasMadre[6].displayText(),self.ListaEntradasMadre[7].displayText())
+		
 
 	def obtenerRepresentante(self):
-		fecha=self.calendario.selectedDate ()
+		fecha=self.ListaEntradasRepresentante[4].selectedDate ()
 		strFecha=self.obtenerFechaString(fecha)
-		return (self.textos[0],self.textos[1],self.textos[2], self.comboSexo.currentText(),self.comboEstadoCivil.currentText(),self.textos[3],self.comboEtnia.currentText(),strFecha)
-
-		
+		return (self.ListaEntradasRepresentante[0].displayText(),self.ListaEntradasRepresentante[1].displayText(),self.ListaEntradasRepresentante[2].displayText(), self.ListaEntradasRepresentante[3].currentText(),strFecha,self.ListaEntradasRepresentante[5].currentText(),self.ListaEntradasRepresentante[6].displayText(),self.ListaEntradasRepresentante[7].displayText())
+	
+	def obtenerPersonaFactura(self):
+		return(self.lisEntradasPersona[0].displayText(),self.lisEntradasPersona[1].displayText(),self.lisEntradasPersona[2].displayText(),self.lisEntradasPersona[3].displayText(),self.lisEntradasPersona[4].displayText())
 
 	def obtenerFechaString(self,date):
 		dia=date.day()

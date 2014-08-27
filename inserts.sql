@@ -203,8 +203,6 @@ call agregarEstudianteEnCurso(1,1);
 
 call AsignarDirigente("0956743399",1);
 
-select * from CursoEstudiante;
+call InsertarPersonaFactura("0914720057","nombre","apellido","telefono","direccion");
 
-select * from Materia;
-
-select * from Curso;
+select * from PersonaFactura;
