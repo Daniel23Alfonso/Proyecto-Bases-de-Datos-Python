@@ -1244,4 +1244,13 @@ BEGIN
 END //
 DELIMITER ;
 
+DELIMITER //
+CREATE PROCEDURE obtenerEstudiantesPorCurso(in id_curso integer)
+BEGIN
+	select nombres, apellidos  from Estudiante e, Curso c, CursoEstudiante ce
+	where c.id_Curso = id_curso and ce.id_curso = c.id_Curso and ce.numMatricula = e.numMatricula;
+
+END //
+DELIMITER ;
+
 
