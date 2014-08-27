@@ -6,6 +6,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from Tabla import *
 from ManejadorBD import *
+from GeneradorReporte import *
 
 class VistaProfesor(QMainWindow):
 	dimension_x=700
@@ -388,13 +389,15 @@ class VistaReporte(QWidget):
 
 	def __init__(self,tabla,*args):
 		QWidget.__init__(self,*args)
+		self.generador = GeneradorReporte()
 		self.layout_reportes=QVBoxLayout()
 		self.layout_reportes.addWidget(QLabel("Cursos Disponibles:"))
 		self.Estudiantes=tabla
 		self.layout_reportes.addWidget(self.Estudiantes)
 		self.boton_uno=QHBoxLayout()
+		self.manejador = ManejadorBD()
 		self.boton_uno.addWidget(QLabel("                               "))
-		self.tiposReportes=["Lista de Estudiantes","Acta de Calificaciones","Libretas","Sabanas","Promociones"]
+		self.tiposReportes=["Lista de Estudiantes","Lista de asistencia","Libretas","Promociones"]
 		self.comboReportes=QComboBox()
 		self.comboReportes.addItems(self.tiposReportes)
 		self.boton_uno.addWidget(QLabel("Tipos de Reportes:"))
@@ -410,4 +413,37 @@ class VistaReporte(QWidget):
 		self.setLayout(self.layout_reportes)
 
 	def initReportes(self):
-		pass
+		indice = self.comboReportes.currentIndex()
+		resultados=self.Estudiantes.getSelectedRegister()
+		if (indice == 0):
+			if len(resultados)>0:
+				cursoSeleccionado=resultados[0]
+				id_curso = str(cursoSeleccionado[1])
+				estudiantes = self.manejador.obtenerEstudiantesPorCurso(id_curso)
+
+				listaEstudiantes = []
+
+				for es in estudiantes:
+					estudiante = unicode(es[0] + " " + es [1])
+					listaEstudiantes.append(estudiante)
+
+				self.generador.GenerarLista(listaEstudiantes, str(cursoSeleccionado[2]), str(cursoSeleccionado[3]))
+		
+		elif (indice == 1):
+			if len(resultados)>0:
+				cursoSeleccionado=resultados[0]
+				id_curso = str(cursoSeleccionado[1])
+				estudiantes = self.manejador.obtenerEstudiantesPorCurso(id_curso)
+
+				listaEstudiantes = []
+
+				for es in estudiantes:
+					estudiante = unicode(es[0] + " " + es [1])
+					listaEstudiantes.append(estudiante)
+
+				self.generador.GenerarListaAsistencia(listaEstudiantes, str(cursoSeleccionado[2]), str(cursoSeleccionado[3]))
+
+
+
+
+
